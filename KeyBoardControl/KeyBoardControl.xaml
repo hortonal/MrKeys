@@ -1,10 +1,7 @@
 ﻿<UserControl x:Class="KeyBoardControlLibrary.KeyBoardControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Height="73" Width="640">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid Name="KeyBoardCanvas">
         
     </Grid>
-
-
 </UserControl>
