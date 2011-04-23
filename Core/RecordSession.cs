@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using Sanford.Multimedia.Midi;
 using System.Diagnostics;
+using KeyBoardControlLibrary;
+using Common.Events;
 
 namespace MrKeys
 {
@@ -20,7 +22,7 @@ namespace MrKeys
     private RecordingSession m_Session;
     
     public delegate void MessageReceivedHandler();
-    public event EventHandler MessageReceived;
+    public event PianoKeyStrokeEvent MessageReceived;
 
     
 #region Properties
@@ -214,14 +216,15 @@ namespace MrKeys
       
       m_context.Post(delegate(object dummy)
       {
-        
         // Create new channel message object and add to session
-        ChannelMessage msg = new ChannelMessage(e.Message.Command,e.Message.MidiChannel,e.Message.Data1,e.Message.Data2);
+          ChannelMessage msg = e.Message;
+        //todo: maybe reimplement this if broken new ChannelMessage(e.Message.Command,e.Message.MidiChannel,e.Message.Data1,e.Message.Data2);
+
         m_Session.Record(msg);
 
         // Update number of messages received and raise event
         this.NumMsgsReceived++;
-        if (MessageReceived != null) MessageReceived(null,null);
+        if (MessageReceived != null) MessageReceived(this, SanfordUtils.BuildKeyStrokeEventArgs(msg));
       
       }, null);
 

@@ -25,7 +25,7 @@ namespace MrKeys
       int EventIndex;
       int EventCount;
       MidiEvent EventItem;
-      ChannelMessage Msg;
+      //ChannelMessage Msg; //Unneeded??
       string Message;
 
       // Get info

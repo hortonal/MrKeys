@@ -90,6 +90,7 @@
     </ApplicationDefinition>
     <Compile Include="Exceptions.cs" />
     <Compile Include="RecordSession.cs" />
+    <Compile Include="SanfordUtils.cs" />
     <Compile Include="Testing\Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
@@ -159,6 +160,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{4FD22659-3465-47D6-86B1-F8B52E0CD688}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KeyBoardControl\KeyBoardControlLibrary.csproj">
       <Project>{77839D7E-243F-4733-A62A-65AF0D237528}</Project>
       <Name>KeyBoardControlLibrary</Name>
@@ -167,6 +172,7 @@
   <ItemGroup>
     <Resource Include="1205_1820_48_piano_icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

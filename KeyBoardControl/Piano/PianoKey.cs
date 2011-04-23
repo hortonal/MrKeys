@@ -36,7 +36,7 @@ namespace KeyBoardControlLibrary
             
             MouseEnter += (o, e) =>
                 {
-                    Fill = Brushes.GreenYellow;
+                    SetKeyPressedColour();
                 };
             MouseLeave += (o, e) =>
                 {
@@ -66,15 +66,22 @@ namespace KeyBoardControlLibrary
         }
         #endregion
 
-        #region Events
-        
-        #endregion Events
-
-        private void SetDefaultKeyColour()
+        public void SetDefaultKeyColour()
         {
             Fill = (KeyType == KeyTypes.White) ? Brushes.Ivory : Brushes.Black;
         }
 
+        public void SetKeyPressedColour()
+        {
+            Fill = Brushes.GreenYellow;
+        }
+
+        public void SetKeyPressedColour(int velocity)
+        {
+            var b = new LinearGradientBrush(Colors.GreenYellow,Colors.Red, 90);
+            b.Opacity = velocity / 127.0;
+            Fill = b;
+        }
 
         public override string ToString()
         {
@@ -83,4 +90,5 @@ namespace KeyBoardControlLibrary
     }
 
     public enum KeyTypes { White, Black };
+    
 }

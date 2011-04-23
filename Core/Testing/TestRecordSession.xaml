@@ -10,6 +10,7 @@
             <Button Content="Start Recording" HorizontalAlignment="Left" Margin="10,10,10,10" Name="button2" Width="126" Click="button2_Click" />
             <Button Content="Stop Recording" HorizontalAlignment="Left" Margin="10,10,10,10" Width="126" Click="button3_Click" />
             <Button Content="Playback" HorizontalAlignment="Left" Margin="10,10,10,10" Name="button4" Width="126" Click="button4_Click" />
+            <Button Content="Stop Playback" HorizontalAlignment="Left" Margin="10,10,10,10" Name="StopPlayBack" Width="126" Click="StopPlayBack_Click" />
         </DockPanel>
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
             <Label Content="Msgs Received:" HorizontalAlignment="Left" Margin="10,10,10,10" Name="label1" Width="92" />
@@ -17,7 +18,8 @@
         </DockPanel>
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
             <Button DockPanel.Dock="Left" Content="Test Midi Events" Margin="10,10,10,10" Name="button5" Width="126" Click="button5_Click" />
-            <Button DockPanel.Dock="Right" Content="Show Keyboard" Margin="10,10,10,10" Name="ShowKeyboard" Width="126" Click="ShowKeyboard_Click" />
+            <Button DockPanel.Dock="Left" Content="Show Keyboard" Margin="10,10,10,10" Name="ShowKeyboard" Width="126" Click="ShowKeyboard_Click" />
+            <Button DockPanel.Dock="Left" Content="Hide Keyboard" Margin="10,10,10,10" Name="HideKeyboard" Width="126" Click="HideKeyboard_Click" />
         </DockPanel> 
     </DockPanel>
 </Window>
