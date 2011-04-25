@@ -35,29 +35,43 @@ namespace MrKeys.Testing
         {
             InitializeComponent();
             m_context = SynchronizationContext.Current;
+
+            AddCustomControls();
+        }
+
+        private void AddCustomControls()
+        {
+            Common.MediaControl c = new Common.MediaControl();
+            MediaControls.Children.Add(c);
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
 
-            // Init Proc
+            try
+            {
+                // Init Proc
 
-            m_Session = new RecordSession();
-            m_Session.Init();
-            m_Session.MessageReceived += UpdateMessageReceived;
-            m_OutDevice = new OutputDevice(0);
+                m_Session = new RecordSession();
+                m_Session.Init();
+                m_Session.MessageReceived += UpdateMessageReceived;
+                m_OutDevice = new OutputDevice(0);
 
-            // Subscribe to events
-            m_Session.Sequencer.Position = 0;
-            m_Session.Sequencer.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
-            m_Session.Sequencer.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);
-            m_Session.Sequencer.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
-            m_Session.Sequencer.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
-            m_Session.Sequencer.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
+                // Subscribe to events
+                m_Session.Sequencer.Position = 0;
+                m_Session.Sequencer.PlayingCompleted += new System.EventHandler(this.HandlePlayingCompleted);
+                m_Session.Sequencer.ChannelMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.ChannelMessageEventArgs>(this.HandleChannelMessagePlayed);
+                m_Session.Sequencer.Stopped += new System.EventHandler<Sanford.Multimedia.Midi.StoppedEventArgs>(this.HandleStopped);
+                m_Session.Sequencer.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
+                m_Session.Sequencer.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
 
-            m_InputInitialised = true;
-            MessageBox.Show("Initialised");
-
+                m_InputInitialised = true;
+                MessageBox.Show("Initialised");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Initialisation Failed.  Err Msg: " + ex.Message);
+            }
         }
 
         private void UpdateMessageReceived(object sender, EventArgs e)

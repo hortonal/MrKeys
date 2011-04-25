@@ -1,6 +1,7 @@
 ﻿<Window x:Class="MrKeys.Testing.Window2"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cm="clr-namespace:Common;assembly=Common"
         Title="Test Record Sesssion" Height="417" Width="1056">
     <DockPanel Margin="10,10,10,10" Name="ParentWindow" VerticalAlignment="Top" LastChildFill="True">
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
@@ -20,6 +21,9 @@
             <Button DockPanel.Dock="Left" Content="Test Midi Events" Margin="10,10,10,10" Name="button5" Width="126" Click="button5_Click" />
             <Button DockPanel.Dock="Left" Content="Show Keyboard" Margin="10,10,10,10" Name="ShowKeyboard" Width="126" Click="ShowKeyboard_Click" />
             <Button DockPanel.Dock="Left" Content="Hide Keyboard" Margin="10,10,10,10" Name="HideKeyboard" Width="126" Click="HideKeyboard_Click" />
-        </DockPanel> 
+        </DockPanel>
+        <DockPanel Name="MediaControls" DockPanel.Dock="Top" HorizontalAlignment="Center" Width="400" Height="50">
+            
+        </DockPanel>
     </DockPanel>
 </Window>

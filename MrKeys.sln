@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyBoardControlLibrary", "KeyBoardControl\KeyBoardControlLibrary.csproj", "{77839D7E-243F-4733-A62A-65AF0D237528}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MrKeys", "Core\MrKeys.csproj", "{0A19EB61-6915-4380-AB0A-2E041FD90235}"

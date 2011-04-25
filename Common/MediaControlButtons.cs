@@ -1,0 +1,123 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows.Shapes;
+using System.Windows.Media;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace Common
+{
+    namespace MediaControls
+    {
+        public class BaseMediaButton : Button
+        {
+            public Grid ShapeContainerGrid { get; private set; }
+
+            public BaseMediaButton()
+            {
+                Click += HandleClick;
+
+                ShapeContainerGrid = new Grid();
+
+                this.AddChild(ShapeContainerGrid);
+            }
+
+            private void HandleClick(object sender, RoutedEventArgs e)
+            {
+
+                MessageBox.Show("You've hit a button. TypeOf: " + "Not yet figured this bit out...");
+            }
+        }
+
+        public class PlayButton : BaseMediaButton
+        {
+            public PlayButton()
+            {   
+                var s = new Polygon()
+                {
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Points = new PointCollection(new List<Point>()
+                                                    {
+                                                        new Point(2,0),
+                                                        new Point(2,16),
+                                                        new Point(10,8)
+                                                    }),
+                    Fill = Brushes.Black,
+                };
+                
+                this.ShapeContainerGrid.Children.Add(s);
+            }
+        }
+
+        public class StopButton : BaseMediaButton
+        {
+            public StopButton()
+            {
+                var s = new Rectangle()
+                {
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Width = 12,
+                    Height = 12,
+                    Fill = Brushes.Black,
+                };
+
+                this.ShapeContainerGrid.Children.Add(s);
+            }    
+        }
+
+        public class RecordButton : BaseMediaButton
+        {
+            public RecordButton()
+            {
+                var s = new Ellipse()
+                {
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Width = 12,
+                    Height = 12,
+                    Fill = Brushes.Red,
+                };
+
+                this.ShapeContainerGrid.Children.Add(s);
+            }
+        }
+
+        public class PauseButton : BaseMediaButton
+        {
+            public PauseButton()
+            {
+                double centralOffset = 8;
+                double stripeWidth = 4;
+                double stripeHeight = 12;
+                
+                var sLeftRect = new Rectangle()
+                {
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Width = stripeWidth,
+                    Height = stripeHeight,
+                    Fill = Brushes.Black,
+                    Margin = new Thickness(0, 0, centralOffset, 0),
+                };
+
+                var sRightRect = new Rectangle()
+                {
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Width = stripeWidth,
+                    Height = stripeHeight,
+                    Fill = Brushes.Black,
+                    Margin = new Thickness(centralOffset, 0, 0, 0),
+                };
+                
+                this.ShapeContainerGrid.Children.Add(sLeftRect);
+                this.ShapeContainerGrid.Children.Add(sRightRect);
+            }
+        }
+
+    }
+}
