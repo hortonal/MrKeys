@@ -19,8 +19,10 @@ namespace KeyBoardControlLibrary
     /// Interaction logic for KeyBoardControl.xaml
     /// </summary>
     public partial class KeyBoardControl : UserControl
-    { 
-        private int m_numberOfOctaves = 8;
+    {
+        public event PianoKeyStrokeEvent KeyPressEvent;
+
+        private int m_numberOfOctaves = 7;
         private Dictionary<int, PianoKey> m_KeyDicionary;
 
         public KeyBoardControl(int numberOfOctaves)
@@ -41,6 +43,7 @@ namespace KeyBoardControlLibrary
 
             m_KeyDicionary = new Dictionary<int,PianoKey>();
             AddKeys();
+
         }
 
         public void AddKeys()
@@ -77,12 +80,16 @@ namespace KeyBoardControlLibrary
 
         private void AddKeyToDictionary(int keyId, KeyTypes keyType, double keyWidth)
         {
-            m_KeyDicionary.Add(keyId, new PianoKey(keyType, keyId, keyWidth));
+            PianoKey key = new PianoKey(keyType, keyId, keyWidth);
+            
+            //Forward on the key press event to anyone who's listening
+            key.KeyPressEvent += (o, ea) => KeyPressEvent(o, ea);
+
+            m_KeyDicionary.Add(keyId, key);
         }
 
         #region Keyboard event handling
-        public delegate void PianoKeyStrokeEvent(object sender,PianoKeyStrokeEventArgs e);
-
+        
         public void HandleMessage(object sender,PianoKeyStrokeEventArgs e)
         {
             if (e == null) return;
@@ -94,8 +101,9 @@ namespace KeyBoardControlLibrary
                 }
                 if (e.keyStrokeType == KeyStrokeType.KeyRelease) m_KeyDicionary[e.midiKeyId].SetDefaultKeyColour();
             }
-
         }
+
+
         #endregion
     }
 }

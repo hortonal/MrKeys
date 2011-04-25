@@ -17,22 +17,26 @@ namespace Common
 
             public BaseMediaButton()
             {
-                Click += HandleClick;
-
                 ShapeContainerGrid = new Grid();
 
+
+                //Attempt to make buttons prettier - FAIL....
+                //var controlBorderTemplate = new ControlTemplate();
+                //var borderFE = new FrameworkElementFactory(typeof(Border));
+                //var grtidFE = new FrameworkElementFactory(typeof(Grid));
+                //grtidFE.SetValue(Grid.BackgroundProperty, Brushes.Yellow);
+                //borderFE.SetValue(Border.CornerRadiusProperty, new CornerRadius(4));
+                //borderFE.AppendChild(grtidFE);
+                //controlBorderTemplate.VisualTree = borderFE;
+                //this.Template = controlBorderTemplate;
+                
                 this.AddChild(ShapeContainerGrid);
-            }
-
-            private void HandleClick(object sender, RoutedEventArgs e)
-            {
-
-                MessageBox.Show("You've hit a button. TypeOf: " + "Not yet figured this bit out...");
             }
         }
 
         public class PlayButton : BaseMediaButton
         {
+            
             public PlayButton()
             {   
                 var s = new Polygon()

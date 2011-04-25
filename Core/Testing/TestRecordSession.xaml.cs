@@ -23,35 +23,32 @@ namespace MrKeys.Testing
     public partial class Window2 : Window
     {   
         // Module vars
-        private bool m_InputInitialised = false;
         private RecordSession m_Session;
         private bool m_Closing = false;
         private OutputDevice m_OutDevice;
-        private string KeyboardViewName = "KeyBoardViewBox";
-        private KeyBoardControl m_keyBoardControl;
+
         private SynchronizationContext m_context;
 
         public Window2()
         {
             InitializeComponent();
             m_context = SynchronizationContext.Current;
-
-            AddCustomControls();
+            InitialiseRecordSession();
         }
 
-        private void AddCustomControls()
+
+        #region Button Clicks
+        private void InitialiseButton_Click(object sender, RoutedEventArgs e)
         {
-            Common.MediaControl c = new Common.MediaControl();
-            MediaControls.Children.Add(c);
+
+            InitialiseRecordSession();
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void InitialiseRecordSession()
         {
-
             try
             {
                 // Init Proc
-
                 m_Session = new RecordSession();
                 m_Session.Init();
                 m_Session.MessageReceived += UpdateMessageReceived;
@@ -65,8 +62,13 @@ namespace MrKeys.Testing
                 m_Session.Sequencer.SysExMessagePlayed += new System.EventHandler<Sanford.Multimedia.Midi.SysExMessageEventArgs>(this.HandleSysExMessagePlayed);
                 m_Session.Sequencer.Chased += new System.EventHandler<Sanford.Multimedia.Midi.ChasedEventArgs>(this.HandleChased);
 
-                m_InputInitialised = true;
-                MessageBox.Show("Initialised");
+                //Subscribe Keyboard to message recieved event
+                m_Session.MessageReceived += Keyboard.HandleMessage;
+
+                //Subscribe session to Keyboard pressed event
+                Keyboard.KeyPressEvent += (o, ea) => m_OutDevice.Send(SanfordUtils.ConvertKeyStrokeEventArgsToChannelMessage(ea));
+
+                InitialisedRadioButton.IsChecked = true;
             }
             catch (Exception ex)
             {
@@ -74,27 +76,62 @@ namespace MrKeys.Testing
             }
         }
 
+        private void TestMidiEventsButton_Click(object sender, RoutedEventArgs e)
+        {
+            string fileName = "C:\\Windows\\Media\\Flourish.mid";
+            Sequence seq = new Sequence(fileName);
+            NoteGroup grp = new NoteGroup();
+            Track trk;
+            trk = seq[0]; // Get the first track
+            grp.ImportTrack(trk);
+
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            m_Session.Playback();
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_Session.IsRecording)
+            {
+                m_Session.StopRecording();
+            }
+            {
+                m_Session.Sequencer.Stop();
+            }
+        }
+
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_Session.IsPaused)
+            {
+                m_Session.Sequencer.Continue();
+                m_Session.IsPaused = false;
+            }
+            else
+            {
+                m_Session.Sequencer.Stop();
+                m_Session.IsPaused = true;
+            }
+            
+        }
+
+        private void RecordButton_Click(object sender, RoutedEventArgs e)
+        {
+            m_Session.Sequencer.Stop();
+            m_Session.StartRecording();
+        }
+        #endregion Button Clicks
+
+
+
         private void UpdateMessageReceived(object sender, EventArgs e)
         {
 
             lblMsgsReceived.Content = m_Session.NumMsgsReceived;
 
-        }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            m_Session.Sequencer.Stop();
-            m_Session.StartRecording();
-        }
-
-        private void button3_Click(object sender, RoutedEventArgs e)
-        {
-            m_Session.StopRecording();
-        }
-
-        private void button4_Click(object sender, RoutedEventArgs e)
-        {
-            m_Session.Playback();
         }
 
 
@@ -135,7 +172,7 @@ namespace MrKeys.Testing
             m_OutDevice.Send(e.Message);
             //Post on the main GUI thread...
             m_context.Post( 
-                    _ => m_keyBoardControl.HandleMessage(sender, SanfordUtils.BuildKeyStrokeEventArgs(e.Message))
+                    _ => Keyboard.HandleMessage(sender, SanfordUtils.ConvertChannelMessageToKeyStrokeEventArgs(e.Message))
                     ,null);  
         }
 
@@ -166,62 +203,13 @@ namespace MrKeys.Testing
             //timer1.Stop();
         }
 
-
         #endregion
-
-        private void button5_Click(object sender, RoutedEventArgs e)
-        {
-            string fileName = "C:\\Windows\\Media\\Flourish.mid";
-            Sequence seq = new Sequence(fileName);
-            NoteGroup grp = new NoteGroup();
-            Track trk;
-            trk = seq[0]; // Get the first track
-            grp.ImportTrack(trk);
-
-        }
-
-        private void ShowKeyboard_Click(object sender, RoutedEventArgs e)
-        {
-            if (m_keyBoardControl == null) AddKeyBoard();
-            //if (!ControlHelpers.IsControlLoaded<Viewbox>(ParentWindow, KeyboardViewName))
-            //{
-            //    AddKeyBoard();
-            //}
-        }
-
-        private void HideKeyboard_Click(object sender, RoutedEventArgs e)
-        {
-            Viewbox vb =  ControlHelpers.GetControl<Viewbox>(ParentWindow, KeyboardViewName);
-            if (vb != null) ParentWindow.Children.Remove(vb);
-            m_keyBoardControl = null;
-        }
-
-        private void AddKeyBoard()
-        {
-            //Add the control in a viewbox to support scaling
-            var viewbox = new Viewbox();
-            m_keyBoardControl = new KeyBoardControl(8);
-            viewbox.Child = m_keyBoardControl;
-            viewbox.Name = KeyboardViewName;
-            viewbox.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-            ParentWindow.Children.Add(viewbox);
-            //If the input is initialised, hook up the keyboard to the midi events
-            if (m_InputInitialised)
-            {
-                m_Session.MessageReceived += m_keyBoardControl.HandleMessage;
-            }
-        }
-
-        private void StopPlayBack_Click(object sender, RoutedEventArgs e)
-        {
-            m_Session.Sequencer.Stop();
-
-        }
 
         private void LoadFile(string fileName)
         {
             Sequence seq = new Sequence(fileName);
             m_Session.Sequencer.Sequence = seq;
         }
+
     }
 }

@@ -10,7 +10,7 @@ namespace MrKeys
 {
     class SanfordUtils
     {
-        public static PianoKeyStrokeEventArgs BuildKeyStrokeEventArgs(ChannelMessage channelMessage)
+        public static PianoKeyStrokeEventArgs ConvertChannelMessageToKeyStrokeEventArgs(ChannelMessage channelMessage)
         {
             var pksea = new PianoKeyStrokeEventArgs();
 
@@ -33,6 +33,28 @@ namespace MrKeys
             if (pksea.KeyVelocity == 0) pksea.keyStrokeType = KeyStrokeType.KeyRelease; 
 
             return pksea;
+        }
+
+        public static ChannelMessage ConvertKeyStrokeEventArgsToChannelMessage(PianoKeyStrokeEventArgs keyStrokeEventArgs)
+        {
+            var channelCommand = new ChannelCommand();
+            int data1 = keyStrokeEventArgs.midiKeyId;
+            int data2 = keyStrokeEventArgs.KeyVelocity; 
+
+            //If the key stroke is neither a press or a release, return a null object
+            switch (keyStrokeEventArgs.keyStrokeType)
+            {
+                case KeyStrokeType.KeyPress:
+                    channelCommand = ChannelCommand.NoteOn;
+                    break;
+                case KeyStrokeType.KeyRelease:
+                    channelCommand = ChannelCommand.NoteOn;
+                    data2 = 0;
+                    break;
+                default: return null;
+            }
+
+            return new ChannelMessage(channelCommand, 1, data1, data2);
         }
     }
 }

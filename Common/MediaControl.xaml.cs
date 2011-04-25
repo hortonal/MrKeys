@@ -21,21 +21,29 @@ namespace Common
     /// </summary>
     public partial class MediaControl : UserControl
     {
-
+        public PlayButton PlayButton { get; set; }
+        public StopButton StopButton { get; set; }
+        public RecordButton RecordButton { get; set; }
+        public PauseButton PauseButton { get; set; }
+        
         private SynchronizationContext uiCtx;
 
         public MediaControl()
         {
             InitializeComponent();
-
+            
+            var marginThickness = new Thickness(4.0);
+            PlayButton = new PlayButton() { Width = 30, Height = 30, Margin = marginThickness };
+            StopButton = new StopButton() { Width = 30, Height = 30, Margin = marginThickness };
+            PauseButton = new PauseButton() { Width = 30, Height = 30, Margin = marginThickness };
+            RecordButton = new RecordButton() { Width = 30, Height = 30, Margin = marginThickness };
+            
             uiCtx = SynchronizationContext.Current;
 
-            var marginThickness = new Thickness(4.0);
-
-            MediaControlContainer.Children.Add(new PlayButton() { Width = 30, Height = 30, Margin = marginThickness });
-            MediaControlContainer.Children.Add(new StopButton() { Width = 30, Height = 30, Margin = marginThickness });
-            MediaControlContainer.Children.Add(new RecordButton() { Width = 30, Height = 30, Margin = marginThickness });
-            MediaControlContainer.Children.Add(new PauseButton() { Width = 30, Height = 30, Margin = marginThickness });
+            MediaControlContainer.Children.Add(PlayButton);
+            MediaControlContainer.Children.Add(StopButton);
+            MediaControlContainer.Children.Add(RecordButton);
+            MediaControlContainer.Children.Add(PauseButton);
         }
     }
 }

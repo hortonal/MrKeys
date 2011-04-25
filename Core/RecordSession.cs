@@ -74,6 +74,10 @@ namespace MrKeys
       set;
     }
 
+      /// <summary>
+      /// True if playback is paused
+      /// </summary>
+    public bool IsPaused { get; set; }
 #endregion // Properties
 
 
@@ -168,6 +172,7 @@ namespace MrKeys
         inDevice.StopRecording();
         this.Clock.Stop();
         IsRecording = false;
+        IsPaused = false;
       }
       catch (Exception ex)
       {
@@ -194,6 +199,9 @@ namespace MrKeys
       // Load the sequence into
       // the sequencer
       Sequencer.Sequence = seq;
+
+      //Always start playback out of Paused mode;
+      IsPaused = false;
 
       // Start playing
       Sequencer.Start();
@@ -224,7 +232,7 @@ namespace MrKeys
 
         // Update number of messages received and raise event
         this.NumMsgsReceived++;
-        if (MessageReceived != null) MessageReceived(this, SanfordUtils.BuildKeyStrokeEventArgs(msg));
+        if (MessageReceived != null) MessageReceived(this, SanfordUtils.ConvertChannelMessageToKeyStrokeEventArgs(msg));
       
       }, null);
 
