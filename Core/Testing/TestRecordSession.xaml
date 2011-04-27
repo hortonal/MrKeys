@@ -4,6 +4,7 @@
         xmlns:cm="clr-namespace:Common;assembly=Common"
         xmlns:cms="clr-namespace:Common.MediaControls;assembly=Common"
         xmlns:kb="clr-namespace:KeyBoardControlLibrary;assembly=KeyBoardControl"
+        xmlns:psam="clr-namespace:PSAMWPFControlLibrary;assembly=PSAMWPFControlLibrary"
         Title="Test Record Sesssion" Height="417" Width="1056">
     <DockPanel Margin="10,10,10,10" Name="ParentWindow" VerticalAlignment="Top" LastChildFill="True">
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
@@ -16,24 +17,16 @@
             <cms:PauseButton Height="30" Width="30" Margin="0,0,5,0" Name="PauseButton" Click="PauseButton_Click"/>
             <cms:RecordButton Height="30" Width="30" Margin="0,0,0,0" Name="RecordButton" Click="RecordButton_Click"/>
         </DockPanel>
-        <!--
-        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-            <Button Content="Start Recording" HorizontalAlignment="Left" Margin="10,10,10,10" Name="button2" Width="126" Click="button2_Click" />
-            <Button Content="Stop Recording" HorizontalAlignment="Left" Margin="10,10,10,10" Width="126" Click="button3_Click" />
-            <Button Content="Playback" HorizontalAlignment="Left" Margin="10,10,10,10" Name="button4" Width="126" Click="button4_Click" />
-            <Button Content="Stop Playback" HorizontalAlignment="Left" Margin="10,10,10,10" Name="StopPlayBack" Width="126" Click="StopPlayBack_Click" />
-        </DockPanel>
-        -->
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
             <Label Content="Msgs Received:" HorizontalAlignment="Left" Margin="10,10,10,10" Name="label1" Width="92" />
             <Label Content="0" HorizontalAlignment="Left" Margin="10,10,10,10" Name="lblMsgsReceived" Width="70"/>
         </DockPanel>
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
             <Button DockPanel.Dock="Left" Content="Test Midi Events" Margin="10,10,10,10" Name="TestMidiEventsButton" Width="126" Click="TestMidiEventsButton_Click" />
-            <!--<Button DockPanel.Dock="Left" Content="Show Keyboard" Margin="10,10,10,10" Name="ShowKeyboard" Width="126" Click="ShowKeyboard_Click" />
-            <Button DockPanel.Dock="Left" Content="Hide Keyboard" Margin="10,10,10,10" Name="HideKeyboard" Width="126" Click="HideKeyboard_Click" />-->
         </DockPanel>
-        
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
+            <psam:IncipitViewerWPF Name="StaveControl"></psam:IncipitViewerWPF>
+        </DockPanel>
         <Viewbox Margin="10">
             <kb:KeyBoardControl Name="Keyboard"/>
         </Viewbox>

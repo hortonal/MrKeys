@@ -14,6 +14,7 @@ using System.Threading;
 using Sanford.Multimedia.Midi;
 using KeyBoardControlLibrary;
 using Common;
+using PSAMWPFControlLibrary;
 
 namespace MrKeys.Testing
 {
@@ -34,14 +35,13 @@ namespace MrKeys.Testing
             InitializeComponent();
             m_context = SynchronizationContext.Current;
             InitialiseRecordSession();
+            InitialiseStaveView();
         }
 
-
-        #region Button Clicks
-        private void InitialiseButton_Click(object sender, RoutedEventArgs e)
+        #region Init
+        private void InitialiseStaveView()
         {
-
-            InitialiseRecordSession();
+            StaveControl.LoadFromXmlFile(@"../../../ThirdParty/PSAMControlLibrary/example.xml");
         }
 
         private void InitialiseRecordSession()
@@ -74,6 +74,14 @@ namespace MrKeys.Testing
             {
                 MessageBox.Show("Initialisation Failed.  Err Msg: " + ex.Message);
             }
+        }
+        #endregion Init
+
+        #region Button Clicks
+        private void InitialiseButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            InitialiseRecordSession();
         }
 
         private void TestMidiEventsButton_Click(object sender, RoutedEventArgs e)

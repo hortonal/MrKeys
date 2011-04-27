@@ -22,7 +22,7 @@ namespace KeyBoardControlLibrary
         public KeyTypes KeyType { get; set; }
         public int KeyMidiId { get; private set; }
         private double centreXPosition;
-        private bool IsKeyPressed;
+        private bool IsKeyPressed = false;
 
         public event PianoKeyStrokeEvent KeyPressEvent;
 

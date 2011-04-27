@@ -18,8 +18,8 @@ namespace Common
             public BaseMediaButton()
             {
                 ShapeContainerGrid = new Grid();
-
-
+                this.Background = new LinearGradientBrush(Colors.LightBlue, Colors.White, 45.0);
+                                
                 //Attempt to make buttons prettier - FAIL....
                 //var controlBorderTemplate = new ControlTemplate();
                 //var borderFE = new FrameworkElementFactory(typeof(Border));
