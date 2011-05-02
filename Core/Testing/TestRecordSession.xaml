@@ -1,7 +1,7 @@
-﻿<Window x:Class="MrKeys.Testing.Window2"
+﻿<Window x:Class="MrKeys.Testing.MainTest"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:cm="clr-namespace:Common;assembly=Common"
+        xmlns:cm="clr-namespace:Common.Media;assembly=Common"
         xmlns:cms="clr-namespace:Common.MediaControls;assembly=Common"
         xmlns:kb="clr-namespace:KeyBoardControlLibrary;assembly=KeyBoardControl"
         xmlns:psam="clr-namespace:PSAMWPFControlLibrary;assembly=PSAMWPFControlLibrary"
@@ -17,6 +17,10 @@
             <cms:PauseButton Height="30" Width="30" Margin="0,0,5,0" Name="PauseButton" Click="PauseButton_Click"/>
             <cms:RecordButton Height="30" Width="30" Margin="0,0,0,0" Name="RecordButton" Click="RecordButton_Click"/>
         </DockPanel>
+        <DockPanel>
+            <cm:MediaControl/>
+        </DockPanel>
+        
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
             <Label Content="Msgs Received:" HorizontalAlignment="Left" Margin="10,10,10,10" Name="label1" Width="92" />
             <Label Content="0" HorizontalAlignment="Left" Margin="10,10,10,10" Name="lblMsgsReceived" Width="70"/>

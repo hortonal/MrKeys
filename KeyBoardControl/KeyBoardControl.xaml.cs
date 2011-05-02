@@ -20,7 +20,7 @@ namespace KeyBoardControlLibrary
     /// </summary>
     public partial class KeyBoardControl : UserControl
     {
-        public event PianoKeyStrokeEvent KeyPressEvent;
+        public event PianoKeyStrokeEvent KeyPressEvent = (s, e) => { };
 
         private int m_numberOfOctaves = 7;
         private Dictionary<int, PianoKey> m_KeyDicionary;

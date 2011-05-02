@@ -25,7 +25,7 @@ namespace MrKeys
     public event PianoKeyStrokeEvent MessageReceived;
 
     
-#region Properties
+    #region Properties
     
     /// <summary>
     /// Sequencer property responsible for playing midi information
@@ -78,10 +78,10 @@ namespace MrKeys
       /// True if playback is paused
       /// </summary>
     public bool IsPaused { get; set; }
-#endregion // Properties
+    #endregion // Properties
 
 
-#region Public
+    #region Public
 
     /// <summary>
     /// Init method
@@ -206,12 +206,10 @@ namespace MrKeys
       // Start playing
       Sequencer.Start();
     }
-      
-
-#endregion 
+    #endregion 
 
 
- #region Private
+    #region Private
 
     /// <summary>
      /// Handles the Midi message received
@@ -238,7 +236,7 @@ namespace MrKeys
 
     } // End Proc
 
-#endregion
+    #endregion
 
 
 

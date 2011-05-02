@@ -21,7 +21,7 @@ namespace MrKeys.Testing
     /// <summary>
     /// Interaction logic for Window2.xaml
     /// </summary>
-    public partial class Window2 : Window
+    public partial class MainTest : Window
     {   
         // Module vars
         private RecordSession m_Session;
@@ -30,7 +30,7 @@ namespace MrKeys.Testing
 
         private SynchronizationContext m_context;
 
-        public Window2()
+        public MainTest()
         {
             InitializeComponent();
             m_context = SynchronizationContext.Current;

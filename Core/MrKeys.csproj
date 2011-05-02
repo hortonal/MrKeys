@@ -54,6 +54,10 @@
     <ApplicationIcon>1205_1820_48_piano_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\Microsoft\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
     <Reference Include="Sanford.Collections">
       <HintPath>Resources\Sanford.Collections.dll</HintPath>
     </Reference>
@@ -89,6 +93,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Exceptions.cs" />
+    <Compile Include="MediaService.cs" />
     <Compile Include="RecordSession.cs" />
     <Compile Include="SanfordUtils.cs" />
     <Compile Include="Testing\Window1.xaml.cs">
