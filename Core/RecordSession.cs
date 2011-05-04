@@ -7,13 +7,15 @@ using Sanford.Multimedia.Midi;
 using System.Diagnostics;
 using KeyBoardControlLibrary;
 using Common.Events;
+using Common.Media;
+using Common.Devices;
 
 namespace MrKeys
 {
   /// <summary>
   /// Records input from Midi keyboard
   /// </summary>
-  class RecordSession
+  class RecordSession : IMediaService, IDeviceStatusService
   {
 
     // Module Level Vars
@@ -24,9 +26,16 @@ namespace MrKeys
     public delegate void MessageReceivedHandler();
     public event PianoKeyStrokeEvent MessageReceived;
 
-    
+    #region ctor
+    public RecordSession()
+    {
+        //TODO: This should be removed later...
+        CanPlay = true;
+    }
+    #endregion
+
     #region Properties
-    
+
     /// <summary>
     /// Sequencer property responsible for playing midi information
     /// </summary>
@@ -88,7 +97,6 @@ namespace MrKeys
     /// </summary>
     public void Init()
     {
-
       // Init
       InputDevice inDevice;
       m_context = SynchronizationContext.Current;
@@ -111,6 +119,9 @@ namespace MrKeys
           inDevice = new InputDevice(0);
           inDevice.ChannelMessageReceived += HandleChannelMessageReceived;
           m_InDevice = inDevice;
+          CanPlay = true;
+          CanRecord = true;
+          IsInitialised = true;
         }
         catch (Exception ex)
         {
@@ -137,23 +148,6 @@ namespace MrKeys
     public void StartRecording()
     {
       
-      // Init
-      InputDevice inDevice = m_InDevice;
-      
-      // Clear current sequence if any
-      this.Clear();
-
-      // Start recording
-      try
-      {
-        inDevice.StartRecording();
-        this.Clock.Start();
-        IsRecording = true;
-      }
-      catch (Exception ex)
-      {
-        Exceptions.ErrHandler(ex);
-      }
     }
 
 
@@ -163,21 +157,7 @@ namespace MrKeys
     public void StopRecording()
     {
 
-      // Init
-      InputDevice inDevice = m_InDevice;
 
-      // Stop recording
-      try
-      {
-        inDevice.StopRecording();
-        this.Clock.Stop();
-        IsRecording = false;
-        IsPaused = false;
-      }
-      catch (Exception ex)
-      {
-        Exceptions.ErrHandler(ex);
-      }
     }
 
     /// <summary>
@@ -199,9 +179,6 @@ namespace MrKeys
       // Load the sequence into
       // the sequencer
       Sequencer.Sequence = seq;
-
-      //Always start playback out of Paused mode;
-      IsPaused = false;
 
       // Start playing
       Sequencer.Start();
@@ -238,7 +215,103 @@ namespace MrKeys
 
     #endregion
 
+    #region MediaServiceImplementation
+    public bool CanPlay { get; set; }
+
+    public bool CanStop { get; set; }
+
+    public bool CanPause { get; set; }
+
+    public bool CanRecord { get; set; }
+
+    public void Play()
+    {
+        
+        // Build a track object from
+        // the current session
+        m_Session.Build();
+        Track trk = m_Session.Result;
+
+        // Create a new sequence
+        // from the current track
+        Sequence seq = new Sequence();
+        seq.Add(trk);
+
+        // Load the sequence into
+        // the sequencer
+        Sequencer.Sequence = seq;
+
+        // Start playing
+        Sequencer.Start();
+
+        CanPlay = false;
+        CanPause = true;
+    }
+
+    public void Stop()
+    {
+        if (IsRecording)
+        {
+            // Stop recording
+            try
+            {
+                m_InDevice.StopRecording();
+                this.Clock.Stop();
+                IsRecording = false;
+            }
+            catch (Exception ex)
+            {
+                Exceptions.ErrHandler(ex);
+            }
+        }
 
 
+        
+        CanPlay = true;
+        
+    }
+
+    public void Pause()
+    {
+        if (IsPaused)
+        {
+            Sequencer.Continue();
+            IsPaused = false;
+        }
+        else
+        {
+            Sequencer.Stop();
+            IsPaused = true;
+        }
+    }
+
+    public void Record()
+    {
+
+        // Clear current sequence if any
+        this.Clear();
+
+        // Start recording
+        try
+        {
+            m_InDevice.StartRecording();
+            this.Clock.Start();
+            IsRecording = true;
+        }
+        catch (Exception ex)
+        {
+            Exceptions.ErrHandler(ex);
+        }
+
+    }
+    #endregion 
+
+    #region DeviceStatusService implementation
+
+    public bool IsInitialised { get; private set; }
+
+    public string Name { get { return "I shouldn't be hardcoded!"; } }
+
+    #endregion 
   } // End Class
 } // End Namespace

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlHelpers.cs" />
+    <Compile Include="Devices\IDeviceStatusService.cs" />
     <Compile Include="Infrastructure\ObservableObject.cs" />
     <Compile Include="Infrastructure\PropertySupport.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />

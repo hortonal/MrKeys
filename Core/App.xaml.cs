@@ -21,17 +21,14 @@ namespace WpfApplication1
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-
-            // Ensure the current culture passed into bindings 
-            // is the OS culture. By default, WPF uses en-US 
-            // as the culture, regardless of the system settings.
-
             var container = IOC.Container;
 
             //Register some basic services to be used by child views later...
             container.RegisterType<IDialogService, ModalDialogService>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IMediaService, MediaService>(new ContainerControlledLifetimeManager());
-            
+            container.RegisterType<IMediaService, RecordSession>(new ContainerControlledLifetimeManager());
+
+            var window = container.Resolve<MainWindow>();
+            window.DataContext = container.Resolve<MainWindowViewModel>();
         }
     }
 }

@@ -218,6 +218,5 @@ namespace MrKeys.Testing
             Sequence seq = new Sequence(fileName);
             m_Session.Sequencer.Sequence = seq;
         }
-
     }
 }

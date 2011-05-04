@@ -10,7 +10,15 @@ namespace MrKeys
 {
     public class MediaService : IMediaService
     {
-        
+
+        public MediaService()
+        {
+            CanPause = true;
+            CanPlay = true;
+            CanStop = true;
+            CanRecord = true;
+        }
+
         public void Play()
         {
             MessageBox.Show("I'm playing");

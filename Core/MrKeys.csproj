@@ -93,6 +93,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Exceptions.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindowViewModel.cs">
+	<DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>    
     <Compile Include="MediaService.cs" />
     <Compile Include="RecordSession.cs" />
     <Compile Include="SanfordUtils.cs" />
@@ -109,6 +115,10 @@
     <Compile Include="MidiPlayer.cs" />
     <Compile Include="NoteItem.cs" />
     <Compile Include="NoteGroup.cs" />
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Testing\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
