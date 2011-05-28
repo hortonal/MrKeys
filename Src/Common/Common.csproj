@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4FD22659-3465-47D6-86B1-F8B52E0CD688}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\Microsoft\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ControlHelpers.cs" />
+    <Compile Include="Devices\DeviceStatusControl.xaml.cs">
+      <DependentUpon>DeviceStatusControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\DeviceStatusControlViewModel.cs">
+      <DependentUpon>DeviceStatusControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\DeviceType.cs" />
+    <Compile Include="Devices\DeviceTypeStringConverter.cs" />
+    <Compile Include="Devices\IOutputDeviceStatusService.cs" />
+    <Compile Include="Devices\IDeviceStatusService.cs" />
+    <Compile Include="Devices\IInputDeviceStatusService.cs" />
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Infrastructure\ObservableObject.cs" />
+    <Compile Include="Infrastructure\PropertySupport.cs" />
+    <Compile Include="Infrastructure\RelayCommand.cs" />
+    <Compile Include="IOC.cs" />
+    <Compile Include="Media\IMediaService.cs" />
+    <Compile Include="Media\MediaControl.xaml.cs">
+      <DependentUpon>MediaControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Media\MediaControlButtons.cs" />
+    <Compile Include="Media\MediaControlViewModel.cs">
+      <DependentUpon>MediaControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\StatusRedGreenConverter.cs" />
+    <Compile Include="PianoKeyStrokeEvent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DialogEnums.cs" />
+    <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\ModalDialogService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Devices\DeviceStatusControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Media\MediaControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
