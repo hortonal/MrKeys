@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Common.Properties {
+namespace MrKeys.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

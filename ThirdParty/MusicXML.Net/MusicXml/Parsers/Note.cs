@@ -12,9 +12,42 @@ namespace MusicXml
 			theDocument = aDocument;
 		}
 
+        public enum NoteTypes { Backup, Forward, Note, Rest}
+
+        public NoteTypes NoteType
+        {
+            get
+            {
+                if (IsRest) return NoteTypes.Rest;
+                if (IsBackup) return NoteTypes.Backup;
+                if (IsForward) return NoteTypes.Forward;
+                return NoteTypes.Note;
+            }
+        }
+
+        public bool IsDrawableEntity
+        {
+            get { return (theDocument.Name ?? "") == "note"; }
+        }
+
+        public bool IsChord
+        {
+            get { return (theDocument["chord"].AsText != null); }
+        }
+
         public bool IsBackup
         {
             get { return (theDocument.Name ?? "") == "backup"; }
+        }
+
+        public bool IsForward
+        {
+            get { return (theDocument.Name ?? "") == "forward"; }
+        }
+
+        public bool IsRest //Rest Notes are distinguished by the fact the rest element exists
+        {
+            get { return (theDocument["rest"].AsText != null); }
         }
 
 		public string Type

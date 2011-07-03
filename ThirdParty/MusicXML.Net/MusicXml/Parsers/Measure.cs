@@ -23,7 +23,7 @@ namespace MusicXml
 			get
 			{
 				List<Note> notes = new List<Note>();
-				foreach (XDoc node in theDocument["note|backup"])
+				foreach (XDoc node in theDocument["note|backup|forward"])
 				{
                     notes.Add(new Note(node));
 

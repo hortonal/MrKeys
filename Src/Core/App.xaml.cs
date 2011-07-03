@@ -7,6 +7,8 @@ using Common.Outputs;
 using Common.Services;
 using KeyBoardControlLibrary;
 using Microsoft.Practices.Unity;
+using System;
+using ScoreControlLibrary;
 
 namespace MrKeys
 {
@@ -41,9 +43,12 @@ namespace MrKeys
             MidiInput midiInput = _container.Resolve<MidiInput>();
             MidiOutput midiOutput = _container.Resolve<MidiOutput>();
 
-            //Try and initialise the midi input
-            midiInput.Initialise();
-            midiOutput.Initialise();
+            //Try and initialise the midi input/output
+            try { midiInput.Initialise(); }
+            catch (Exception ex) { MessageBox.Show("Failed to initialise Input: " + ex.Message); }
+
+            try { midiOutput.Initialise(); }
+            catch (Exception ex) { MessageBox.Show("Failed to initialise Output: " + ex.Message); }
 
             _container.RegisterInstance<IMidiInput>(midiInput);
             _container.RegisterInstance<IOutput>(midiOutput);
@@ -52,12 +57,14 @@ namespace MrKeys
             RecordSession recordSession = _container.Resolve<RecordSession>();
 
             _container.RegisterType<IDialogService, ModalDialogService>(new ContainerControlledLifetimeManager());
-
             _container.RegisterType<MediaControlViewModel, MediaControlViewModel>();
-
             _container.RegisterInstance<IMediaService>(recordSession);
             _container.RegisterInstance<IInputDeviceStatusService>(midiInput);
             _container.RegisterInstance<IOutputDeviceStatusService>(midiOutput);
+
+            //_container.RegisterType<ITestControlService, BasicTestControl>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ITestControlService, BasicTestControl>(new ContainerControlledLifetimeManager());
+            
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -65,8 +72,10 @@ namespace MrKeys
             base.OnExit(e);
 
             //Have to close down the IO devices otherwise we leave threads open...
-            _container.Resolve<IMidiInput>().Close();
-            _container.Resolve<IOutput>().Close();
+            try { _container.Resolve<IMidiInput>().Close(); }
+            catch { }
+            try { _container.Resolve<IOutput>().Close(); }
+            catch { }
         }
     }
 }

@@ -10,10 +10,12 @@ namespace MusicXml
 		{
 			theDocument = aDocument;
 		}
-		public int Divisions
-		{
-			get { return theDocument["divisions"].AsInt ?? 0; }
-		}
+
+        public int Divisions
+        {
+            get { return theDocument["divisions"].AsInt ?? -1; }
+        }
+
 		public Key Key
 		{
 			get
@@ -30,13 +32,14 @@ namespace MusicXml
 				return time.IsEmpty ? null : new Time(time);
 			}
 		}
-		public Clef Clef
+		public Clef Clef(int staffNumber)
 		{
-			get
-			{
-				XDoc clef = theDocument["clef"];
-				return clef.IsEmpty ? null : new Clef(clef);
-			}
+            XDoc clef;
+            clef = theDocument[string.Format("clef[@number={0}]", staffNumber)];
+
+			return clef.IsEmpty ? null : new Clef(clef);
+			
 		}
+        public int Staves { get { return theDocument["staves"].AsInt ?? 1; } }
 	}
 }

@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Practices.Unity;
+using MusicXml;
 
 namespace ScoreControlLibrary.Views
 {
@@ -19,6 +21,11 @@ namespace ScoreControlLibrary.Views
     /// </summary>
     public partial class ScoreControl : UserControl
     {
+        public ScoreControl(IUnityContainer container, XScore musicScore): this()
+        {
+            new ScoreRenderer(musicScore, ScoreGrid).Render();
+        }
+
         public ScoreControl()
         {
             InitializeComponent();

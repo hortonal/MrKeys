@@ -8,13 +8,15 @@
     <ProjectGuid>{0A19EB61-6915-4380-AB0A-2E041FD90235}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common</RootNamespace>
+    <RootNamespace>MrKeys</RootNamespace>
     <AssemblyName>MrKeys</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +29,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -36,7 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,7 +46,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -125,6 +126,7 @@
     <Compile Include="PlayGround\MidiPlayer.cs" />
     <Compile Include="PlayGround\NoteItem.cs" />
     <Compile Include="PlayGround\NoteGroup.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="TestSelector.xaml.cs">
       <DependentUpon>TestSelector.xaml</DependentUpon>
     </Compile>
@@ -155,6 +157,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -191,6 +194,10 @@
     <ProjectReference Include="..\KeyBoardControl\KeyBoardControlLibrary.csproj">
       <Project>{77839D7E-243F-4733-A62A-65AF0D237528}</Project>
       <Name>KeyBoardControlLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScoreControlLibrary\ScoreControlLibrary.csproj">
+      <Project>{C5517C73-37F5-44D7-90A6-B9F259AB4508}</Project>
+      <Name>ScoreControlLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

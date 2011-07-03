@@ -21,7 +21,6 @@ namespace KeyBoardControlLibrary
     /// </summary>
     public partial class KeyBoardControl : UserControl
     {
-
         public KeyBoardControl(IVirtualKeyBoard keyBoard): this()
         {
             keyBoard.DrawKeys(KeyBoardCanvas);

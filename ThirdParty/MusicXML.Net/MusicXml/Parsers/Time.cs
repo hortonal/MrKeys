@@ -20,9 +20,9 @@ namespace MusicXml
 		{
 			get { return theDocument["beats"].AsInt ?? 0; }
 		}
-		public string Mode
+		public int Mode
 		{
-			get { return theDocument["beat-type"].AsText ?? String.Empty; }
+			get { return theDocument["beat-type"].AsInt ?? 0; }
 		}
 		public TimeSymbol Symbol
 		{

@@ -15,9 +15,9 @@ namespace MusicXml
 		{
 			get { return theDocument["line"].AsInt ?? 0; }
 		}
-		public string Sign
+		public char Sign
 		{
-			get { return theDocument["sign"].AsText ?? String.Empty; }
+			get { return theDocument["sign"].AsText[0]; }
 		}
 	}
 }

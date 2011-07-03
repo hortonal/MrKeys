@@ -30,7 +30,7 @@
 
         <Border Style="{StaticResource DefaultBorderStyle}" DockPanel.Dock="Top">
             <Viewbox>
-                <UserControl Content="{Binding Path=KeyBoardControlView}" Margin="5" d:DataContext="{d:DesignInstance kb:KeyBoardControl}"/>
+                <UserControl Content="{Binding Path=KeyBoardControlView}" Margin="5"/>
             </Viewbox>
         </Border>
 
@@ -41,12 +41,10 @@
             <TextBlock DockPanel.Dock="Right" Text="Not figured this out yet..." Height="30" Margin="10" HorizontalAlignment="Left"/>
         </DockPanel>
 
-        
-
         <Border DockPanel.Dock="Bottom" Style="{StaticResource DefaultBorderStyle}">
-            <Viewbox>
-                <TextBlock Text="Put Tests Here"/>
-            </Viewbox>
+            
+                <UserControl Content="{Binding Path=CurrentTestView}" Margin="5"/>
+            
         </Border>
     </DockPanel>
 </Window>
