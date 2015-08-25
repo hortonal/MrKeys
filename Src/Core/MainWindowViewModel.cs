@@ -28,7 +28,8 @@ namespace MrKeys
         
         public MainWindowViewModel(IUnityContainer container,  IMediaService mediaService, 
             IDialogService dialogService, IOutput outputDevice, IMidiInput inputDevice,
-            IVirtualKeyBoard keyBoard, ITestControlService currentTest)
+            IVirtualKeyBoard keyBoard)
+            //, ITestControlService currentTest)
         {
             _container =container;
             _dialoagService = dialogService;
@@ -36,7 +37,7 @@ namespace MrKeys
             _output = outputDevice;
             _input = inputDevice;
             _keyBoard = keyBoard;
-            _currentTest = currentTest.Control;
+            //_currentTest = currentTest.Control;
 
             ResolveViews();
 
