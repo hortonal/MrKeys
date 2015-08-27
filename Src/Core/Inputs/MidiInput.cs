@@ -45,7 +45,7 @@ namespace Common.Inputs
             // Set up the midi device
             if (InputDevice.DeviceCount == 0)
             {
-                throw new Exception("No midi devices detected");
+                //throw new Exception("No midi devices detected");
             }
             else
             {
