@@ -1,8 +1,8 @@
 ﻿using System;
 using Common.Devices;
-namespace Common.Inputs
+namespace Common.IO
 {
-    interface IMidiInput : IInputDeviceStatusService
+    public interface IMidiInput : IInputDeviceStatusService
     {
         void Initialise();
         event Common.Events.PianoKeyStrokeEvent MessageReceived;

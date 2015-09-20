@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Common.Infrastructure;
-using Common.Media;
+using Common.IO;
 using Common.Devices;
 using Sanford.Multimedia.Midi;
 using Common.Events;
 using System.Threading;
 
-namespace Common.Inputs
+namespace Common.IO
 {
     public class MidiInput : ObservableObject, IMidiInput, IDisposable
     {
@@ -17,14 +17,13 @@ namespace Common.Inputs
         InputDevice _inputDevice;
         //Avoid having to handle non-subsribed events
         public event PianoKeyStrokeEvent MessageReceived = (o, e) => { };
+        private IInputEvents _inputEvents;
 
-        public MidiInput()
-        {
-        }
-
+        public MidiInput() { }
+        
         public void Close()
         {
-            _inputDevice.Close();
+            if(IsInitialised) _inputDevice.Close();
         }
 
         public void StartRecording()
@@ -55,6 +54,8 @@ namespace Common.Inputs
                     _inputDevice = new InputDevice(0);
                     _inputDevice.ChannelMessageReceived += HandleInputMessageReceived;
                     IsInitialised = true;
+                    //Remove me when you have the recorder setup
+                    this.StartRecording();
                 }
                 catch (Exception ex)
                 {

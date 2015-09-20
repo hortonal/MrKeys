@@ -11,5 +11,6 @@ namespace Common.Services
         UserControl Control {get;}
         void StartTest();
         void MarkTest();
+        string Name { get; }
     }
 }

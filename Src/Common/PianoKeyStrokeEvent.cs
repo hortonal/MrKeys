@@ -12,17 +12,17 @@ namespace Common
         public class PianoKeyStrokeEventArgs : EventArgs
         {
             public int midiKeyId { get; set; }
-            public KeyStrokeType keyStrokeType { get; set; }
+            public KeyStrokeType KeyStrokeType { get; set; }
             public int KeyVelocity { get; set; }
 
             public PianoKeyStrokeEventArgs()
             {
             }
 
-            public PianoKeyStrokeEventArgs(int mideKeyId, KeyStrokeType keyStrokeType, int keyVelocity)
+            public PianoKeyStrokeEventArgs(int midiKeyId, KeyStrokeType keyStrokeType, int keyVelocity)
             {
                 this.midiKeyId = midiKeyId;
-                this.keyStrokeType = keyStrokeType;
+                this.KeyStrokeType = keyStrokeType;
                 this.KeyVelocity = keyVelocity;
             }
         }

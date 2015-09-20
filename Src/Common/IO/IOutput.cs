@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Common.Devices;
 
-namespace Common.Outputs
+namespace Common.IO
 {
     public interface IOutput: IOutputDeviceStatusService
     {

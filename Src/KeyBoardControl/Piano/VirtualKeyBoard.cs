@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Common.Events;
+using Common.IO;
 using System.Windows.Controls;
 using System.Windows;
 
@@ -11,11 +12,12 @@ namespace KeyBoardControlLibrary
     public class VirtualKeyBoard: IVirtualKeyBoard
     {
         private KeyDictionary _keyDictionary;
-
+        private IInputEvents _inputEvents;
         public event PianoKeyStrokeEvent KeyPressEvent = (o, a) => { };
 
-        public VirtualKeyBoard()
+        public VirtualKeyBoard(IInputEvents inputEvents)
         {
+            _inputEvents = inputEvents;
             Initialise();
         }
 
@@ -28,6 +30,9 @@ namespace KeyBoardControlLibrary
                 //Wrap up each key event in our single VirtualKeyboard key press event.
                 virtualKey.KeyPressEvent += (o, a) => KeyPressEvent(o, a);
             }
+
+            //Allow the global input collection to access the virtual keyboard as an input
+            KeyPressEvent += (o, e) => _inputEvents.HandleInputEvent(o, e);
         }
 
         public void DrawKeys(Panel parentControl)
@@ -44,7 +49,7 @@ namespace KeyBoardControlLibrary
 
             if (_keyDictionary.Keys.ContainsKey(e.midiKeyId))
             {
-                switch (e.keyStrokeType)
+                switch (e.KeyStrokeType)
                 {
                     case KeyStrokeType.KeyPress:
                         _keyDictionary.Keys[e.midiKeyId].SetKeyPressedColour(e.KeyVelocity);

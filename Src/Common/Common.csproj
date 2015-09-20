@@ -48,6 +48,26 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Sanford.Collections, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Sanford\Sanford.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Multimedia, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Sanford\Sanford.Multimedia.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Multimedia.Midi, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Sanford\Sanford.Multimedia.Midi.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Multimedia.Timers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Sanford\Sanford.Multimedia.Timers.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Threading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Sanford\Sanford.Threading.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
@@ -76,6 +96,12 @@
     <Compile Include="Infrastructure\PropertySupport.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="IOC.cs" />
+    <Compile Include="IO\IMidiInput.cs" />
+    <Compile Include="IO\InputEvents.cs" />
+    <Compile Include="IO\IOutput.cs" />
+    <Compile Include="IO\MidiInput.cs" />
+    <Compile Include="IO\MidiOutput.cs" />
+    <Compile Include="IO\SanfordUtils.cs" />
     <Compile Include="Media\IMediaService.cs" />
     <Compile Include="Media\MediaControl.xaml.cs">
       <DependentUpon>MediaControl.xaml</DependentUpon>
@@ -86,6 +112,11 @@
     </Compile>
     <Compile Include="Devices\StatusRedGreenConverter.cs" />
     <Compile Include="PianoKeyStrokeEvent.cs" />
+    <Compile Include="Playground\MediaService.cs" />
+    <Compile Include="Playground\MidiPlayer.cs" />
+    <Compile Include="Playground\NoteGroup.cs" />
+    <Compile Include="Playground\NoteItem.cs" />
+    <Compile Include="IO\RecordSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DialogEnums.cs" />
     <Compile Include="Services\IDialogService.cs" />

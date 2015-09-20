@@ -1,9 +1,8 @@
 ﻿using System.Windows;
 using Common;
 using Common.Devices;
-using Common.Inputs;
 using Common.Media;
-using Common.Outputs;
+using Common.IO;
 using Common.Services;
 using KeyBoardControlLibrary;
 using Microsoft.Practices.Unity;
@@ -40,16 +39,23 @@ namespace MrKeys
             //Build a virtual keyboard to handle events and such..
             _container.RegisterType<IVirtualKeyBoard, VirtualKeyBoard>(new ContainerControlledLifetimeManager());
 
+
+            InputEvents inputEvents = _container.Resolve<InputEvents>();
+
             MidiInput midiInput = _container.Resolve<MidiInput>();
             MidiOutput midiOutput = _container.Resolve<MidiOutput>();
-
+            
             //Try and initialise the midi input/output
             try { midiInput.Initialise(); }
             catch (Exception ex) { MessageBox.Show("Failed to initialise Input: " + ex.Message); }
 
             try { midiOutput.Initialise(); }
             catch (Exception ex) { MessageBox.Show("Failed to initialise Output: " + ex.Message); }
-
+            
+            //Wire midi inpputs throught the input events
+            midiInput.MessageReceived += inputEvents.HandleInputEvent;
+            
+            _container.RegisterInstance<IInputEvents>(inputEvents);
             _container.RegisterInstance<IMidiInput>(midiInput);
             _container.RegisterInstance<IOutput>(midiOutput);
 
@@ -61,6 +67,7 @@ namespace MrKeys
             _container.RegisterInstance<IMediaService>(recordSession);
             _container.RegisterInstance<IInputDeviceStatusService>(midiInput);
             _container.RegisterInstance<IOutputDeviceStatusService>(midiOutput);
+
 
             //_container.RegisterType<ITestControlService, BasicTestControl>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ITestControlService, BasicTestControl>(new ContainerControlledLifetimeManager());

@@ -7,7 +7,7 @@
              d:DesignHeight="150" d:DesignWidth="500">
     <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
         <Grid Name="ScoreGrid" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TextBlock Text="Score Test" Grid.Column="1" Grid.Row="1" Margin="50,8" />
+            <TextBlock Text="Simple score test" Grid.Column="1" Grid.Row="1" Margin="50,8" />
         </Grid>
     </ScrollViewer>
 </UserControl>

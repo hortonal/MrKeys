@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Sanford.Multimedia.Midi;
 using Common;
 using Common.Devices;
 using Common.Events;
 using Common.Infrastructure;
 
-namespace Common.Outputs
+namespace Common.IO
 {
     public class MidiOutput : ObservableObject, IOutput, IDisposable
     {
@@ -16,7 +13,7 @@ namespace Common.Outputs
 
         public void Close()
         {
-            _outputDevice.Close();
+            if(IsInitialised) _outputDevice.Close();
         }
 
         public void Initialise()
@@ -28,13 +25,17 @@ namespace Common.Outputs
             }
             catch (Exception e)
             {
-                Exceptions.ErrHandler("Failed to initialise output device: ", e);
+
+                //Exceptions.ErrHandler("Failed to initialise output device: ", e);
             }
         }
 
         public void Send(PianoKeyStrokeEventArgs args)
         {
-            _outputDevice.Send(SanfordUtils.ConvertKeyStrokeEventArgsToChannelMessage(args));
+            if(IsInitialised)
+            {
+                _outputDevice.Send(SanfordUtils.ConvertKeyStrokeEventArgsToChannelMessage(args));
+            }
         }
 
         #region IOutput implementation

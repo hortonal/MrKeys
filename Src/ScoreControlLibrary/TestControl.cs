@@ -26,6 +26,14 @@ namespace ScoreControlLibrary
             get { return _control; }
         }
 
+        public string Name
+        {
+            get
+            {
+                return "Basic Sheet Music Test";
+            }
+        }
+
         public void StartTest()
         {
             throw new NotImplementedException();
@@ -35,5 +43,7 @@ namespace ScoreControlLibrary
         {
             throw new NotImplementedException();
         }
+
+ 
     }
 }

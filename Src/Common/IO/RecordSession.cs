@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using Sanford.Multimedia.Midi;
-using System.Diagnostics;
-using KeyBoardControlLibrary;
 using Common.Events;
 using Common.Media;
-using Common.Devices;
 using Common.Infrastructure;
-using Common.Inputs;
 
-namespace Common
+
+namespace Common.IO
 {
   /// <summary>
   /// Records input from Midi keyboard
   /// </summary>
-    class RecordSession : ObservableObject, IMediaService
+    public class RecordSession : ObservableObject, IMediaService
     {
         // Module Level Vars
         private IMidiInput _midiInput;

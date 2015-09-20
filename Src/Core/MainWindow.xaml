@@ -34,17 +34,13 @@
             </Viewbox>
         </Border>
 
-        <DockPanel DockPanel.Dock="Bottom">
-            <TextBlock DockPanel.Dock="Left" Text="Test Type:" Height="30" Margin="10" HorizontalAlignment="Right"/>
-            
-            <Button DockPanel.Dock="Right" Height="30" Margin="10" HorizontalAlignment="Left" Content="Change Test"/>
-            <TextBlock DockPanel.Dock="Right" Text="Not figured this out yet..." Height="30" Margin="10" HorizontalAlignment="Left"/>
-        </DockPanel>
+        <ComboBox DockPanel.Dock="Bottom" Margin="5" ItemsSource="{Binding AvailableTestControls}" SelectedItem="{Binding SelectedTest}"/>
 
         <Border DockPanel.Dock="Bottom" Style="{StaticResource DefaultBorderStyle}">
-            
-                <UserControl Content="{Binding Path=CurrentTestView}" Margin="5"/>
-            
+
+            <UserControl Content="{Binding Path=CurrentTestView}" Margin="5"/>
+
         </Border>
+
     </DockPanel>
 </Window>

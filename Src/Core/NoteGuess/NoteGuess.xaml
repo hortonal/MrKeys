@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="MrKeys.NoteGuess.NoteGuess"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MrKeys.NoteGuess"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <Label DockPanel.Dock="Top" Content="Simply hit the button and guess the note"/>
+        
+        <Button Content="Go" Width="50" Height="20" Margin="5" Command="{Binding GoButton}"/>
+        <DockPanel DockPanel.Dock="Bottom">
+
+            <Label DockPanel.Dock="Left" Content="Running: "/>
+            <Label DockPanel.Dock="Bottom" Content="{Binding TestRunning}"/>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Bottom">
+            <Label DockPanel.Dock="Left" Content="Result: "/>
+            <Label DockPanel.Dock="Right" Content="{Binding Result}"/>
+         
+        </DockPanel>
+
+    </StackPanel>
+</UserControl>

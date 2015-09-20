@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sanford.Multimedia.Midi;
-using KeyBoardControlLibrary;
+
 using Common.Events;
 
-namespace Common
+namespace Common.IO
 {
-    class SanfordUtils
+    public class SanfordUtils
     {
         public static PianoKeyStrokeEventArgs ConvertChannelMessageToKeyStrokeEventArgs(ChannelMessage channelMessage)
         {
@@ -18,10 +18,10 @@ namespace Common
             switch (channelMessage.Command)
             {
                 case ChannelCommand.NoteOn: 
-                    pksea.keyStrokeType = KeyStrokeType.KeyPress; 
+                    pksea.KeyStrokeType = KeyStrokeType.KeyPress; 
                     break;
                 case ChannelCommand.NoteOff: 
-                    pksea.keyStrokeType = KeyStrokeType.KeyRelease; 
+                    pksea.KeyStrokeType = KeyStrokeType.KeyRelease; 
                     break; 
                 default: return null;
             }
@@ -30,7 +30,7 @@ namespace Common
             pksea.KeyVelocity = channelMessage.Data2;
 
             //Velocity 0 is effectively a key release
-            if (pksea.KeyVelocity == 0) pksea.keyStrokeType = KeyStrokeType.KeyRelease; 
+            if (pksea.KeyVelocity == 0) pksea.KeyStrokeType = KeyStrokeType.KeyRelease; 
 
             return pksea;
         }
@@ -42,7 +42,7 @@ namespace Common
             int data2 = keyStrokeEventArgs.KeyVelocity; 
 
             //If the key stroke is neither a press or a release, return a null object
-            switch (keyStrokeEventArgs.keyStrokeType)
+            switch (keyStrokeEventArgs.KeyStrokeType)
             {
                 case KeyStrokeType.KeyPress:
                     channelCommand = ChannelCommand.NoteOn;

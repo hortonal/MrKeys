@@ -9,18 +9,25 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Practices.Unity;
 
-namespace Common
+namespace MrKeys.NoteGuess
 {
     /// <summary>
-    /// Interaction logic for TestSelector.xaml
+    /// Interaction logic for NoteGuess.xaml
     /// </summary>
-    public partial class TestSelector : Window
+    public partial class NoteGuess : UserControl
     {
-        public TestSelector()
+        private readonly IUnityContainer _container;
+
+        public NoteGuess(IUnityContainer container)
         {
+            _container = container;
+            DataContext = _container.Resolve<NoteGuessViewModel>();
             InitializeComponent();
         }
+
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Sanford.Multimedia.Midi;
 
-namespace Common
+namespace Common.Playground
 {
   
   /// <summary>

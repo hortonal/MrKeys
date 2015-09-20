@@ -6,7 +6,7 @@ using Common.Media;
 using Common.Services;
 using System.Windows;
 
-namespace Common
+namespace Common.Playground
 {
     public class MediaService : IMediaService
     {
