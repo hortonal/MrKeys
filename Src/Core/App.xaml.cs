@@ -54,7 +54,8 @@ namespace MrKeys
             
             //Wire midi inpputs throught the input events
             midiInput.MessageReceived += inputEvents.HandleInputEvent;
-            
+            inputEvents.MessageReceived += (o, e) => midiOutput.Send(o, e);
+
             _container.RegisterInstance<IInputEvents>(inputEvents);
             _container.RegisterInstance<IMidiInput>(midiInput);
             _container.RegisterInstance<IOutput>(midiOutput);

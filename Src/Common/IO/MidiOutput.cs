@@ -30,7 +30,7 @@ namespace Common.IO
             }
         }
 
-        public void Send(PianoKeyStrokeEventArgs args)
+        public void Send(object sender, PianoKeyStrokeEventArgs args)
         {
             if(IsInitialised)
             {

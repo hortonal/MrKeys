@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Common.Events;
+﻿using Common.Events;
 using Common.IO;
 using System.Windows.Controls;
-using System.Windows;
 
 namespace KeyBoardControlLibrary
 {
@@ -13,11 +8,13 @@ namespace KeyBoardControlLibrary
     {
         private KeyDictionary _keyDictionary;
         private IInputEvents _inputEvents;
+        private IMidiInput _midiInput;
         public event PianoKeyStrokeEvent KeyPressEvent = (o, a) => { };
 
-        public VirtualKeyBoard(IInputEvents inputEvents)
+        public VirtualKeyBoard(IInputEvents inputEvents, IMidiInput midiInput)
         {
             _inputEvents = inputEvents;
+            _midiInput = midiInput;
             Initialise();
         }
 
@@ -30,6 +27,9 @@ namespace KeyBoardControlLibrary
                 //Wrap up each key event in our single VirtualKeyboard key press event.
                 virtualKey.KeyPressEvent += (o, a) => KeyPressEvent(o, a);
             }
+
+            //Make keyboard input show up on screen
+            _midiInput.MessageReceived += (o, e) => HandleIncomingMessage(o, e);
 
             //Allow the global input collection to access the virtual keyboard as an input
             KeyPressEvent += (o, e) => _inputEvents.HandleInputEvent(o, e);

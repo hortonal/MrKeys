@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Common.IO;
 using Common.Events;
 using KeyBoardControlLibrary;
+using System.Threading;
 
 namespace MrKeys.NoteGuess
 {
@@ -26,14 +27,16 @@ namespace MrKeys.NoteGuess
         {
             if (_testRunning)
             {
-                if (e.KeyStrokeType == KeyStrokeType.KeyPress && e.midiKeyId == _testKeyId)
-                    Result = "Nailed it - nice one " + e.midiKeyId;
-                else
+                if(e.KeyStrokeType == KeyStrokeType.KeyPress)
                 {
-                    Result = "You suck " + e.midiKeyId;
+                    if (e.midiKeyId == _testKeyId)
+                        Result = "Nailed it - nice one " + e.midiKeyId;
+                    else
+                    {
+                        Result = "You suck " + e.midiKeyId;
+                    }
+                    TestRunning = false;
                 }
-                
-                TestRunning = false;
             }
         }
 
@@ -68,10 +71,14 @@ namespace MrKeys.NoteGuess
             Random rnd = new Random();
             _testKeyId = rnd.Next(20, 100);
 
-            //Do this async...
-            _outputDevice.Send(new PianoKeyStrokeEventArgs(_testKeyId, KeyStrokeType.KeyPress, 100));
-            System.Threading.Thread.Sleep(1000);
-            _outputDevice.Send(new PianoKeyStrokeEventArgs(_testKeyId, KeyStrokeType.KeyRelease, 100));
+            //Simple async note of 1 second duration
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+                _outputDevice.Send(null, new PianoKeyStrokeEventArgs(_testKeyId, KeyStrokeType.KeyPress, 100));
+                Thread.Sleep(1000);
+                _outputDevice.Send(null, new PianoKeyStrokeEventArgs(_testKeyId, KeyStrokeType.KeyRelease, 100));
+            }));
+
             
             //now just wait for keyboard input event
         }

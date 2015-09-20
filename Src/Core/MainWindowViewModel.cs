@@ -55,7 +55,7 @@ namespace MrKeys
             
             ResolveViews();
             
-            //Hook up keyboard (mouse presses) to output
+            
             //_keyBoard.KeyPressEvent += (o, e) => _output.Send(e);
 
             //inputEvents.InputMessageRaised += (o, e) => _keyBoard.HandleIncomingMessage(o, e);

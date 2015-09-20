@@ -75,7 +75,7 @@ namespace KeyBoardControlLibrary
             {
                 KeyPressEvent(this, new PianoKeyStrokeEventArgs
                 {
-                    KeyStrokeType = KeyStrokeType.KeyPress,
+                    KeyStrokeType = KeyStrokeType.KeyRelease,
                     KeyVelocity = 0,
                     midiKeyId = KeyMidiId,
                 });
