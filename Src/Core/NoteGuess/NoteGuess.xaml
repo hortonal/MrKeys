@@ -4,22 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MrKeys.NoteGuess"
+             xmlns:c="clr-namespace:Common.Devices;assembly=Common"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
-        <Label DockPanel.Dock="Top" Content="Simply hit the button and guess the note"/>
-        
-        <Button Content="Go" Width="50" Height="20" Margin="5" Command="{Binding GoButton}"/>
+        <StackPanel.Resources>
+            <c:StatusGreenRedConverter x:Key="StatusGreenRedConverter"/>
+        </StackPanel.Resources>
+        <Label DockPanel.Dock="Top" Content="Simply hit the button and guess the note" FontSize="20"/>
+        <Button Content="Go" Width="50" Height="20" Margin="5" Command="{Binding GoButton}" Background="{Binding Path=TestActive, Converter={StaticResource StatusGreenRedConverter}}"/>
         <DockPanel DockPanel.Dock="Bottom">
-
-            <Label DockPanel.Dock="Left" Content="Running: "/>
-            <Label DockPanel.Dock="Bottom" Content="{Binding TestRunning}"/>
+            <Label DockPanel.Dock="Right" Content="{Binding Result}" FontSize="20" />
         </DockPanel>
-        <DockPanel DockPanel.Dock="Bottom">
-            <Label DockPanel.Dock="Left" Content="Result: "/>
-            <Label DockPanel.Dock="Right" Content="{Binding Result}"/>
-         
-        </DockPanel>
-
     </StackPanel>
-</UserControl>
+</UserControl>  

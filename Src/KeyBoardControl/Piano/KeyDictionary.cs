@@ -5,14 +5,12 @@ using System.Text;
 
 namespace KeyBoardControlLibrary
 {
-    class KeyDictionary
+    class KeyDictionary: Dictionary<int, Key>
     {
         private int m_numberOfOctaves = 7;
-        public Dictionary<int, Key> Keys { get; set; }
         
         public KeyDictionary()
         {
-            Keys = new Dictionary<int, Key>();
             BuildKeyDictionary();
         }
 
@@ -42,7 +40,7 @@ namespace KeyBoardControlLibrary
         private void AddKeyToDictionary(int keyId, KeyTypes keyType, double keyWidth)
         {
             Key key = new Key(keyType, keyId, keyWidth);
-            Keys.Add(keyId, key);
+            Add(keyId, key);
         }
     }
 }

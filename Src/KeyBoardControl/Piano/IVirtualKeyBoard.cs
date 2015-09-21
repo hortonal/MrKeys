@@ -9,6 +9,7 @@ namespace KeyBoardControlLibrary
     {
         void HandleIncomingMessage(object sender, Common.Events.PianoKeyStrokeEventArgs e);
         event PianoKeyStrokeEvent KeyPressEvent;
-        void DrawKeys(Panel parentControl);
+        void DrawKeys(Panel parentControl); //feels like this shouldn't be on the interface...
+        KeyRange GetkeyRange();
     }
 }

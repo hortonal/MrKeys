@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Piano\IVirtualKeyBoard.cs" />
+    <Compile Include="Piano\KeyRange.cs" />
     <Compile Include="Piano\VirtualKeyBoard.cs" />
     <Compile Include="KeyBoardControl.xaml.cs">
       <DependentUpon>KeyBoardControl.xaml</DependentUpon>

@@ -35,11 +35,6 @@ namespace MrKeys
 
         private void InitialiseServices()
         {
-
-            //Build a virtual keyboard to handle events and such..
-            _container.RegisterType<IVirtualKeyBoard, VirtualKeyBoard>(new ContainerControlledLifetimeManager());
-
-
             InputEvents inputEvents = _container.Resolve<InputEvents>();
 
             MidiInput midiInput = _container.Resolve<MidiInput>();
@@ -52,9 +47,12 @@ namespace MrKeys
             try { midiOutput.Initialise(); }
             catch (Exception ex) { MessageBox.Show("Failed to initialise Output: " + ex.Message); }
             
-            //Wire midi inpputs throught the input events
+            //Wire midi inputs through central the input events, could do this with OIC but the
+            //midi input shouldn't need to know about this centralised routing
             midiInput.MessageReceived += inputEvents.HandleInputEvent;
             inputEvents.MessageReceived += (o, e) => midiOutput.Send(o, e);
+
+            _container.RegisterType<IVirtualKeyBoard, VirtualKeyBoard>(new ContainerControlledLifetimeManager());
 
             _container.RegisterInstance<IInputEvents>(inputEvents);
             _container.RegisterInstance<IMidiInput>(midiInput);
@@ -68,11 +66,7 @@ namespace MrKeys
             _container.RegisterInstance<IMediaService>(recordSession);
             _container.RegisterInstance<IInputDeviceStatusService>(midiInput);
             _container.RegisterInstance<IOutputDeviceStatusService>(midiOutput);
-
-
-            //_container.RegisterType<ITestControlService, BasicTestControl>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ITestControlService, BasicTestControl>(new ContainerControlledLifetimeManager());
-            
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -23,9 +23,8 @@ namespace Common.IO
                 _outputDevice = new OutputDevice(0);
                 IsInitialised = true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
                 //Exceptions.ErrHandler("Failed to initialise output device: ", e);
             }
         }

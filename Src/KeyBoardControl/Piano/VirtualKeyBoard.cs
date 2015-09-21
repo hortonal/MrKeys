@@ -1,11 +1,14 @@
 ﻿using Common.Events;
 using Common.IO;
 using System.Windows.Controls;
+using System;
+using System.Linq;
 
 namespace KeyBoardControlLibrary
 {
     public class VirtualKeyBoard: IVirtualKeyBoard
     {
+        private KeyRange _keyRange;
         private KeyDictionary _keyDictionary;
         private IInputEvents _inputEvents;
         private IMidiInput _midiInput;
@@ -22,7 +25,12 @@ namespace KeyBoardControlLibrary
         {
             //Give the keyboard a set of virtual keys
             _keyDictionary = new KeyDictionary();
-            foreach (var virtualKey in _keyDictionary.Keys.Values)
+
+            _keyRange = new KeyRange();
+            _keyRange.BottomKeyId = _keyDictionary.Keys.Min();
+            _keyRange.TopKeyId = _keyDictionary.Keys.Max();
+            
+            foreach (var virtualKey in _keyDictionary.Values)
             { 
                 //Wrap up each key event in our single VirtualKeyboard key press event.
                 virtualKey.KeyPressEvent += (o, a) => KeyPressEvent(o, a);
@@ -37,7 +45,7 @@ namespace KeyBoardControlLibrary
 
         public void DrawKeys(Panel parentControl)
         {
-            foreach (var key in _keyDictionary.Keys.Values)
+            foreach (var key in _keyDictionary.Values)
             {
                 parentControl.Children.Add(key);
             }
@@ -47,18 +55,23 @@ namespace KeyBoardControlLibrary
         {
             if (e == null) return;
 
-            if (_keyDictionary.Keys.ContainsKey(e.midiKeyId))
+            if (_keyDictionary.ContainsKey(e.midiKeyId))
             {
                 switch (e.KeyStrokeType)
                 {
                     case KeyStrokeType.KeyPress:
-                        _keyDictionary.Keys[e.midiKeyId].SetKeyPressedColour(e.KeyVelocity);
+                        _keyDictionary[e.midiKeyId].SetKeyPressedColour(e.KeyVelocity);
                         break;
                     case KeyStrokeType.KeyRelease:
-                        _keyDictionary.Keys[e.midiKeyId].SetDefaultKeyColour();
+                        _keyDictionary[e.midiKeyId].SetDefaultKeyColour();
                         break;
                 }
             }
+        }
+
+        public KeyRange GetkeyRange()
+        {
+            return _keyRange;
         }
     }
 }
