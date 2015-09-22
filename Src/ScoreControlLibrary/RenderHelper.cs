@@ -54,6 +54,7 @@ namespace ScoreControlLibrary
                 currentX += RenderSpecificItems(RenderItemType.Clef, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.Key, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.TimeSignature, noteTime, currentX);
+                currentX += RenderSpecificItems(RenderItemType.LedgerLine, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.NoteStem, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.Note, noteTime, currentX);
             }

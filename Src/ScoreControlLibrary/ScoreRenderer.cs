@@ -10,29 +10,7 @@ using System.Windows;
 
 namespace ScoreControlLibrary
 {
-    internal class ScoreLayoutDetails
-    {
-        //Vertical layout defaults
-        private static double _lineSpacing_Y = 10; //e.g. space between E and G lines
-        public static double LineSpacing_Y                     { get { return _lineSpacing_Y; } }
-        public static double OffsetPerNote_Y                   { get { return _lineSpacing_Y / 2.0; } } //e.g. space between E and F
-        public static double CenterStaffs_Y                    { get { return _lineSpacing_Y * 20.0; } }
-        public static double NumberLinesBetweenCenterAndStaffs { get { return 4.0; } }
-        public static double DefaultMargin_X                   { get { return 10; } }
-        public static double DefaultNoteHeight                 { get { return LineSpacing_Y - 3;; } }
-        public static double DefaultNoteWidth                  { get { return LineSpacing_Y; } }
-        public static int NumberOfLines { get { return 5; } }
-
-        public static double Staff1_FristLineY //Generally E line of trebble staff
-        { 
-           get { return CenterStaffs_Y - NumberLinesBetweenCenterAndStaffs * LineSpacing_Y; } 
-        }
-        public static double Staff2_FristLineY //Generally E line of trebble staff
-        {
-            get { return CenterStaffs_Y + (NumberLinesBetweenCenterAndStaffs + NumberOfLines - 1) * LineSpacing_Y; }
-        } 
-    }
-
+    
     public class ScoreRenderer
     {
         private Grid scorePanel;
@@ -50,12 +28,17 @@ namespace ScoreControlLibrary
             var renderHelper = new RenderHelper(scorePanel);
             double currentNoteTime = 0;
             double currentDevisions = 0;
-
-
+            
             var staffs = new Staffs(renderHelper);
                 
-            staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY));
-            staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY));
+            staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+
+            //Only add a second stave if nec.
+            if (score.Parts.Any(x => x.Measures.Any(y => y.Attributes.Staves > 1)))
+            {
+                staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+            }
+            
             staffs.AddBarLine(currentNoteTime);
 
             foreach (Part part in score.Parts)
@@ -126,8 +109,7 @@ namespace ScoreControlLibrary
                     if(xmlTime.Beats != staff.Timing.Numerator || xmlTime.Mode != staff.Timing.Denominator)
                     {
                         staff.Timing.Numerator = xmlTime.Beats;
-                        staff.Timing.Denominator = xmlTime.Mode;
-                    
+                        staff.Timing.Denominator = xmlTime.Mode; 
                         staff.AddTimingChange(noteTime);   
                     }   
             }

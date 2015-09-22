@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace ScoreControlLibrary
 {
-    public enum RenderItemType { Clef, Key, TimeSignature, Note, NoteStem, Rest, BarDivision }
+    public enum RenderItemType { Clef, Key, TimeSignature, Note, NoteStem, Rest, BarDivision, LedgerLine }
 
     internal class RenderItem
     {

@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         mc:Ignorable="d" 
-        Title="MainWindow" Height="auto" Width="auto">
+        Title="MainWindow" Height="600" Width="800">
     <Window.Resources>
         <Style TargetType="Border" x:Key="DefaultBorderStyle">
             <Setter Property="BorderBrush" Value="DarkBlue"/>
@@ -14,7 +14,7 @@
             <Setter Property="CornerRadius" Value="15"/>
         </Style>
     </Window.Resources>
-    <DockPanel Margin="10">
+    <DockPanel Margin="10" >
         
         <DockPanel DockPanel.Dock="Top" LastChildFill="True">
             <Border Style="{StaticResource DefaultBorderStyle}" DockPanel.Dock="Left" HorizontalAlignment="Center">

@@ -16,8 +16,8 @@ namespace ScoreControlLibrary
 
         public BasicTestControl(IUnityContainer container)
         {
-            XScore testMusicScore = new XScore(@".\..\..\ThirdParty\MusicXML.Net\Promenade_Example.xml");
-            //XScore testMusicScore = new XScore(@"C:\Users\Alex\Desktop\elite.xml");
+            XScore testMusicScore = new XScore(@".\Examples\Scales-C-2-Hands.xml");
+//            XScore testMusicScore = new XScore(@".\Examples\Promenade_Example.xml");
             _control = new ScoreControl(container, testMusicScore);
         }
 

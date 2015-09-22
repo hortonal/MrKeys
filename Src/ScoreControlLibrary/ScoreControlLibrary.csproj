@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="RenderItemsDictionary.cs" />
     <Compile Include="RenderHelper.cs" />
+    <Compile Include="ScoreLayoutDetails.cs" />
     <Compile Include="ScoreRenderer.cs" />
     <Compile Include="Staff.cs" />
     <Compile Include="Staffs.cs" />
@@ -109,7 +110,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Examples\Promenade_Example.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Examples\Scales-C-2-Hands.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Examples\Scales-C-1-Hand.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

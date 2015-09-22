@@ -49,8 +49,9 @@ namespace ScoreControlLibrary
 
         private RenderHelper _renderHelper;
         private NoteRenderHelper _noteRenderHelper;
+        private double _defaultNoteSeparation;
 
-        public Staff(RenderHelper renderHelper, double lineSpacing, double lowestLine_Y)
+        public Staff(RenderHelper renderHelper, double lineSpacing, double lowestLine_Y, double defaultNoteSeparation)
         {
             _renderHelper = renderHelper;
             LineSpacing = lineSpacing;
@@ -58,6 +59,8 @@ namespace ScoreControlLibrary
             RestYCoords = new RestYCoords(LowestLine_Y, LineSpacing);
 
             _noteRenderHelper = new NoteRenderHelper(_renderHelper, RestYCoords);
+
+            _defaultNoteSeparation = defaultNoteSeparation;
 
             //Set some values that will never occur in practice, so when we first check to see if the attributes
             //in the xml are different to our staff, we'll always update the first time around
@@ -118,9 +121,39 @@ namespace ScoreControlLibrary
         #region Note Addition Logic
         public void AddNote(Note note, double devisions, double noteTime)
         {
-            _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, CalculateYForNote(note), LineSpacing);
+            double yCoord = CalculateYForNote(note);
+            _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, _defaultNoteSeparation);
+
+            AddLedgerLines(note, devisions, noteTime, yCoord);
         }
 
+        private void AddLedgerLines(Note note, double devisions, double noteTime, double yCoord)
+        {
+            //Options
+            //= 1 line. Draw it
+            //=1.5 lines. Draw 1 line
+            if (HighestLine_Y - yCoord >= LineSpacing)
+            {
+                //Get remainder
+                var numberToAdd = (int) Math.Round( (HighestLine_Y - yCoord) / LineSpacing);
+                for (int i = 1; i <= numberToAdd; i++){
+                    _noteRenderHelper.AddLedgerLine(noteTime, yCoord + LineSpacing * (i - 1));
+                }
+            }
+            
+            if (yCoord - LowestLine_Y >= LineSpacing)
+            {
+                var numberToAdd = (int)Math.Round( (yCoord - LowestLine_Y) / LineSpacing);
+                for (int i = 1; i <= numberToAdd; i++)
+                {
+                    _noteRenderHelper.AddLedgerLine(noteTime, yCoord + LineSpacing * (i - 1));
+                }
+            }
+
+            return;
+        }
+        
+            
         private double CalculateYForNote(Note note)
         {
             if (note.IsRest) return CalculateYForRest(note);

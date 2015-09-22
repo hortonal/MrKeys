@@ -20,7 +20,7 @@ namespace ScoreControlLibrary
             _restYCoords = restYCoords;
         }
 
-        public void AddNote(Note note, Timing timing, double devisions, double noteTime, double yCoord, double defaultNoteSize)
+        public void AddNote(Note note, Timing timing, double devisions, double noteTime, double yCoord, double defaultNoteSize, double xCoordDefaultNoteSeparation)
         {
             Type glyphType = typeof(BlackNoteHeadGlyph);
             double finalYCoord = yCoord;
@@ -111,7 +111,24 @@ namespace ScoreControlLibrary
             
             TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, defaultNoteSize * 3.3);
 
-            _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, 20.0, RenderItemType.Note);
+            _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, xCoordDefaultNoteSeparation, RenderItemType.Note);
+        }
+
+        public void AddLedgerLine(double noteTime, double yCoord)
+        {
+            var lineWidth = ScoreLayoutDetails.DefaultNoteHeight * 1.9;
+
+            Line line = new Line();
+
+            line.StrokeThickness = 0.6;
+            line.Stroke = Brushes.Black;
+            
+            line.Y1 = 0;
+            line.Y2 = 0;
+            line.X1 = -lineWidth / 2;
+            line.X2 = lineWidth / 2;
+            
+            _renderHelper.AddItemToRender(noteTime, line, yCoord, (- 1.2 * lineWidth / 4), RenderItemType.LedgerLine);
         }
 
         private Type CalculateRestType(int noteDuration, Timing timing, double devisions)
