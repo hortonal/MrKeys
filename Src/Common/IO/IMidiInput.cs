@@ -2,7 +2,7 @@
 using Common.Devices;
 namespace Common.IO
 {
-    public interface IMidiInput : IInputDeviceStatusService
+    public interface IMidiInput : IInputDeviceStatusService, IDisposable
     {
         void Initialise();
         event Common.Events.PianoKeyStrokeEvent MessageReceived;

@@ -24,7 +24,7 @@
     </page-layout>
   </defaults>
   <credit page="1">
-    <credit-words default-x="736.842" default-y="2008.07" font-size="24" justify="center" valign="top">Alex HOrton</credit-words>
+    <credit-words default-x="736.842" default-y="2008.07" font-size="24" justify="center" valign="top">Alex Horton</credit-words>
   </credit>
   <credit page="1">
     <credit-words default-x="1397.54" default-y="1893.33" font-size="12" justify="right" valign="top"></credit-words>
@@ -279,17 +279,6 @@
         <stem>up</stem>
         <staff>2</staff>
       </note>
-      <note default-x="98.44" default-y="-30.00">
-        <pitch>
-          <step>E</step>
-          <octave>4</octave>
-        </pitch>
-        <duration>1</duration>
-        <voice>1</voice>
-        <type>quarter</type>
-        <stem>up</stem>
-        <staff>2</staff>
-      </note>      
       <barline location="right">
         <bar-style>light-light</bar-style>
       </barline>

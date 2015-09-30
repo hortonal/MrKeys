@@ -7,7 +7,7 @@ using Common.Infrastructure;
 
 namespace Common.IO
 {
-    public class MidiOutput : ObservableObject, IOutput, IDisposable
+    public class MidiOutput : ObservableObject, IOutput
     {
         OutputDevice _outputDevice;
 
@@ -31,9 +31,17 @@ namespace Common.IO
 
         public void Send(object sender, PianoKeyStrokeEventArgs args)
         {
-            if(IsInitialised)
+            if (IsInitialised)
             {
-                _outputDevice.Send(SanfordUtils.ConvertKeyStrokeEventArgsToChannelMessage(args));
+                try
+                {
+                    _outputDevice.Send(SanfordUtils.ConvertKeyStrokeEventArgsToChannelMessage(args));
+
+                }
+                catch (Exception ex)
+                {
+                    //Catch ex...
+                }
             }
         }
 

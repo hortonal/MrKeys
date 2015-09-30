@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace KeyBoardControlLibrary
 {
-    public interface IVirtualKeyBoard
+    public interface IVirtualKeyBoard: IDisposable
     {
         void HandleIncomingMessage(object sender, Common.Events.PianoKeyStrokeEventArgs e);
         event PianoKeyStrokeEvent KeyPressEvent;

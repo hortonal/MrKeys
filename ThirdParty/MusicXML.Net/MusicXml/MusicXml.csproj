@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parsers\Clef.cs" />
+    <Compile Include="Parsers\Direction.cs" />
     <Compile Include="Parsers\Encoding.cs" />
     <Compile Include="Test\Test.cs" />
     <Compile Include="Parsers\Time.cs" />

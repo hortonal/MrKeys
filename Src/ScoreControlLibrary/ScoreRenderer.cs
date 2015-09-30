@@ -7,25 +7,27 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
+using Common.Music;
 
 namespace ScoreControlLibrary
 {
     
     public class ScoreRenderer
     {
-        private Grid scorePanel;
-        private XScore score;
-        
+        private Grid _scorePanel;
+        private XScore _score;
+        private Song _song;
 
         public ScoreRenderer(XScore score, Grid scorePanel)
         {
-            this.score = score;
-            this.scorePanel = scorePanel;
+            this._score = score;
+            this._scorePanel = scorePanel;
         }
 
         public void Render()
         {
-            var renderHelper = new RenderHelper(scorePanel);
+
+            var renderHelper = new RenderHelper(_scorePanel);
             double currentNoteTime = 0;
             double currentDevisions = 0;
             
@@ -34,14 +36,14 @@ namespace ScoreControlLibrary
             staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
 
             //Only add a second stave if nec.
-            if (score.Parts.Any(x => x.Measures.Any(y => y.Attributes.Staves > 1)))
+            if (_score.Parts.Any(x => x.Measures.Any(y => y.Attributes.Staves > 1)))
             {
                 staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
             }
             
             staffs.AddBarLine(currentNoteTime);
 
-            foreach (Part part in score.Parts)
+            foreach (Part part in _score.Parts)
                 foreach (Measure measure in part.Measures)
                 {
                     MeasureAttributes attributes = measure.Attributes;

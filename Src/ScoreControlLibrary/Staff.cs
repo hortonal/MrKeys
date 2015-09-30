@@ -7,6 +7,7 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
 using MusicXml;
+using Common.Music;
 
 namespace ScoreControlLibrary
 {
@@ -174,7 +175,7 @@ namespace ScoreControlLibrary
             }
             
             int octaveOffsetFromMiddleC = note.Pitch.Octave - 4; //Octave 4 starts at middle C
-            return middleC_Y - (octaveOffsetFromMiddleC * 7.0 + GetNoteOffsetFromC(note)) * ScoreLayoutDetails.OffsetPerNote_Y;
+            return middleC_Y - (octaveOffsetFromMiddleC * 7.0 + XmlMusicHelper.GetLineOffsetFromC(note)) * ScoreLayoutDetails.OffsetPerNote_Y;
         }
 
         private double CalculateYForRest(Note note)
@@ -182,20 +183,7 @@ namespace ScoreControlLibrary
             return LowestLine_Y + LineSpacing * 2.0;
         }
 
-        private int GetNoteOffsetFromC(Note note)
-        {
-            switch (note.Pitch.Step)
-            {
-                case 'C': return 0;
-                case 'D': return 1;
-                case 'E': return 2;
-                case 'F': return 3;
-                case 'G': return 4;
-                case 'A': return 5;
-                case 'B': return 6;
-                default: throw new ArgumentException("Note Step not parsable/not acceptable value : " + note);
-            }
-        }
+
         #endregion
 
 

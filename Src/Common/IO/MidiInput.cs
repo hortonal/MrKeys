@@ -116,8 +116,11 @@ namespace Common.IO
 
         public void Dispose()
         {
-            _inputDevice.Close();
-            _inputDevice.Dispose();
+            if(_inputDevice != null)
+            {
+                Close();
+                _inputDevice.Dispose();
+            }
         }
     }
 }

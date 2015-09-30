@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows;
 
-namespace Common
+namespace Common.Infrastructure
 {
     public class ControlHelpers
     {

@@ -73,10 +73,22 @@ namespace MrKeys
         {
             base.OnExit(e);
 
+            //_container.Resolve<InputEvents>().Dispose();
+            _container.Resolve<IMidiInput>().MessageReceived -= _container.Resolve<InputEvents>().HandleInputEvent;
+            _container.Resolve<InputEvents>().MessageReceived -= _container.Resolve<IOutput>().Send;
+
+
             //Have to close down the IO devices otherwise we leave threads open...
-            try { _container.Resolve<IMidiInput>().Close(); }
+            try { _container.Resolve<IMidiInput>().Dispose(); }
             catch { }
-            try { _container.Resolve<IOutput>().Close(); }
+
+            try { _container.Resolve<IVirtualKeyBoard>().Dispose(); }
+            catch { }
+
+            try { _container.Resolve<IOutput>().Dispose(); }
+            catch { }
+
+            try { _container.Resolve<IOutput>().Dispose(); }
             catch { }
         }
     }

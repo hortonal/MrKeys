@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace KeyBoardControlLibrary
 {
-    public class VirtualKeyBoard: IVirtualKeyBoard
+    public class VirtualKeyBoard: IVirtualKeyBoard, IDisposable
     {
         private KeyRange _keyRange;
         private KeyDictionary _keyDictionary;
@@ -72,6 +72,13 @@ namespace KeyBoardControlLibrary
         public KeyRange GetkeyRange()
         {
             return _keyRange;
+        }
+
+        public void Dispose()
+        {
+            //Make keyboard input show up on screen
+            _midiInput.MessageReceived -= HandleIncomingMessage;
+            
         }
     }
 }

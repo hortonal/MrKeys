@@ -33,7 +33,20 @@ namespace MusicXml
 			}
 		}
 
-		public MeasureAttributes Attributes
+        public IEnumerable<Direction> Directions
+        {
+            get
+            {
+                List<Direction> directions = new List<Direction>();
+                foreach (XDoc direction in theDocument["//direction"])
+                {
+                    directions.Add(new Direction(direction));
+                }
+                return directions;
+            }
+        }
+
+        public MeasureAttributes Attributes
 		{
 			get
 			{

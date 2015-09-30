@@ -24,11 +24,13 @@ namespace ScoreControlLibrary.Views
         public ScoreControl(IUnityContainer container, XScore musicScore): this()
         {
             new ScoreRenderer(musicScore, ScoreGrid).Render();
+
         }
 
         public ScoreControl()
         {
             InitializeComponent();
+
         }
     }
 }

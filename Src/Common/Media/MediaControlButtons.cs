@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
@@ -19,17 +16,6 @@ namespace Common
             {
                 ShapeContainerGrid = new Grid();
                 this.Background = new LinearGradientBrush(Colors.LightBlue, Colors.White, 45.0);
-                                
-                //Attempt to make buttons prettier - FAIL....
-                //var controlBorderTemplate = new ControlTemplate();
-                //var borderFE = new FrameworkElementFactory(typeof(Border));
-                //var grtidFE = new FrameworkElementFactory(typeof(Grid));
-                //grtidFE.SetValue(Grid.BackgroundProperty, Brushes.Yellow);
-                //borderFE.SetValue(Border.CornerRadiusProperty, new CornerRadius(4));
-                //borderFE.AppendChild(grtidFE);
-                //controlBorderTemplate.VisualTree = borderFE;
-                //this.Template = controlBorderTemplate;
-                
                 this.AddChild(ShapeContainerGrid);
             }
         }
