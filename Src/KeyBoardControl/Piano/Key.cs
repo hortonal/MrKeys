@@ -13,7 +13,6 @@ namespace KeyBoardControlLibrary
     {
         
         #region ctor and member variable declarations
-
         public static int WhiteKeyWidth = 10;
         public static int KeyOffset = WhiteKeyWidth / 2;
         public static int BlackKeyWidth = 5;
@@ -106,24 +105,31 @@ namespace KeyBoardControlLibrary
         #region Key Color manipulation methods
         public void SetDefaultKeyColour()
         {
-            Fill = (KeyType == KeyTypes.White) ? Brushes.Ivory : Brushes.Black;
+            Dispatcher.Invoke(new Action(() =>
+                Fill = (KeyType == KeyTypes.White) ? Brushes.Ivory : Brushes.Black
+                ));
         }
 
         public void SetKeyPressedColour()
         {
-            Fill = Brushes.GreenYellow;
+            Dispatcher.Invoke(new Action(() => 
+                Fill = Brushes.GreenYellow
+                ));
         }
 
         public void SetKeyPressedColour(int velocity)
-        {
-            Color startColor = Colors.GreenYellow;
-            Color endColor = Colors.Red;
-            endColor.B = Convert.ToByte(200 * (1 - velocity / 127.0));
-            endColor.G = Convert.ToByte(200 * (1 - velocity / 127.0));
+        {            
+            Dispatcher.Invoke(new Action(() =>
+            {
+                Color startColor = Colors.GreenYellow;
+                Color endColor = Colors.Red;
+                endColor.B = Convert.ToByte(200 * (1 - velocity / 127.0));
+                endColor.G = Convert.ToByte(200 * (1 - velocity / 127.0));
 
-            var b = new LinearGradientBrush(startColor, endColor, 90);
-            
-            Fill = b;
+                var b = new LinearGradientBrush(startColor, endColor, 90);
+
+                Fill = b;
+            }) );
         }
         #endregion
 

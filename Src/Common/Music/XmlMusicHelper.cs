@@ -39,15 +39,6 @@ namespace Common.Music
             }
         }
 
-        public static SongNote ConvertXmlNoteToSongNote(double noteTime, Note xmlNote)
-        {
-            var songNote = new SongNote();
-            songNote.NoteTime = noteTime;
-            songNote.PitchId = (xmlNote.Pitch.Octave + 1) * 12 + GetMidiIdOffsetFromC(xmlNote);
-            songNote.Velocity = 100;
-            songNote.Duration = xmlNote.Duration;
-            
-            return songNote;
-        }
+
     }
 }

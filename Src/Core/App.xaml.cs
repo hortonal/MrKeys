@@ -8,6 +8,7 @@ using KeyBoardControlLibrary;
 using Microsoft.Practices.Unity;
 using System;
 using ScoreControlLibrary;
+using SongPlayer;
 
 namespace MrKeys
 {

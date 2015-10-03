@@ -192,6 +192,10 @@
       <Project>{C5517C73-37F5-44D7-90A6-B9F259AB4508}</Project>
       <Name>ScoreControlLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SongPlayer\SongPlayer.csproj">
+      <Project>{6fa0a2fb-7401-4093-8d3c-a903f4df3aac}</Project>
+      <Name>SongPlayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="1205_1820_48_piano_icon.ico" />

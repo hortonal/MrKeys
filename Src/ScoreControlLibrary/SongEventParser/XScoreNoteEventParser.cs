@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MusicXml;
+using Common.Music;
 
-namespace Common.Music
+namespace ScoreControlLibrary.SongEventParser
 {
-    public class MusicParser
+    public class XScoreNoteEventParser
     {
         private XScore _score;
 
-        public MusicParser(XScore score)
+        public XScoreNoteEventParser(XScore score)
         {
             this._score = score;
         }
 
-        public Song Parse()
+        public SongNoteList Parse()
         {
-            var song = new Song();
+            var song = new SongNoteList();
 
             int? tempo = _score.Parts.First().Measures.First().Directions.Where(x => x.Placement == DirectionPlacement.Above).First().Tempo;
 
@@ -55,7 +56,7 @@ namespace Common.Music
                         switch (note.NoteType)
                         {
                             case Note.NoteTypes.Note:
-                                song.Add(XmlMusicHelper.ConvertXmlNoteToSongNote(currentNoteTime, note));
+                                song.Add(ConvertXmlNoteToSongNote(currentNoteTime, note));
                                 currentNoteTime += note.Duration / currentDevisions;
                                 break;
                             case Note.NoteTypes.Backup:
@@ -73,6 +74,17 @@ namespace Common.Music
                 }
 
             return song;
+        }
+
+        public static SongNote ConvertXmlNoteToSongNote(double noteTime, Note xmlNote)
+        {
+            var songNote = new SongNote();
+            songNote.NoteTime = noteTime;
+            songNote.PitchId = (xmlNote.Pitch.Octave + 1) * 12 + XmlMusicHelper.GetMidiIdOffsetFromC(xmlNote);
+            songNote.Velocity = 100;
+            songNote.Duration = xmlNote.Duration;
+
+            return songNote;
         }
 
     }

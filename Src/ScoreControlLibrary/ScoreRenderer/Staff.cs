@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows;
 using MusicXml;
 using Common.Music;
+using ScoreControlLibrary.Glyphs;
 
 namespace ScoreControlLibrary
 {

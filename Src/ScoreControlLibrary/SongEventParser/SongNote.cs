@@ -1,18 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace Common.Music
+namespace ScoreControlLibrary.SongEventParser
 {
-    public class Song : List<SongNote>
-    {
-        public int Tempo { get; set; }
-    }
-
-    public class SongNote: IComparable<SongNote>
+    public class SongNote : IComparable<SongNote>
     {
         public double NoteTime { get; set; }
         public double Duration { get; set; }
@@ -21,7 +14,7 @@ namespace Common.Music
 
         public int CompareTo(SongNote songNote)
         {
-            return (int) (this.NoteTime * 1000.0 - songNote.NoteTime * 1000.0);
+            return (int)(this.NoteTime * 1000.0 - songNote.NoteTime * 1000.0);
         }
     }
 }

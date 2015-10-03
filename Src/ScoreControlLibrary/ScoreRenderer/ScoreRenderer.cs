@@ -4,10 +4,7 @@ using System.Linq;
 using System.Text;
 using MusicXml;
 using System.Windows.Controls;
-using System.Windows.Shapes;
-using System.Windows.Media;
-using System.Windows;
-using Common.Music;
+
 
 namespace ScoreControlLibrary
 {
@@ -16,7 +13,7 @@ namespace ScoreControlLibrary
     {
         private Grid _scorePanel;
         private XScore _score;
-        private Song _song;
+
 
         public ScoreRenderer(XScore score, Grid scorePanel)
         {

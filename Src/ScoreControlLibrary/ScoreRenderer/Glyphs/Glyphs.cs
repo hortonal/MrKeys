@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.Glyphs
 {
     internal interface IGlyph
     {

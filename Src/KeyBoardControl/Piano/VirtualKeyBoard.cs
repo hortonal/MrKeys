@@ -3,6 +3,8 @@ using Common.IO;
 using System.Windows.Controls;
 using System;
 using System.Linq;
+using Common.Devices;
+using System.ComponentModel;
 
 namespace KeyBoardControlLibrary
 {
@@ -12,6 +14,31 @@ namespace KeyBoardControlLibrary
         private KeyDictionary _keyDictionary;
         private IInputEvents _inputEvents;
         private IMidiInput _midiInput;
+
+        public bool IsInitialised
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public DeviceType DeviceType
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public event PianoKeyStrokeEvent KeyPressEvent = (o, a) => { };
 
         public VirtualKeyBoard(IInputEvents inputEvents, IMidiInput midiInput)
@@ -33,7 +60,7 @@ namespace KeyBoardControlLibrary
             foreach (var virtualKey in _keyDictionary.Values)
             { 
                 //Wrap up each key event in our single VirtualKeyboard key press event.
-                virtualKey.KeyPressEvent += (o, a) => KeyPressEvent(o, a);
+                virtualKey.KeyPressEvent += (o, e) => KeyPressEvent(o, e);
             }
 
             //Make keyboard input show up on screen
@@ -80,5 +107,30 @@ namespace KeyBoardControlLibrary
             _midiInput.MessageReceived -= HandleIncomingMessage;
             
         }
+
+        #region MidiInput
+        public event PianoKeyStrokeEvent MessageReceived;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void IMidiInput.Initialise()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartRecording()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StopRecording()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

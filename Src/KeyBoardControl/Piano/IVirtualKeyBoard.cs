@@ -1,11 +1,12 @@
 ﻿using System;
 using Common.Events;
 using System.Windows.Controls;
+using Common.IO;
 using System.Windows;
 
 namespace KeyBoardControlLibrary
 {
-    public interface IVirtualKeyBoard: IDisposable
+    public interface IVirtualKeyBoard: IMidiInput, IDisposable
     {
         void HandleIncomingMessage(object sender, Common.Events.PianoKeyStrokeEventArgs e);
         event PianoKeyStrokeEvent KeyPressEvent;

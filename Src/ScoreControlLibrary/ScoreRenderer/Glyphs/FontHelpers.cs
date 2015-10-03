@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-
 using System.Windows.Media;
 using System.Windows.Controls;
-using System.Windows;
-using System.Globalization;
-using ScoreControlLibrary.Glyphs;
 
-namespace ScoreControlLibrary
+
+namespace ScoreControlLibrary.Glyphs
 {
     internal class MusicGlyphs
     {
@@ -24,8 +16,8 @@ namespace ScoreControlLibrary
         public MusicGlyphs()
         {
             
-            var poliFontFamily = new FontFamily(new Uri("pack://application:,,,/ScoreControlLibrary;component/"), "./Resources/#Polihymnia");
-            var museFontFamily = new FontFamily(new Uri("pack://application:,,,/ScoreControlLibrary;component/"), "./Resources/#MScore 20");
+            var poliFontFamily = new FontFamily(new Uri("pack://application:,,,/ScoreControlLibrary;component/"), "./ScoreRenderer/Resources/#Polihymnia");
+            var museFontFamily = new FontFamily(new Uri("pack://application:,,,/ScoreControlLibrary;component/"), "./ScoreRenderer/Resources/#MScore 20");
 
             _defaultFontFamily = museFontFamily;
 

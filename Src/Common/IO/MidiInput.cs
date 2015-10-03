@@ -54,8 +54,6 @@ namespace Common.IO
                     _inputDevice = new InputDevice(0);
                     _inputDevice.ChannelMessageReceived += HandleInputMessageReceived;
                     IsInitialised = true;
-                    //Remove me when you have the recorder setup
-                    this.StartRecording();
                 }
                 catch (Exception ex)
                 {

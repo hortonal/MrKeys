@@ -75,7 +75,7 @@
     <Compile Include="Infrastructure\ObservableObject.cs" />
     <Compile Include="Infrastructure\PropertySupport.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
-    <Compile Include="IOC.cs" />
+    <Compile Include="Infrastructure\IOC.cs" />
     <Compile Include="IO\IMidiInput.cs" />
     <Compile Include="IO\InputEvents.cs" />
     <Compile Include="IO\IOutput.cs" />
@@ -91,19 +91,15 @@
       <DependentUpon>MediaControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\StatusRedGreenConverter.cs" />
-    <Compile Include="Music\MusicParser.cs" />
-    <Compile Include="Music\Song.cs" />
-    <Compile Include="Music\SongPlayer.cs" />
     <Compile Include="Music\XmlMusicHelper.cs" />
     <Compile Include="PianoKeyStrokeEvent.cs" />
     <Compile Include="Playground\MediaService.cs" />
-    <Compile Include="IO\RecordSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DialogEnums.cs" />
-    <Compile Include="Services\IDialogService.cs" />
-    <Compile Include="Services\ISetViewReferenceService.cs" />
-    <Compile Include="Services\ITestControlService.cs" />
-    <Compile Include="Services\ModalDialogService.cs" />
+    <Compile Include="Infrastructure\Services\DialogEnums.cs" />
+    <Compile Include="Infrastructure\Services\IDialogService.cs" />
+    <Compile Include="Infrastructure\Services\ISetViewReferenceService.cs" />
+    <Compile Include="Infrastructure\Services\ITestControlService.cs" />
+    <Compile Include="Infrastructure\Services\ModalDialogService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Devices\DeviceStatusControl.xaml">

@@ -8,14 +8,14 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace Common.Music
+namespace SongPlayer
 {
-    public class SongPlayer
+    public class Player
     {
         private Song _song;
         private IOutput _output;
 
-        public SongPlayer(IOutput output, Song song)
+        public Player(IOutput output, Song song)
         {
             _song = song;
             _output = output;
@@ -23,25 +23,28 @@ namespace Common.Music
 
         public void Play()
         {
+            //Spark up a background worker to wait for the note to finish and release the key press
+            var worker = new BackgroundWorker();
+            worker.DoWork += (ob, arg) => { PlayBackgroundWorker(); };
+
+            worker.RunWorkerAsync();
+        }
+
+        private void PlayBackgroundWorker()
+        {
             _song.Sort();
-
-
+            
             //Build a dictionary of notes per note time
             //Should really do all this not on the gui thread...
             //var uniqueNoteTimes = _song.ConvertAll(x => x.NoteTime).Distinct();
-            
+                
             double lastNoteTime = 0;
             Collection<SongNote> simulatneousSongNotes = new Collection<SongNote>();
             
             //Iterate through song playing notes
             foreach (SongNote note in _song)
             {
-                
-                if (note.NoteTime == lastNoteTime)
-                {
-                    simulatneousSongNotes.Add(note);
-                }
-                else
+                if (note.NoteTime != lastNoteTime && simulatneousSongNotes.Any())
                 {
                     SendNoteEvents(simulatneousSongNotes);
 
@@ -50,6 +53,7 @@ namespace Common.Music
                     simulatneousSongNotes = new Collection<SongNote>();
                 }
 
+                simulatneousSongNotes.Add(note);
                 lastNoteTime = note.NoteTime;
             }
             //Finally send the last notes in the song
@@ -65,7 +69,7 @@ namespace Common.Music
                 var pianoKeyStrokeEventArgs = new PianoKeyStrokeEventArgs(songNote.PitchId, KeyStrokeType.KeyPress, songNote.Velocity);
                 var pianoKeyStrokeReleaseEventArgs = new PianoKeyStrokeEventArgs(songNote.PitchId, KeyStrokeType.KeyRelease, songNote.Velocity);
 
-                _output.Send(null, pianoKeyStrokeEventArgs);
+                _output.Send(this, pianoKeyStrokeEventArgs);
                 
                 //Spark up a background worker to wait for the note to finish and release the key press
                 var worker = new BackgroundWorker();
@@ -79,6 +83,7 @@ namespace Common.Music
                 worker.RunWorkerAsync();
             }
         }
+
 
         private int CalculateNoteDuration(SongNote songNote)
         {
