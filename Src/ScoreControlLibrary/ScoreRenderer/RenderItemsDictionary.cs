@@ -10,6 +10,10 @@ namespace ScoreControlLibrary
 
     internal class RenderItem
     {
+        /// <summary>
+        /// X position set only at render time!!
+        /// </summary>
+        public double XPosition { get; set; }
         public double YPosition { get; set; }
         public FrameworkElement UIElement { get; set; }
         public RenderItemType ItemType { get; set; }

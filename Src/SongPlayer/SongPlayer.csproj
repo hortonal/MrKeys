@@ -48,10 +48,6 @@
     <Compile Include="SongPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
-      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
-      <Name>Sanford.Multimedia.Midi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{4fd22659-3465-47d6-86b1-f8b52e0cd688}</Project>
       <Name>Common</Name>
@@ -63,6 +59,10 @@
     <ProjectReference Include="..\KeyBoardControl\KeyBoardControlLibrary.csproj">
       <Project>{77839d7e-243f-4733-a62a-65af0d237528}</Project>
       <Name>KeyBoardControlLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
+      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
+      <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

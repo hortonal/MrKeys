@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MusicXml;
 using Common.Music;
+using System.Collections.ObjectModel;
 
 namespace ScoreControlLibrary.SongEventParser
 {
@@ -16,9 +17,9 @@ namespace ScoreControlLibrary.SongEventParser
             this._score = score;
         }
 
-        public SongNoteList Parse()
+        public Song Parse()
         {
-            var song = new SongNoteList();
+            var song = new Song();
 
             int? tempo = _score.Parts.First().Measures.First().Directions.Where(x => x.Placement == DirectionPlacement.Above).First().Tempo;
 
@@ -30,7 +31,6 @@ namespace ScoreControlLibrary.SongEventParser
             {
                 song.Tempo = (int)tempo;
             }
-            
 
             double currentNoteTime = 0;
             double currentDevisions = 4;
@@ -56,7 +56,8 @@ namespace ScoreControlLibrary.SongEventParser
                         switch (note.NoteType)
                         {
                             case Note.NoteTypes.Note:
-                                song.Add(ConvertXmlNoteToSongNote(currentNoteTime, note));
+                                
+                                AddSongNoteToSong(currentNoteTime, song, note);
                                 currentNoteTime += note.Duration / currentDevisions;
                                 break;
                             case Note.NoteTypes.Backup:
@@ -76,16 +77,24 @@ namespace ScoreControlLibrary.SongEventParser
             return song;
         }
 
-        public static SongNote ConvertXmlNoteToSongNote(double noteTime, Note xmlNote)
+        public static void AddSongNoteToSong(double noteTime, Song song, Note xmlNote)
         {
+
             var songNote = new SongNote();
             songNote.NoteTime = noteTime;
-            songNote.PitchId = (xmlNote.Pitch.Octave + 1) * 12 + XmlMusicHelper.GetMidiIdOffsetFromC(xmlNote);
+            songNote.PitchId = (xmlNote.Pitch.Octave + 1) * 12 + XmlMusicHelper.GetMidiIdOffsetFromC(xmlNote) + xmlNote.Pitch.Alter;
             songNote.Velocity = 100;
             songNote.Duration = xmlNote.Duration;
 
-            return songNote;
-        }
+            ICollection<SongNote> noteList;
 
+            if (!song.TryGetValue(noteTime, out noteList))
+            {
+                noteList = new Collection<SongNote>();
+                song.Add(noteTime, noteList);
+            };
+
+            noteList.Add(songNote);   
+        }
     }
 }

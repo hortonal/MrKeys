@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="500">
-    <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
+    <ScrollViewer Name="ScoreScrollViewer" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
         <Grid Name="ScoreGrid" HorizontalAlignment="Left" VerticalAlignment="Top">
             <TextBlock Text="Totally awesome, not quite finished.." Grid.Column="1" Grid.Row="1" Margin="50,8" />
         </Grid>

@@ -81,21 +81,17 @@
     <Compile Include="SongEventParser\XScoreNoteEventParser.cs" />
     <Compile Include="SongEventParser\Song.cs" />
     <Compile Include="TestControl.cs" />
-    <Compile Include="Views\ScoreControl.xaml.cs">
+    <Compile Include="ScoreControl.xaml.cs">
       <DependentUpon>ScoreControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\ScoreControl.xaml">
+    <Page Include="ScoreControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
-      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
-      <Name>Sanford.Multimedia.Midi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ThirdParty\MusicXML.Net\MusicXml\MusicXml.csproj">
       <Project>{42ACDD70-26DA-4737-B490-282A21B170E6}</Project>
       <Name>MusicXml</Name>
@@ -103,6 +99,14 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{4FD22659-3465-47D6-86B1-F8B52E0CD688}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KeyBoardControl\KeyBoardControlLibrary.csproj">
+      <Project>{77839d7e-243f-4733-a62a-65af0d237528}</Project>
+      <Name>KeyBoardControlLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
+      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
+      <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>
     <ProjectReference Include="..\SongPlayer\SongPlayer.csproj">
       <Project>{6fa0a2fb-7401-4093-8d3c-a903f4df3aac}</Project>
@@ -127,6 +131,9 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="ScoreRenderer\Examples\Promenade_Example.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScoreRenderer\Examples\LedgerTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ScoreRenderer\Examples\Scales-C-2-Hands.xml">

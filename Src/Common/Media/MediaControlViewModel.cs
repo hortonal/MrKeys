@@ -10,13 +10,13 @@ namespace Common.Media
 {
     public class MediaControlViewModel 
     {
-        private IMediaService _mediaService;
+        private IMediaServiceHost _mediaServiceHost;
         private IDialogService _dialogService;
 
         //these params are typically dependency injected
-        public MediaControlViewModel(IMediaService mediaService, IDialogService diaglogService)
+        public MediaControlViewModel(IMediaServiceHost mediaServiceHost, IDialogService diaglogService)
         {       
-            _mediaService = mediaService;
+            _mediaServiceHost = mediaServiceHost;
             _dialogService = diaglogService;
         }
 
@@ -25,7 +25,7 @@ namespace Common.Media
         {
             try
             {
-                _mediaService.Play();
+                _mediaServiceHost.MediaService.Play();
             } catch (Exception ex)
             {
                 _dialogService.ShowException("Couldn't play: " + ex.Message);
@@ -36,7 +36,7 @@ namespace Common.Media
         {
             try
             {
-                _mediaService.Stop();
+                _mediaServiceHost.MediaService.Stop();
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace Common.Media
         {
             try
             {
-                _mediaService.Pause();
+                _mediaServiceHost.MediaService.Pause();
             }
             catch (Exception ex)
             {
@@ -60,7 +60,7 @@ namespace Common.Media
         {
             try
             {
-                _mediaService.Record();
+                _mediaServiceHost.MediaService.Record();
             }
             catch (Exception ex)
             {
@@ -73,22 +73,22 @@ namespace Common.Media
 
         public ICommand PlayCommand
         {
-            get { return new RelayCommand(PlayExecute, () => _mediaService.CanPlay); }
+            get { return new RelayCommand(PlayExecute, () => _mediaServiceHost.MediaService.CanPlay); }
         }
 
         public ICommand StopCommand
         {
-            get { return new RelayCommand(StopExecute, () => _mediaService.CanStop); }
+            get { return new RelayCommand(StopExecute, () => _mediaServiceHost.MediaService.CanStop); }
         }
 
         public ICommand PauseCommand
         {
-            get { return new RelayCommand(PauseExecute, () => _mediaService.CanPause); }
+            get { return new RelayCommand(PauseExecute, () => _mediaServiceHost.MediaService.CanPause); }
         }
 
         public ICommand RecordCommand
         {
-            get { return new RelayCommand(RecordExecute, () => _mediaService.CanRecord); }
+            get { return new RelayCommand(RecordExecute, () => _mediaServiceHost.MediaService.CanRecord); }
         }
 
         #endregion //Commands

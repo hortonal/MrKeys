@@ -13,7 +13,7 @@ namespace ScoreControlLibrary
     {
         private Grid _scorePanel;
         private XScore _score;
-
+        private RenderHelper _renderHelper;
 
         public ScoreRenderer(XScore score, Grid scorePanel)
         {
@@ -23,19 +23,21 @@ namespace ScoreControlLibrary
 
         public void Render()
         {
+            _renderHelper = new RenderHelper(_scorePanel);
 
-            var renderHelper = new RenderHelper(_scorePanel);
             double currentNoteTime = 0;
             double currentDevisions = 0;
             
-            var staffs = new Staffs(renderHelper);
-                
-            staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+            var staffs = new Staffs(_renderHelper);
+            
+            staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+
+            if (_score == null) throw new Exception("Score is empty, doh..");
 
             //Only add a second stave if nec.
             if (_score.Parts.Any(x => x.Measures.Any(y => y.Attributes.Staves > 1)))
             {
-                staffs.Add(new Staff(renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+                staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
             }
             
             staffs.AddBarLine(currentNoteTime);
@@ -81,8 +83,13 @@ namespace ScoreControlLibrary
                     staffs.AddBarLine(currentNoteTime);
                 }
 
-            double finalX = renderHelper.RenderItems(ScoreLayoutDetails.DefaultMargin_X);
+            double finalX = _renderHelper.RenderItems(ScoreLayoutDetails.DefaultMargin_X);
             foreach (var staff in staffs) staff.DrawStaffLines(ScoreLayoutDetails.DefaultMargin_X, finalX);
+        }
+
+        public double GetHorizontalOffsetForNoteTime(double noteTime)
+        {
+            return _renderHelper.GetHorizontalOffsetForNoteTime(noteTime);
         }
 
         private void UpdateMeasureAttributes(MeasureAttributes attributes, List<Staff> staffs, double noteTime)

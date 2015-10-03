@@ -83,6 +83,7 @@
     <Compile Include="IO\MidiOutput.cs" />
     <Compile Include="IO\SanfordUtils.cs" />
     <Compile Include="Media\IMediaService.cs" />
+    <Compile Include="Media\IMediaServiceHost.cs" />
     <Compile Include="Media\MediaControl.xaml.cs">
       <DependentUpon>MediaControl.xaml</DependentUpon>
     </Compile>
@@ -91,6 +92,7 @@
       <DependentUpon>MediaControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\StatusRedGreenConverter.cs" />
+    <Compile Include="Media\MediaServiceHost.cs" />
     <Compile Include="Music\XmlMusicHelper.cs" />
     <Compile Include="PianoKeyStrokeEvent.cs" />
     <Compile Include="Playground\MediaService.cs" />
@@ -115,13 +117,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
-      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
-      <Name>Sanford.Multimedia.Midi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ThirdParty\MusicXML.Net\MusicXml\MusicXml.csproj">
       <Project>{42acdd70-26da-4737-b490-282a21b170e6}</Project>
       <Name>MusicXml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
+      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
+      <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

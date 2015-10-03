@@ -126,29 +126,28 @@ namespace ScoreControlLibrary
             double yCoord = CalculateYForNote(note);
             _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, _defaultNoteSeparation);
 
-            AddLedgerLines(note, devisions, noteTime, yCoord);
+            if(note.NoteType == Note.NoteTypes.Note) AddLedgerLines(note, noteTime, yCoord);
         }
 
-        private void AddLedgerLines(Note note, double devisions, double noteTime, double yCoord)
+        private void AddLedgerLines(Note note, double noteTime, double yCoord)
         {
-            //Options
             //= 1 line. Draw it
             //=1.5 lines. Draw 1 line
             if (HighestLine_Y - yCoord >= LineSpacing)
             {
                 //Get remainder
-                var numberToAdd = (int) Math.Round( (HighestLine_Y - yCoord) / LineSpacing);
+                var numberToAdd = (int) Math.Floor( (HighestLine_Y - yCoord) / LineSpacing);
                 for (int i = 1; i <= numberToAdd; i++){
-                    _noteRenderHelper.AddLedgerLine(noteTime, yCoord + LineSpacing * (i - 1));
+                    _noteRenderHelper.AddLedgerLine(noteTime, HighestLine_Y - LineSpacing * i);
                 }
             }
             
             if (yCoord - LowestLine_Y >= LineSpacing)
             {
-                var numberToAdd = (int)Math.Round( (yCoord - LowestLine_Y) / LineSpacing);
+                var numberToAdd = (int)Math.Floor( (yCoord - LowestLine_Y) / LineSpacing);
                 for (int i = 1; i <= numberToAdd; i++)
                 {
-                    _noteRenderHelper.AddLedgerLine(noteTime, yCoord + LineSpacing * (i - 1));
+                    _noteRenderHelper.AddLedgerLine(noteTime, LowestLine_Y + LineSpacing * i);
                 }
             }
 

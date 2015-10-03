@@ -27,7 +27,7 @@ namespace MrKeys
     class MainWindowViewModel: NotifyPropertyBasic
     {
         private readonly IUnityContainer _container;
-        private readonly IMediaService _mediaService;
+        private readonly IMediaServiceHost _mediaServiceHost;
         private readonly IDialogService _dialoagService;
         private readonly IOutput _output;
         private readonly IMidiInput _input;
@@ -37,13 +37,13 @@ namespace MrKeys
 
         
 
-        public MainWindowViewModel(IUnityContainer container,  IMediaService mediaService, 
+        public MainWindowViewModel(IUnityContainer container,  IMediaServiceHost mediaServiceHost, 
             IDialogService dialogService, IOutput outputDevice, IMidiInput inputDevice,
             IVirtualKeyBoard keyBoard, ITestControlService currentTest, IInputEvents inputEvents)
         {
             _container =container;
             _dialoagService = dialogService;
-            _mediaService = mediaService;
+            _mediaServiceHost = mediaServiceHost;
             _output = outputDevice;
             _input = inputDevice;
             _keyBoard = keyBoard;
@@ -54,14 +54,6 @@ namespace MrKeys
             availableTestControls.Add(_container.Resolve<NoteGuess.NoteGuessControl>());
             
             ResolveViews();
-            
-            
-            //_keyBoard.KeyPressEvent += (o, e) => _output.Send(e);
-
-            //inputEvents.InputMessageRaised += (o, e) => _keyBoard.HandleIncomingMessage(o, e);
-
-            //_input.MessageReceived += (o, e) => _keyBoard.HandleIncomingMessage(o, e);
-
         }
 
 
@@ -80,9 +72,7 @@ namespace MrKeys
                 RaisePropertyChanged("CurrentTestView");
             }
         }
-
-
-
+        
         private void ResolveViews()
         {
             KeyBoardControlView = _container.Resolve<KeyBoardControl>();

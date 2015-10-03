@@ -20,6 +20,16 @@ namespace ScoreControlLibrary
             Glyphs = new MusicGlyphs();
         }
 
+        public double GetHorizontalOffsetForNoteTime(double noteTime)
+        {
+            List<RenderItem> items;
+            if(renderItemsDictionary.TryGetValue(noteTime, out items))
+            {
+                return items.Max(x => x.XPosition);
+            }
+            return 0;
+        }
+
         public void AddItemToRender(double noteTime, FrameworkElement element, double yPosition, double xOffset, RenderItemType itemType)
         {
             element.HorizontalAlignment = HorizontalAlignment.Left;
@@ -68,6 +78,7 @@ namespace ScoreControlLibrary
             {
                 hadItemsToRender = true;
                 if (item.XOffset < xRightOffset) xRightOffset = item.XOffset;
+                item.XPosition = currentX;
                 RenderItemXY(item.UIElement, currentX, item.YPosition);                   
             }
 
