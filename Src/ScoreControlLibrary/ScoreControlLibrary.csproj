@@ -45,6 +45,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Sanford.Multimedia.Midi, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\SandfordMidi\Sanford.Multimedia.Midi.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -103,10 +107,6 @@
     <ProjectReference Include="..\KeyBoardControl\KeyBoardControlLibrary.csproj">
       <Project>{77839d7e-243f-4733-a62a-65af0d237528}</Project>
       <Name>KeyBoardControlLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
-      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
-      <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>
     <ProjectReference Include="..\SongPlayer\SongPlayer.csproj">
       <Project>{6fa0a2fb-7401-4093-8d3c-a903f4df3aac}</Project>

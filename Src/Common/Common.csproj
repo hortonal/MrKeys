@@ -48,6 +48,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Sanford.Multimedia.Midi, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\SandfordMidi\Sanford.Multimedia.Midi.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
@@ -120,10 +124,6 @@
     <ProjectReference Include="..\..\ThirdParty\MusicXML.Net\MusicXml\MusicXml.csproj">
       <Project>{42acdd70-26da-4737-b490-282a21b170e6}</Project>
       <Name>MusicXml</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj">
-      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
-      <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

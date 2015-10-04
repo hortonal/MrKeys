@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoreControlLibrary", "Src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongPlayer", "Src\SongPlayer\SongPlayer.csproj", "{6FA0A2FB-7401-4093-8D3C-A903F4DF3AAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanford.Multimedia.Midi", "Src\Sanford.Multimedia.Midi\Midi\Sanford.Multimedia.Midi.csproj", "{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,18 +89,6 @@ Global
 		{6FA0A2FB-7401-4093-8D3C-A903F4DF3AAC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6FA0A2FB-7401-4093-8D3C-A903F4DF3AAC}.Release|x86.ActiveCfg = Release|Any CPU
 		{6FA0A2FB-7401-4093-8D3C-A903F4DF3AAC}.Release|x86.Build.0 = Release|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Debug|x86.Build.0 = Debug|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|x86.ActiveCfg = Release|Any CPU
-		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
