@@ -76,6 +76,8 @@
     <Compile Include="Devices\IDeviceStatusService.cs" />
     <Compile Include="Devices\IInputDeviceStatusService.cs" />
     <Compile Include="Infrastructure\Exceptions.cs" />
+    <Compile Include="Logging\DebugOutputLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Infrastructure\ObservableObject.cs" />
     <Compile Include="Infrastructure\PropertySupport.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="IO\MidiInput.cs" />
     <Compile Include="IO\MidiOutput.cs" />
     <Compile Include="IO\SanfordUtils.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Media\IMediaService.cs" />
     <Compile Include="Media\IMediaServiceHost.cs" />
     <Compile Include="Media\MediaControl.xaml.cs">

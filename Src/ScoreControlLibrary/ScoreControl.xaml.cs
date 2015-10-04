@@ -17,7 +17,7 @@ using KeyBoardControlLibrary;
 using System.ComponentModel;
 using System.Threading;
 using System.Diagnostics;
-
+using Common.Logging;
 
 namespace ScoreControlLibrary.Views
 {
@@ -34,6 +34,7 @@ namespace ScoreControlLibrary.Views
         XScore _musicScore;
         ScoreRenderer _scoreRenderer;
         Timer _updateScrollTimer;
+        ILogger _logger;
 
         //Frequency of horizontal update, ms
         private int _scrollTimingPerdiod = 50;
@@ -44,7 +45,7 @@ namespace ScoreControlLibrary.Views
         private double _currentTempo;
         //horizontal units per millisecond
         private double _scrollSpeed = 0;
-        private double _scrollOffset = 100;
+        private double _scrollOffset = 50;
         private double _lastNoteTime = 0;
         private object _lockObject = new object();
 
@@ -54,12 +55,13 @@ namespace ScoreControlLibrary.Views
         }
 
         public ScoreControl(IUnityContainer container, IOutput output, IMediaServiceHost mediaServiceHost, 
-            IVirtualKeyBoard virtualKeyboard, XScore musicScore): this()
+            IVirtualKeyBoard virtualKeyboard, ILogger logger, XScore musicScore): this()
         {
             _output = output;
             _virtualKeyboard = virtualKeyboard;
             _musicScore = musicScore;
             _mediaServiceHost = mediaServiceHost;
+            _logger = logger;
 
             _updateScrollTimer = new Timer(ScrollTimerHandler, null, Timeout.Infinite, _scrollTimingPerdiod);
 
@@ -69,7 +71,8 @@ namespace ScoreControlLibrary.Views
             Song _song;
             _song = new XScoreNoteEventParser(_musicScore).Parse();
             
-            _songEventController = new SongEventController(_song);
+            _songEventController = container.Resolve<SongEventController>();
+            _songEventController.SetSong(_song);
 
             _currentTempo = _songEventController.CurrentTempo;
             //Hook up all handlers for the song controller events
@@ -100,6 +103,8 @@ namespace ScoreControlLibrary.Views
 
         private void Controller_SongNoteEvent(object sender, SongEventArgs e)
         {
+            _logger.Log(this, LogLevel.Debug, "Score control handling song note event. " + e);
+
             _virtualKeyboard.HandleIncomingMessage(this, e.NoteKeyStrokeEvenArguments);
             _output.Send(this, e.NoteKeyStrokeEvenArguments);
 
@@ -107,21 +112,20 @@ namespace ScoreControlLibrary.Views
             //Only handle this once per chord   
             if (e.NoteTime <= _lastNoteTime) return;
             
+            
+
             //Update scrool speed
             var _lastHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NoteTime);
             var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NextNoteTime);
-            var distance = (_nextHorizontalScrollEventPosition - _lastHorizontalScrollEventPosition);
-            var timeToNextEvent = (e.NextNoteTime - e.NoteTime) * _currentTempo;
+
+            SetScrollSpeed(_lastHorizontalScrollEventPosition, _nextHorizontalScrollEventPosition, e.NoteTime, e.NextNoteTime);
 
             _currentHorizontalScrollPosition = _lastHorizontalScrollEventPosition;
             UpdateHorizontalScrollPosition();
-            var tempScrollSpeed = distance / timeToNextEvent;
-
-            if (tempScrollSpeed >= 0) _scrollSpeed = tempScrollSpeed;
-       
+           
             _lastNoteTime = e.NoteTime;
-            
-            //Debug.WriteLine("   Speed: " + _scrollSpeed + ", lastNote: " + e.NoteTime + ", nextNote: " + e.NextNoteTime + ", lastEvent: " + _lastHorizontalScrollEventPosition + ", NextEvent: " + _nextHorizontalScrollEventPosition);            
+
+            _logger.Log(this, LogLevel.Debug, "Score control finished handling song note event. " + e);
         }
 
         private void ResetHorizontalScrollPosition()
@@ -133,11 +137,16 @@ namespace ScoreControlLibrary.Views
             }));
         }
 
+        private void SetScrollSpeed(double startPosition, double endPosistion, double startNoteTime, double endNoteTime)
+        {
+            _scrollSpeed = (endPosistion - startPosition) / ((endNoteTime - startNoteTime) * _currentTempo);
+        }
+
         private void UpdateHorizontalScrollPosition()
         {
             Dispatcher.Invoke(new Action(() =>
             {
-               double actualScrollPosition;
+                double actualScrollPosition;
                 if (_currentHorizontalScrollPosition - _scrollOffset > 0)
                 {
                     actualScrollPosition = _currentHorizontalScrollPosition - _scrollOffset;

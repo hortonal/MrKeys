@@ -8,6 +8,7 @@ using Microsoft.Practices.Unity;
 using System;
 using ScoreControlLibrary;
 using SongPlayer;
+using Common.Logging;
 
 namespace MrKeys
 {
@@ -16,6 +17,11 @@ namespace MrKeys
         private void Bootstrap()
         {
             InputEvents inputEvents = _container.Resolve<InputEvents>();
+
+            //_container.RegisterType<ILogger, DebugOutputLogger>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ILogger, NullLogger>(new ContainerControlledLifetimeManager());
+            var logger = _container.Resolve<ILogger>();
+            logger.LogLevel = LogLevel.Debug;
 
             var midiInput = _container.Resolve<MidiInput>();
             var midiOutput = _container.Resolve<MidiOutput>();

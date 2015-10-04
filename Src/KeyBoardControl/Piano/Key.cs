@@ -11,7 +11,6 @@ namespace KeyBoardControlLibrary
 {
     public class Key : Shape
     {
-        
         #region ctor and member variable declarations
         public static int WhiteKeyWidth = 10;
         public static int KeyOffset = WhiteKeyWidth / 2;
@@ -106,15 +105,17 @@ namespace KeyBoardControlLibrary
         public void SetDefaultKeyColour()
         {
             Dispatcher.Invoke(new Action(() =>
-                Fill = (KeyType == KeyTypes.White) ? Brushes.Ivory : Brushes.Black
-                ));
+            {
+                Fill = (KeyType == KeyTypes.White) ? Brushes.Ivory : Brushes.Black;
+            }));
         }
 
         public void SetKeyPressedColour()
         {
-            Dispatcher.Invoke(new Action(() => 
-                Fill = Brushes.GreenYellow
-                ));
+            Dispatcher.Invoke(new Action(() =>
+            {
+                Fill = Brushes.GreenYellow;
+            }));
         }
 
         public void SetKeyPressedColour(int velocity)

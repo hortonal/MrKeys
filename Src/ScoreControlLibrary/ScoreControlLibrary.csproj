@@ -136,6 +136,9 @@
     <Content Include="ScoreRenderer\Examples\LedgerTest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ScoreRenderer\Examples\Simple2NoteTest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ScoreRenderer\Examples\Scales-C-2-Hands.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

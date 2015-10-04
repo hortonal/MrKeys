@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Common.Devices;
 using System.ComponentModel;
+using Common.Logging;
 
 namespace KeyBoardControlLibrary
 {
@@ -14,42 +15,22 @@ namespace KeyBoardControlLibrary
         private KeyDictionary _keyDictionary;
         private IInputEvents _inputEvents;
         private IMidiInput _midiInput;
-
-        public bool IsInitialised
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public DeviceType DeviceType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
+        private ILogger _logger;
+     
         public event PianoKeyStrokeEvent KeyPressEvent = (o, a) => { };
 
-        public VirtualKeyBoard(IInputEvents inputEvents, IMidiInput midiInput)
+        public VirtualKeyBoard(IInputEvents inputEvents, IMidiInput midiInput, ILogger logger)
         {
             _inputEvents = inputEvents;
             _midiInput = midiInput;
+            _logger = logger;
             Initialise();
         }
 
         private void Initialise()
         {
+            _logger.Log(LogLevel.Info, "Initialising virtual keyboard");
+
             //Give the keyboard a set of virtual keys
             _keyDictionary = new KeyDictionary();
 
@@ -80,6 +61,8 @@ namespace KeyBoardControlLibrary
 
         public void HandleIncomingMessage(object sender, PianoKeyStrokeEventArgs e)
         {
+            _logger.Log(this, LogLevel.Debug, "Handling keyboard input event");
+
             if (e == null) return;
 
             if (_keyDictionary.ContainsKey(e.midiKeyId))
@@ -111,11 +94,33 @@ namespace KeyBoardControlLibrary
         #region MidiInput
         public event PianoKeyStrokeEvent MessageReceived;
         public event PropertyChangedEventHandler PropertyChanged;
+        
+        void IMidiInput.Initialise() { }
 
-        void IMidiInput.Initialise()
+        public bool IsInitialised
         {
-            throw new NotImplementedException();
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
+
+        public string Name
+        {
+            get
+            {
+                return "Virtual Keybaord";
+            }
+        }
+
+        public DeviceType DeviceType
+        {
+            get
+            {
+                return DeviceType.Input;
+            }
+        }
+
 
         public void StartRecording()
         {

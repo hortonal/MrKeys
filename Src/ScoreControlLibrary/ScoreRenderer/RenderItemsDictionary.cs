@@ -35,7 +35,7 @@ namespace ScoreControlLibrary
         }
     }
 
-    internal class RenderItemsDictionary: Dictionary<double, List<RenderItem>>
+    internal class RenderItemsDictionary: SortedDictionary<double, List<RenderItem>>
     {
         //Dictionary keeps a list of items rendered at a given X position 
         //i.e. Dictionary<noteTime, List<RenderItems>>

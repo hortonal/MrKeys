@@ -10,6 +10,7 @@ using Common.Events;
 using System.ComponentModel;
 using System.Threading;
 using Common.Media;
+using Common.Logging;
 
 namespace ScoreControlLibrary.ScoreEventController
 {
@@ -39,13 +40,20 @@ namespace ScoreControlLibrary.ScoreEventController
         //private bool _isPlaying = true;
         //private bool _isRecording = true;
 
-        public SongEventController(Song song)
+        private ILogger _logger;
+
+        public SongEventController(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+        private void IntialiseWithSong(Song song)
         {
             _song = song;
             _songCopy = song.MakeCopy();
 
             PrepareClock();
-         
+
             if (_songCopy.Any())
             {
                 _nextNoteTick = ConvertNoteTimeToTick(_songCopy.Tempo, _songCopy.First().Key);
@@ -56,11 +64,8 @@ namespace ScoreControlLibrary.ScoreEventController
         private void PrepareClock()
         {
             //if (_clock != null) _clock.Dispose();
-
+            
             _clock = new MidiInternalClock();
-
-            //_clock.SetTicks(0);
-            //int ticks = _clock.Ticks;
 
             //Pulses per quarter note... 24 sounds reasonable.
             //Trade off between accuracy and CPU
@@ -88,8 +93,7 @@ namespace ScoreControlLibrary.ScoreEventController
                 //Get note list item
                 noteTime = _songCopy.First().Key;
                 
-                //Debug.WriteLine("  Time: s" + DateTime.UtcNow + ":" + DateTime.UtcNow.Millisecond + " noteTime: " + noteTime + ", next noteTime: " + nextNoteTime + ", current tick time : " + _nextNoteTick);
-
+            
                 ICollection<SongNote> noteList = _songCopy.First().Value;
 
                 //Now drop it from the song
@@ -106,6 +110,8 @@ namespace ScoreControlLibrary.ScoreEventController
 
                 foreach (SongNote note in noteList)
                 {
+                    _logger.Log(this, LogLevel.Debug, "Controller raising note press for: " + note.ToString());
+
                     SongNoteEvent(this, new SongEventArgs(
                         new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyPress, note.Velocity),
                         noteTime,
@@ -113,9 +119,13 @@ namespace ScoreControlLibrary.ScoreEventController
 
                     //Spark up a background worker to wait for the note to finish and release the key press
                     var worker = new BackgroundWorker();
+
+                    var noteCopy = note;
                     worker.DoWork += (ob, arg) =>
                     {
-                        Thread.Sleep(CalculateNoteDurationMilliSeconds(_songCopy.Tempo, note));
+                        _logger.Log(this, LogLevel.Debug, "Controller raising note release for: " + note.ToString());
+
+                        Thread.Sleep(CalculateNoteDurationMilliSeconds(_songCopy.Tempo, noteCopy));
                         SongNoteEvent(this, new SongEventArgs(
                             new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyRelease, 0),
                                                     noteTime,
@@ -158,9 +168,9 @@ namespace ScoreControlLibrary.ScoreEventController
         }
 
         #region ISongEventController
-        public void UpdateSong(Song songNoteList)
+        public void SetSong(Song song)
         {
-            _songCopy = songNoteList.MakeCopy();
+            IntialiseWithSong(song);
         }
 
         private void FinishSong()

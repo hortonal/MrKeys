@@ -21,7 +21,7 @@ namespace ScoreControlLibrary.ScoreEventController
         /// </summary>
         int CurrentTempo { get; }
 
-        void UpdateSong(Song songNoteList);
+        void SetSong(Song songNoteList);
         void Play();
         void Pause();
         void Resume();
@@ -45,5 +45,11 @@ namespace ScoreControlLibrary.ScoreEventController
             NoteTime = noteTime;
         }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("notetime: ").Append(NoteTime).Append(", Keystroke: ").Append(NoteKeyStrokeEvenArguments);
+            return sb.ToString();
+        }
     }
 }

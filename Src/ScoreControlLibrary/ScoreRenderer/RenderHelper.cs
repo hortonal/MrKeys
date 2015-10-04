@@ -53,6 +53,8 @@ namespace ScoreControlLibrary
         public double RenderItems(double xStartingOffset)
         {
             double currentX = xStartingOffset;
+
+            //renderItemsDictionary.OrderBy();
             //Step through each NoteTime item
             foreach (double noteTime in renderItemsDictionary.Keys)
             {

@@ -4,12 +4,19 @@ using Common;
 using Common.Devices;
 using Common.Events;
 using Common.Infrastructure;
+using Common.Logging;
 
 namespace Common.IO
 {
     public class MidiOutput : ObservableObject, IOutput
     {
         OutputDevice _outputDevice;
+        private ILogger _logger;
+
+        public MidiOutput(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public void Close()
         {
@@ -35,6 +42,7 @@ namespace Common.IO
             {
                 try
                 {
+                    _logger.Log(this, LogLevel.Info, "Sending message");
                     _outputDevice.Send(SanfordUtils.ConvertKeyStrokeEventArgsToChannelMessage(args));
 
                 }

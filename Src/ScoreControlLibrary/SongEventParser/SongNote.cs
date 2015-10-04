@@ -11,5 +11,10 @@ namespace ScoreControlLibrary.SongEventParser
         public double Duration { get; set; }
         public int PitchId { get; set; }
         public int Velocity { get; set; }
+
+        public override string ToString()
+        {
+            return NoteTime + ", " + Duration + ", " + PitchId + ", " + Velocity;
+        }
     }
 }
