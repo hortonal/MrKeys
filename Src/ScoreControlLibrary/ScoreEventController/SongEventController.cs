@@ -18,6 +18,8 @@ namespace ScoreControlLibrary.ScoreEventController
         //Notify others of events raised from the controller
         public event SongEventHandler SongNoteEvent;
         public event SongFinishedHandler Finished;
+        public event SongFinishedHandler Starting;
+        public event SongFinishedHandler Stopping;
 
         //Used for thread safety (ideally...)
         private readonly object _lockObject = new object();
@@ -85,7 +87,8 @@ namespace ScoreControlLibrary.ScoreEventController
                 double nextNoteTime = 0;
                 //Get note list item
                 noteTime = _songCopy.First().Key;
-                //Debug.WriteLine(" noteTime: " + noteTime + ", next noteTime: " + nextNoteTime + ", current tick time : " + _nextNoteTick);
+                
+                //Debug.WriteLine("  Time: s" + DateTime.UtcNow + ":" + DateTime.UtcNow.Millisecond + " noteTime: " + noteTime + ", next noteTime: " + nextNoteTime + ", current tick time : " + _nextNoteTick);
 
                 ICollection<SongNote> noteList = _songCopy.First().Value;
 
@@ -110,14 +113,17 @@ namespace ScoreControlLibrary.ScoreEventController
 
                     //Spark up a background worker to wait for the note to finish and release the key press
                     var worker = new BackgroundWorker();
-                    worker.DoWork += (ob, arg) => { Thread.Sleep(CalculateNoteDurationMilliSeconds(_songCopy.Tempo, note)); };
+                    worker.DoWork += (ob, arg) =>
+                    {
+                        Thread.Sleep(CalculateNoteDurationMilliSeconds(_songCopy.Tempo, note));
+                        SongNoteEvent(this, new SongEventArgs(
+                            new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyRelease, 0),
+                                                    noteTime,
+                                                    nextNoteTime));
+                    };
 
                     worker.RunWorkerCompleted += (ob, arg) =>
                     {
-                        SongNoteEvent(this, new SongEventArgs(
-                            new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyRelease, 0),
-                            noteTime,
-                            nextNoteTime));
                         _backGroundWorkersRunning--;
                     };
 
@@ -132,7 +138,6 @@ namespace ScoreControlLibrary.ScoreEventController
 
                 //New first item becomes next thing to watch for
                 _nextNoteTick = ConvertNoteTimeToTick(_songCopy.Tempo, nextNoteTime);
-                //Debug.WriteLine(" next tick time : " + _nextNoteTick);
             }
         }
 
@@ -185,6 +190,7 @@ namespace ScoreControlLibrary.ScoreEventController
             {
                 if (_clock.IsRunning)
                 {
+                    Stopping(this, null);
                     _clock.Stop();
                 }
             }
@@ -197,6 +203,7 @@ namespace ScoreControlLibrary.ScoreEventController
 
         public void Play()
         {
+            Starting(this, null);
             if (_isPaused)
             {
                 Resume();
@@ -205,9 +212,11 @@ namespace ScoreControlLibrary.ScoreEventController
 
             _clock.SetTicks(0);
             _songCopy = _song.MakeCopy();
-                
+
+            Starting(this, null);
+
             lock (_lockObject)
-            {
+            {    
                 if (_clock.IsRunning) _clock.Stop();
                 _clock.Start();
             }
@@ -220,6 +229,7 @@ namespace ScoreControlLibrary.ScoreEventController
         {
             _isPaused = false;
 
+            Starting(this, null);
             lock (_lockObject)
             {
                 if (_clock.IsRunning) return;
@@ -234,6 +244,7 @@ namespace ScoreControlLibrary.ScoreEventController
         public void Stop()
         {
             //FinishSong();
+            Stopping(this, null);
             lock (_lockObject)
             {
                 _clock.Stop();
@@ -252,7 +263,15 @@ namespace ScoreControlLibrary.ScoreEventController
         public bool CanStop { get; set; }
         public bool CanPause { get; set; }
         public bool CanRecord { get { return false; } set {}}
-        
+
+        public int CurrentTempo
+        {
+            get
+            {
+                return LengthOfBeatInMicroSeconds(_songCopy.Tempo) / 1000;
+            }
+        }
+
         ~SongEventController()
         {
             Dispose(false);

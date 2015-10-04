@@ -87,9 +87,9 @@ namespace ScoreControlLibrary
             foreach (var staff in staffs) staff.DrawStaffLines(ScoreLayoutDetails.DefaultMargin_X, finalX);
         }
 
-        public double GetHorizontalOffsetForNoteTime(double noteTime)
+        public double GetHorizontalPositionForNoteTime(double noteTime)
         {
-            return _renderHelper.GetHorizontalOffsetForNoteTime(noteTime);
+            return _renderHelper.GetHorizontalPositionForNoteTime(noteTime);
         }
 
         private void UpdateMeasureAttributes(MeasureAttributes attributes, List<Staff> staffs, double noteTime)

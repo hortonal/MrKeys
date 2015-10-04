@@ -20,12 +20,12 @@ namespace ScoreControlLibrary
             Glyphs = new MusicGlyphs();
         }
 
-        public double GetHorizontalOffsetForNoteTime(double noteTime)
+        public double GetHorizontalPositionForNoteTime(double noteTime)
         {
             List<RenderItem> items;
             if(renderItemsDictionary.TryGetValue(noteTime, out items))
             {
-                return items.Max(x => x.XPosition);
+                return items.Where(x => x.ItemType == RenderItemType.Note).Max(x => x.XPosition);
             }
             return 0;
         }

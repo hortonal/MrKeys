@@ -12,7 +12,14 @@ namespace ScoreControlLibrary.ScoreEventController
     public interface ISongEventController
     {
         event SongEventHandler SongNoteEvent;
+        event SongFinishedHandler Starting;
+        event SongFinishedHandler Stopping;
         event SongFinishedHandler Finished;
+
+        /// <summary>
+        /// Current elapsed time in milliseconds of 1 'noteTime'
+        /// </summary>
+        int CurrentTempo { get; }
 
         void UpdateSong(Song songNoteList);
         void Play();
