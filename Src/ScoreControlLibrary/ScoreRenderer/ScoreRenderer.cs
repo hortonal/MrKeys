@@ -30,14 +30,14 @@ namespace ScoreControlLibrary
             
             var staffs = new Staffs(_renderHelper);
             
-            staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+            staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff1_FristLineY));
 
             if (_score == null) throw new Exception("Score is empty, doh..");
 
             //Only add a second stave if nec.
             if (_score.Parts.Any(x => x.Measures.Any(y => y.Attributes.Staves > 1)))
             {
-                staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY, ScoreLayoutDetails.DefaultNoteSeparation));
+                staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY));
             }
             
             staffs.AddBarLine(currentNoteTime);

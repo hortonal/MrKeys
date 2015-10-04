@@ -16,7 +16,7 @@ namespace ScoreControlLibrary
         public static double DefaultMargin_X { get { return 10; } }
         public static double DefaultNoteHeight { get { return LineSpacing_Y - 1.3; ; } }
         //public static double DefaultNoteWidth { get { return LineSpacing_Y; } }
-        public static double DefaultNoteSeparation { get { return LineSpacing_Y * 4; } }
+        public static double DefaultQuarterNoteSeparation { get { return LineSpacing_Y * 4; } }
 
         public static int NumberOfLines { get { return 5; } }
 

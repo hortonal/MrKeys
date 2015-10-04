@@ -77,8 +77,11 @@ namespace ScoreControlLibrary
             foreach (RenderItem item in items)
             {
                 hadItemsToRender = true;
+                
                 if (item.XOffset < xRightOffset) xRightOffset = item.XOffset;
+                //Store the final object horizontal position for later
                 item.XPosition = currentX;
+
                 RenderItemXY(item.UIElement, currentX, item.YPosition);                   
             }
 

@@ -51,9 +51,9 @@ namespace ScoreControlLibrary
 
         private RenderHelper _renderHelper;
         private NoteRenderHelper _noteRenderHelper;
-        private double _defaultNoteSeparation;
+        //private double _defaultNoteSeparation;
 
-        public Staff(RenderHelper renderHelper, double lineSpacing, double lowestLine_Y, double defaultNoteSeparation)
+        public Staff(RenderHelper renderHelper, double lineSpacing, double lowestLine_Y)
         {
             _renderHelper = renderHelper;
             LineSpacing = lineSpacing;
@@ -61,8 +61,7 @@ namespace ScoreControlLibrary
             RestYCoords = new RestYCoords(LowestLine_Y, LineSpacing);
 
             _noteRenderHelper = new NoteRenderHelper(_renderHelper, RestYCoords);
-
-            _defaultNoteSeparation = defaultNoteSeparation;
+            
 
             //Set some values that will never occur in practice, so when we first check to see if the attributes
             //in the xml are different to our staff, we'll always update the first time around
@@ -124,7 +123,7 @@ namespace ScoreControlLibrary
         public void AddNote(Note note, double devisions, double noteTime)
         {
             double yCoord = CalculateYForNote(note);
-            _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, _defaultNoteSeparation);
+            _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, ScoreLayoutDetails.DefaultQuarterNoteSeparation * note.Duration );
 
             if(note.NoteType == Note.NoteTypes.Note) AddLedgerLines(note, noteTime, yCoord);
         }

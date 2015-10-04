@@ -85,7 +85,8 @@ namespace ScoreControlLibrary.ScoreEventController
                 double nextNoteTime = 0;
                 //Get note list item
                 noteTime = _songCopy.First().Key;
-                Debug.WriteLine(" noteTime: " + noteTime + ", next noteTime: " + nextNoteTime);
+                //Debug.WriteLine(" noteTime: " + noteTime + ", next noteTime: " + nextNoteTime + ", current tick time : " + _nextNoteTick);
+
                 ICollection<SongNote> noteList = _songCopy.First().Value;
 
                 //Now drop it from the song
@@ -131,6 +132,7 @@ namespace ScoreControlLibrary.ScoreEventController
 
                 //New first item becomes next thing to watch for
                 _nextNoteTick = ConvertNoteTimeToTick(_songCopy.Tempo, nextNoteTime);
+                //Debug.WriteLine(" next tick time : " + _nextNoteTick);
             }
         }
 
@@ -147,7 +149,7 @@ namespace ScoreControlLibrary.ScoreEventController
         
         private int ConvertNoteTimeToTick(int tempo, double noteTime)
         {
-            return (int) noteTime * _clock.Ppqn;
+            return (int) (1.0 * noteTime * _clock.Ppqn);
         }
 
         #region ISongEventController
