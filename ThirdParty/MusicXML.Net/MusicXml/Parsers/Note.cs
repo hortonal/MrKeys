@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MindTouch.Xml;
 
 namespace MusicXml
@@ -54,7 +55,7 @@ namespace MusicXml
 		{
 			get { return theDocument["type"].AsText ?? String.Empty; }
 		}
-		public int Voice
+		public int Voice    
 		{
 			get { return theDocument["voice"].AsInt ?? -1; }
 		}
@@ -87,7 +88,47 @@ namespace MusicXml
             get { return theDocument["@default-y"].AsDouble ?? double.NaN; }
         }
 
-		public Pitch Pitch
+        public IEnumerable<Beam> Beams
+        {
+            get
+            {
+                List<Beam> beams = new List<Beam>();
+                foreach (XDoc beam in theDocument["beam"])
+                {
+                    beams.Add(new Beam(beam));
+                }
+                return beams;
+            }
+        }
+
+        public Beam Beam
+        {
+            get
+            {
+                XDoc beam = theDocument["beam"];
+                return beam.IsEmpty ? null : new Beam(beam);
+            }
+        }
+
+        public TieType TieType
+        {
+            get
+            {
+                XDoc tie = theDocument["tie/@type"];
+
+                switch (tie.AsText)
+                {
+                    case "stop":
+                        return TieType.Stop;
+                    case "start":
+                        return TieType.Start;
+                    default:
+                        return TieType.None;
+                }
+            }
+        }
+
+        public Pitch Pitch
 		{
 			get
 			{
@@ -101,4 +142,6 @@ namespace MusicXml
             return string.Format("Voice={0}, Type={1}, Pitch{2}, Duration={3}, IsBackUp={4}, Staff={5}, x={6}, y={7}", Voice, Type, Pitch, Duration, IsBackup, Staff, DefaultX, DefaultY);
         }
 	}
+
+    public enum TieType {  None, Start, Stop }
 }

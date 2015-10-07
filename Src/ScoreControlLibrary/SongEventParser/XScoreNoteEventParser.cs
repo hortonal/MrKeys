@@ -35,45 +35,52 @@ namespace ScoreControlLibrary.SongEventParser
             double currentNoteTime = 0;
             double currentDevisions = 4;
 
-            foreach (Part part in _score.Parts)
-                foreach (Measure measure in part.Measures)
-                {
+            //foreach (Part part in _score.Parts)
+            Part part = MusicXmlHelpers.SelectPianoPart(_score);
+
+            foreach (Measure measure in part.Measures)
+            {
                     
-                    MeasureAttributes attributes = measure.Attributes;
-                    if (attributes != null)
-                    {
-                        if (attributes.Divisions != -1) currentDevisions = attributes.Divisions;
-                    }
-
-                    double lastXmlNoteDuration = 0;
-
-                    foreach (Note note in measure.Notes)
-                    {
-                        double noteDuration = note.Duration / currentDevisions;
-                        //If the current note is part of a chord, we need to revert to the previous NoteTime
-                        if (note.IsChord) currentNoteTime -= lastXmlNoteDuration;
-                        
-                        //After current note drawn, handle keeping track of noteTime in the piece
-                        switch (note.NoteType)
-                        {
-                            case Note.NoteTypes.Note:
-                                
-                                AddSongNoteToSong(currentNoteTime, song, note, noteDuration);
-                                currentNoteTime += noteDuration;
-                                break;
-                            case Note.NoteTypes.Backup:
-                                currentNoteTime -= noteDuration;
-                                break;
-                            case Note.NoteTypes.Forward:
-                                currentNoteTime += noteDuration;
-                                break;
-                            default:
-                                currentNoteTime += noteDuration;
-                                break;
-                        }
-                        lastXmlNoteDuration = noteDuration;
-                    }
+                MeasureAttributes attributes = measure.Attributes;
+                if (attributes != null)
+                {
+                    if (attributes.Divisions != -1) currentDevisions = attributes.Divisions;
                 }
+
+                double lastXmlNoteDuration = 0;
+
+                foreach (Note note in measure.Notes)
+                {
+                    double noteDuration = note.Duration / currentDevisions;
+                    //If the current note is part of a chord, we need to revert to the previous NoteTime
+                    if (note.IsChord) currentNoteTime -= lastXmlNoteDuration;
+                        
+                    //After current note drawn, handle keeping track of noteTime in the piece
+                    switch (note.NoteType)
+                    {
+                        case Note.NoteTypes.Note:
+                            if(note.TieType == TieType.Stop)
+                            {
+                                ExtendSongNote(currentNoteTime, song, note, noteDuration);
+                            } else
+                            {
+                                AddSongNoteToSong(currentNoteTime, song, note, noteDuration);
+                            }
+                            currentNoteTime += noteDuration;
+                            break;
+                        case Note.NoteTypes.Backup:
+                            currentNoteTime -= noteDuration;
+                            break;
+                        case Note.NoteTypes.Forward:
+                            currentNoteTime += noteDuration;
+                            break;
+                        default:
+                            currentNoteTime += noteDuration;
+                            break;
+                    }
+                    lastXmlNoteDuration = noteDuration;
+                }
+            }
 
             return song;
         }
@@ -83,7 +90,7 @@ namespace ScoreControlLibrary.SongEventParser
 
             var songNote = new SongNote();
             songNote.NoteTime = noteTime;
-            songNote.PitchId = (xmlNote.Pitch.Octave + 1) * 12 + XmlMusicHelper.GetMidiIdOffsetFromC(xmlNote) + xmlNote.Pitch.Alter;
+            songNote.PitchId = GetPitchIdFromNote(xmlNote);
             songNote.Velocity = 100;
             
             songNote.Duration = duration;
@@ -98,5 +105,31 @@ namespace ScoreControlLibrary.SongEventParser
 
             noteList.Add(songNote);   
         }
+
+        public static void ExtendSongNote(double noteTime, Song song, Note xmlNote, double duration)
+        {
+            int pitchId = GetPitchIdFromNote(xmlNote);
+
+
+            //searching the list backwards will be faster..
+            //I'm sure there's nice linq for this, but hey..
+            foreach (double itemNoteTime in song.Keys.Reverse())
+            {
+                foreach(var note in song[itemNoteTime])
+                {
+                    if (note.PitchId == pitchId)
+                    {
+                        note.Duration += duration;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private static int GetPitchIdFromNote(Note note)
+        {
+            return (note.Pitch.Octave + 1) * 12 + XmlMusicHelper.GetMidiIdOffsetFromC(note) + note.Pitch.Alter;
+        }
+
     }
 }

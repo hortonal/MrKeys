@@ -125,10 +125,10 @@ namespace ScoreControlLibrary
             double yCoord = CalculateYForNote(note);
             _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, ScoreLayoutDetails.DefaultQuarterNoteSeparation * note.Duration );
 
-            if(note.NoteType == Note.NoteTypes.Note) AddLedgerLines(note, noteTime, yCoord);
+            if(note.NoteType == Note.NoteTypes.Note) AddLedgerLinesIfNeeded(note, noteTime, yCoord);
         }
 
-        private void AddLedgerLines(Note note, double noteTime, double yCoord)
+        private void AddLedgerLinesIfNeeded(Note note, double noteTime, double yCoord)
         {
             //= 1 line. Draw it
             //=1.5 lines. Draw 1 line

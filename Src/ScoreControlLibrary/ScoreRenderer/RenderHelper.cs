@@ -9,21 +9,21 @@ namespace ScoreControlLibrary
 {
     internal class RenderHelper
     {
-        private Grid scorePanel;
-        private RenderItemsDictionary renderItemsDictionary;
+        private Canvas _scorePanel;
+        private RenderItemsDictionary _renderItemsDictionary;
         public MusicGlyphs Glyphs { get; private set; }
 
-        public RenderHelper(Grid scorePanel)
+        public RenderHelper(Canvas scorePanel)
         {
-            this.scorePanel = scorePanel;
-            renderItemsDictionary = new RenderItemsDictionary();
+            _scorePanel = scorePanel;
+            _renderItemsDictionary = new RenderItemsDictionary();
             Glyphs = new MusicGlyphs();
         }
 
         public double GetHorizontalPositionForNoteTime(double noteTime)
         {
             List<RenderItem> items;
-            if(renderItemsDictionary.TryGetValue(noteTime, out items))
+            if(_renderItemsDictionary.TryGetValue(noteTime, out items))
             {
                 return items.Where(x => x.ItemType == RenderItemType.Note).Max(x => x.XPosition);
             }
@@ -34,7 +34,7 @@ namespace ScoreControlLibrary
         {
             element.HorizontalAlignment = HorizontalAlignment.Left;
             element.VerticalAlignment = VerticalAlignment.Top;
-            renderItemsDictionary.Add(noteTime, new RenderItem(element, yPosition, xOffset, itemType));
+            _renderItemsDictionary.Add(noteTime, new RenderItem(element, yPosition, xOffset, itemType));
         }
 
         public void RenderItemXY(FrameworkElement element, double x, double y)
@@ -42,7 +42,7 @@ namespace ScoreControlLibrary
             element.HorizontalAlignment = HorizontalAlignment.Left;
             element.VerticalAlignment = VerticalAlignment.Top;
             element.Margin = new Thickness(x, y, 0, 0);
-            scorePanel.Children.Add(element);
+            _scorePanel.Children.Add(element);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ScoreControlLibrary
 
             //renderItemsDictionary.OrderBy();
             //Step through each NoteTime item
-            foreach (double noteTime in renderItemsDictionary.Keys)
+            foreach (double noteTime in _renderItemsDictionary.Keys)
             {
                 //Render items by type: BarLines, Clefs, Keys, Timing Signatures, then notes
                 currentX += RenderSpecificItems(RenderItemType.BarDivision, noteTime, currentX);
@@ -75,7 +75,7 @@ namespace ScoreControlLibrary
             
             double xRightOffset = 1000; 
             bool hadItemsToRender = false;
-            var items = GetItemsByType(type, renderItemsDictionary[noteTime]);
+            var items = GetItemsByType(type, _renderItemsDictionary[noteTime]);
             foreach (RenderItem item in items)
             {
                 hadItemsToRender = true;

@@ -7,6 +7,8 @@ using System.Windows.Media;
 
 namespace ScoreControlLibrary
 {
+    internal enum BarLineStyle { Light, LightHeavy }
+
     internal class Staffs: List<Staff>
     {
         RenderHelper _renderHelper;
@@ -16,18 +18,43 @@ namespace ScoreControlLibrary
             _renderHelper = renderHelper;
         }
 
-        public void AddBarLine(double noteTime)
+        public void AddBarLine(double noteTime, BarLineStyle barLineStyle = BarLineStyle.Light)
         {
 
+            double xLineOffset = 0;
+            double xPostBarLineOffset = ScoreLayoutDetails.LineSpacing_Y * 1.5;
+            
+            if (barLineStyle == BarLineStyle.LightHeavy)
+            {
+                xLineOffset = -ScoreLayoutDetails.LineSpacing_Y / 2;
+                xPostBarLineOffset = 0;
+            }
+            
             Line singleBarLine = new Line()
             {
                 Y1 = 0,
                 Y2 = LowestBarYCoord - HighestBarYCoord,
                 Stroke = Brushes.Black,
-                StrokeThickness = 1
+                StrokeThickness = 1,
+                X1 = xLineOffset,
+                X2 = xLineOffset
             };
 
-            _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, 8, RenderItemType.BarDivision);
+            _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, xPostBarLineOffset, RenderItemType.BarDivision);
+
+            if(barLineStyle == BarLineStyle.LightHeavy)
+            {
+                singleBarLine = new Line()
+                {
+                    Y1 = 0,
+                    Y2 = LowestBarYCoord - HighestBarYCoord,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 2
+                };
+
+                _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, 0, RenderItemType.BarDivision);
+
+            }
         }
 
         private double LowestBarYCoord

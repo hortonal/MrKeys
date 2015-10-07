@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsers\Beam.cs" />
     <Compile Include="Parsers\Clef.cs" />
     <Compile Include="Parsers\Direction.cs" />
     <Compile Include="Parsers\Encoding.cs" />

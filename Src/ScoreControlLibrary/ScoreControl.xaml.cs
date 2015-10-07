@@ -37,7 +37,7 @@ namespace ScoreControlLibrary.Views
         ILogger _logger;
 
         //Frequency of horizontal update, ms
-        private int _scrollTimingPerdiod = 50;
+        private int _scrollTimingPerdiod = 6;
         
         //State variables
         private double _currentHorizontalScrollPosition = 0;
@@ -45,7 +45,7 @@ namespace ScoreControlLibrary.Views
         private double _currentTempo;
         //horizontal units per millisecond
         private double _scrollSpeed = 0;
-        private double _scrollOffset = 50;
+        private double _scrollOffset = 400;
         private double _lastNoteTime = 0;
         private object _lockObject = new object();
 
@@ -70,7 +70,9 @@ namespace ScoreControlLibrary.Views
 
             Song _song;
             _song = new XScoreNoteEventParser(_musicScore).Parse();
-            
+
+            ScoreGrid.Width = 12000;
+
             _songEventController = container.Resolve<SongEventController>();
             _songEventController.SetSong(_song);
 

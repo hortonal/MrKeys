@@ -11,11 +11,11 @@ namespace ScoreControlLibrary
     
     public class ScoreRenderer
     {
-        private Grid _scorePanel;
+        private Canvas _scorePanel;
         private XScore _score;
         private RenderHelper _renderHelper;
 
-        public ScoreRenderer(XScore score, Grid scorePanel)
+        public ScoreRenderer(XScore score, Canvas scorePanel)
         {
             this._score = score;
             this._scorePanel = scorePanel;
@@ -34,54 +34,58 @@ namespace ScoreControlLibrary
 
             if (_score == null) throw new Exception("Score is empty, doh..");
 
+            Part part = MusicXmlHelpers.SelectPianoPart(_score);
+
+            double numberOfStaves = MusicXmlHelpers.GetNumberOfStaves(part);
+            
             //Only add a second stave if nec.
-            if (_score.Parts.Any(x => x.Measures.Any(y => y.Attributes.Staves > 1)))
+            if (numberOfStaves == 2)
             {
                 staffs.Add(new Staff(_renderHelper, ScoreLayoutDetails.LineSpacing_Y, ScoreLayoutDetails.Staff2_FristLineY));
             }
             
             staffs.AddBarLine(currentNoteTime);
-
-            foreach (Part part in _score.Parts)
-                foreach (Measure measure in part.Measures)
+            
+            //foreach (Part part in _score.Parts)
+            foreach (Measure measure in part.Measures)
+            {
+                MeasureAttributes attributes = measure.Attributes;
+                if (attributes != null)
                 {
-                    MeasureAttributes attributes = measure.Attributes;
-                    if (attributes != null)
-                    {
-                        if (attributes.Divisions != -1) currentDevisions = attributes.Divisions;
+                    if (attributes.Divisions != -1) currentDevisions = attributes.Divisions;
 
-                        UpdateMeasureAttributes(attributes, staffs, currentNoteTime);
-                    }
-
-                    double lastNoteDuration = 0;
-
-                    foreach (Note note in measure.Notes)
-                    {
-                        //If the current note is part of a chord, we need to revert to the previous NoteTime
-                        if (note.IsChord) currentNoteTime -= lastNoteDuration / currentDevisions;
-
-                        Staff staff = GetStaffFromNote(staffs, note);
-                        if (staff != null && note.IsDrawableEntity)
-                        {
-                            staff.AddNote(note, currentDevisions, currentNoteTime);
-                        }
-                        
-                        //After current note drawn, handle keeping track of noteTime in the piece
-                        switch (note.NoteType)
-                        {
-                            case Note.NoteTypes.Backup: currentNoteTime -= note.Duration / currentDevisions;
-                                break;
-                            case Note.NoteTypes.Forward: currentNoteTime += note.Duration / currentDevisions;
-                                break;
-                            default: currentNoteTime += note.Duration / currentDevisions;
-                                break;
-                        }
-
-                        lastNoteDuration = note.Duration;
-                    }
-
-                    staffs.AddBarLine(currentNoteTime);
+                    UpdateMeasureAttributes(attributes, staffs, currentNoteTime);
                 }
+
+                double lastNoteDuration = 0; 
+
+                foreach (Note note in measure.Notes)
+                {
+                    //If the current note is part of a chord, we need to revert to the previous NoteTime
+                    if (note.IsChord) currentNoteTime -= lastNoteDuration / currentDevisions;
+
+                    Staff staff = GetStaffFromNote(staffs, note);
+                    if (staff != null && note.IsDrawableEntity)
+                    {
+                        staff.AddNote(note, currentDevisions, currentNoteTime);
+                    }
+                        
+                    //After current note drawn, handle keeping track of noteTime in the piece
+                    switch (note.NoteType)
+                    {
+                        case Note.NoteTypes.Backup: currentNoteTime -= note.Duration / currentDevisions;
+                            break;
+                        case Note.NoteTypes.Forward: currentNoteTime += note.Duration / currentDevisions;
+                            break;
+                        default: currentNoteTime += note.Duration / currentDevisions;
+                            break;
+                    }
+
+                    lastNoteDuration = note.Duration;
+                }
+
+                staffs.AddBarLine(currentNoteTime);
+            }
 
             double finalX = _renderHelper.RenderItems(ScoreLayoutDetails.DefaultMargin_X);
             foreach (var staff in staffs) staff.DrawStaffLines(ScoreLayoutDetails.DefaultMargin_X, finalX);
@@ -127,5 +131,8 @@ namespace ScoreControlLibrary
             if (staffId > 0 && staffId <= staffs.Count) return staffs[staffId-1];
             return null;
         }
+
+
+
     }
 }

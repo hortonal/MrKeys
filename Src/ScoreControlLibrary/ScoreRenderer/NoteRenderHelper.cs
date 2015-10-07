@@ -27,6 +27,9 @@ namespace ScoreControlLibrary
             double finalYCoord = yCoord;
             double defaultNoteWidth = 20.0;
 
+            var pointStemStart = new System.Windows.Point();
+            var pointStemEnd = new System.Windows.Point();
+
             if (note.IsRest)
             {
                 switch (note.Type)
@@ -43,7 +46,7 @@ namespace ScoreControlLibrary
                     case "16th":
                         glyphType = typeof(Rest16thGlyph);
                         break;
-                    case "eigth":
+                    case "eighth":
                         glyphType = typeof(RestEighthGlyph);
                         break;
                     case "quarter":
@@ -88,31 +91,37 @@ namespace ScoreControlLibrary
 
                 line.StrokeThickness = 1.2;
                 line.Stroke = Brushes.Black;
-                
+
                 double stemHeight = defaultNoteSize * 3.0;
                 switch(note.Stem)
                 {
                     case "down":
-                        line.Y1 = 0.1;
-                        line.Y2 = stemHeight;
-                        line.X1 = 0.1;
-                        line.X2 = 0.1;
+                        pointStemStart.X = 0.1;
+                        pointStemStart.Y = 0.1;
+                        pointStemEnd.X = 0.1;
+                        pointStemEnd.Y = stemHeight;
                         break;
                     case "up":
-                        line.Y1 = - 0.1;
-                        line.Y2 = - stemHeight;
-                        line.X1 = defaultNoteSize - 0.1;
-                        line.X2 = defaultNoteSize - 0.1;
+                        pointStemStart.X = defaultNoteSize - 0.1;
+                        pointStemStart.Y = -0.1;
+                        pointStemEnd.X = defaultNoteSize - 0.1;
+                        pointStemEnd.Y = -stemHeight;
                         break;
                 }
 
-                _renderHelper.AddItemToRender(noteTime, line, finalYCoord, 0, RenderItemType.NoteStem);
+                line.X1 = pointStemStart.X;
+                line.X2 = pointStemEnd.X;
+                line.Y1 = pointStemStart.Y;
+                line.Y2 = pointStemEnd.Y;
                 
+                _renderHelper.AddItemToRender(noteTime, line, finalYCoord, 0, RenderItemType.NoteStem);
             }
             
             TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, defaultNoteSize * 3.3);
 
             _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, xCoordDefaultNoteSeparation, RenderItemType.Note);
+
+            //Add placeholder line for beam (need to hook up in the renderer)
         }
 
         public void AddLedgerLine(double noteTime, double yCoord)

@@ -22,10 +22,7 @@ namespace ScoreControlLibrary.ScoreEventController
         int CurrentTempo { get; }
 
         void SetSong(Song songNoteList);
-        void Play();
-        void Pause();
-        void Resume();
-        void Stop();
+       
         
     }
 
