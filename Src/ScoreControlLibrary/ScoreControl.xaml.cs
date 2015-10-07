@@ -118,10 +118,10 @@ namespace ScoreControlLibrary.Views
             var _lastHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NoteTime);
             var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NextNoteTime);
 
-            SetScrollSpeed(_lastHorizontalScrollEventPosition, _nextHorizontalScrollEventPosition, e.NoteTime, e.NextNoteTime);
+            SetScrollSpeed(_currentHorizontalScrollPosition, _nextHorizontalScrollEventPosition, e.NoteTime, e.NextNoteTime);
 
-            _currentHorizontalScrollPosition = _lastHorizontalScrollEventPosition;
-            UpdateHorizontalScrollPosition();
+            //_currentHorizontalScrollPosition = _lastHorizontalScrollEventPosition;
+            //UpdateHorizontalScrollPosition();
            
             _lastNoteTime = e.NoteTime;
 
