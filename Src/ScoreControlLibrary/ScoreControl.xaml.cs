@@ -111,11 +111,10 @@ namespace ScoreControlLibrary.Views
             _output.Send(this, e.NoteKeyStrokeEvenArguments);
 
             if (e.NoteKeyStrokeEvenArguments.KeyStrokeType != Common.Events.KeyStrokeType.KeyPress) return;
+            
             //Only handle this once per chord   
             if (e.NoteTime <= _lastNoteTime) return;
             
-            
-
             //Update scrool speed
             var _lastHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NoteTime);
             var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NextNoteTime);

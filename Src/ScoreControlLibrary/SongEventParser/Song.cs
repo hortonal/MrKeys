@@ -12,7 +12,7 @@ namespace ScoreControlLibrary.SongEventParser
     /// occur at the same time - i.e. a chord - we collect these together in the collection (makes the 
     /// timer logic a bit more efficient)
     /// </summary>
-    public class Song : SortedDictionary<double, ICollection<SongNote>>
+    public class Song : SortedDictionary<double, SongNoteEventCollections>
     {
         /// <summary>
         /// Beats per minute
@@ -21,7 +21,7 @@ namespace ScoreControlLibrary.SongEventParser
 
         public Song() : base() { }
 
-        private Song(SortedDictionary<double, ICollection<SongNote>> song, IComparer<double> comparer) : base(song, comparer) { }
+        private Song(SortedDictionary<double, SongNoteEventCollections> song, IComparer<double> comparer) : base(song, comparer) { }
 
         /// <summary>
         /// Makes a shallow copy of the dictionary elements. 

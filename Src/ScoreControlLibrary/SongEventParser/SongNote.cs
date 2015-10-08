@@ -16,5 +16,15 @@ namespace ScoreControlLibrary.SongEventParser
         {
             return NoteTime + ", " + Duration + ", " + PitchId + ", " + Velocity;
         }
+
+        public SongNote Clone()
+        {
+            var note = new SongNote();
+            note.NoteTime = NoteTime;
+            note.Duration = Duration;
+            note.PitchId = PitchId;
+            note.Velocity = Velocity;
+            return note; 
+        }
     }
 }

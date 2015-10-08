@@ -25,7 +25,7 @@ namespace ScoreControlLibrary
             List<RenderItem> items;
             if(_renderItemsDictionary.TryGetValue(noteTime, out items))
             {
-                return items.Where(x => x.ItemType == RenderItemType.Note).Max(x => x.XPosition);
+                return items.Max(x => x.XPosition);
             }
             return 0;
         }

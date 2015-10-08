@@ -34,7 +34,6 @@ namespace ScoreControlLibrary.ScoreEventController
         private Song _songCopy;
         private Song _song;
         private int _nextNoteTick = 0;
-        private int _backGroundWorkersRunning = 0;
 
         private bool _isPaused = false;
         //private bool _isPlaying = true;
@@ -93,8 +92,7 @@ namespace ScoreControlLibrary.ScoreEventController
                 //Get note list item
                 noteTime = _songCopy.First().Key;
                 
-            
-                ICollection<SongNote> noteList = _songCopy.First().Value;
+                SongNoteEventCollections noteEventList = _songCopy.First().Value;
 
                 //Now drop it from the song
                 _songCopy.Remove(_songCopy.First().Key);
@@ -108,7 +106,20 @@ namespace ScoreControlLibrary.ScoreEventController
                     nextNoteTime = 0;
                 }
 
-                foreach (SongNote note in noteList)
+                //Handle key releases first
+                foreach (SongNote note in noteEventList.KeyReleases)
+                {
+                    _logger.Log(this, LogLevel.Debug, "Controller raising note release for: " + note.ToString());
+
+                    SongNoteEvent(this, new SongEventArgs(
+                        new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyRelease, note.Velocity),
+                        noteTime,
+                        nextNoteTime));
+
+                }
+
+                //Handle key presses next
+                foreach (SongNote note in noteEventList.KeyPresses)
                 {
                     _logger.Log(this, LogLevel.Debug, "Controller raising note press for: " + note.ToString());
 
@@ -116,29 +127,6 @@ namespace ScoreControlLibrary.ScoreEventController
                         new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyPress, note.Velocity),
                         noteTime,
                         nextNoteTime));
-
-                    //Spark up a background worker to wait for the note to finish and release the key press
-                    var worker = new BackgroundWorker();
-
-                    var noteCopy = note;
-                    worker.DoWork += (ob, arg) =>
-                    {
-                        _logger.Log(this, LogLevel.Debug, "Controller raising note release for: " + note.ToString());
-
-                        Thread.Sleep(CalculateNoteDurationMilliSeconds(_songCopy.Tempo, noteCopy));
-                        SongNoteEvent(this, new SongEventArgs(
-                            new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyRelease, 0),
-                                                    noteTime,
-                                                    nextNoteTime));
-                    };
-
-                    worker.RunWorkerCompleted += (ob, arg) =>
-                    {
-                        _backGroundWorkersRunning--;
-                    };
-
-                    _backGroundWorkersRunning++;
-                    worker.RunWorkerAsync();
                 }
 
                 if (!_songCopy.Any())
@@ -180,9 +168,7 @@ namespace ScoreControlLibrary.ScoreEventController
                 _clock.Stop();
                 _nextNoteTick = 0;
             }
-
-            while (_backGroundWorkersRunning > 0) { }
-
+            
             Finished(this, null);
 
             //Reset clock
@@ -205,6 +191,8 @@ namespace ScoreControlLibrary.ScoreEventController
                 }
             }
 
+            ReleaseKeys();
+
             _isPaused = true;
             CanStop = false;
             CanPlay = true;
@@ -218,7 +206,7 @@ namespace ScoreControlLibrary.ScoreEventController
             {
                 Resume();
                 return;
-           }
+            }
 
             _clock.SetTicks(0);
             _songCopy = _song.MakeCopy();
@@ -261,14 +249,34 @@ namespace ScoreControlLibrary.ScoreEventController
                 _nextNoteTick = 0;
             }
 
+            ReleaseKeys();
+
             //while (_backGroundWorkersRunning > 0) { }
 
             CanPlay = true;
             CanPause = false;
             CanStop = false;
         }
+
+        /// <summary>
+        /// When paused/stopped release all key presses
+        /// A bit hacky but does the job...
+        /// </summary>
+        private void ReleaseKeys()
+        {
+            foreach (var noteTime in _songCopy.Keys)
+            {
+                foreach (SongNote note in _songCopy[noteTime].KeyPresses)
+                {
+                    SongNoteEvent(this, new SongEventArgs(
+                        new PianoKeyStrokeEventArgs(note.PitchId, KeyStrokeType.KeyRelease, note.Velocity),
+                        noteTime,
+                        noteTime));
+                }
+            }
+        }
         #endregion ISongEventController
- 
+
         public bool CanPlay { get; set; }
         public bool CanStop { get; set; }
         public bool CanPause { get; set; }

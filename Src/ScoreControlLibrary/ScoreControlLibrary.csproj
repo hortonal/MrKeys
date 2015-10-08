@@ -82,6 +82,7 @@
     <Compile Include="ScoreRenderer\Staff.cs" />
     <Compile Include="ScoreRenderer\Staffs.cs" />
     <Compile Include="ScoreEventController\ITimeEventController.cs" />
+    <Compile Include="SongEventParser\SongNoteEventCollections.cs" />
     <Compile Include="SongEventParser\SongNote.cs" />
     <Compile Include="SongEventParser\XScoreNoteEventParser.cs" />
     <Compile Include="SongEventParser\Song.cs" />
@@ -133,6 +134,7 @@
   <ItemGroup>
     <Content Include="ScoreRenderer\Examples\Dichterliebe01.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="ScoreRenderer\Examples\Promenade_Example.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

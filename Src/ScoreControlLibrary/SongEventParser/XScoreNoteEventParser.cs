@@ -82,7 +82,38 @@ namespace ScoreControlLibrary.SongEventParser
                 }
             }
 
+            song = BuildKeyReleases(song);
+
             return song;
+        }
+
+        private static Song BuildKeyReleases(Song song)
+        {
+            var songCopy = song.MakeCopy();
+            SongNoteEventCollections noteCollections;
+            SongNoteEventCollections releaseNoteCollections;
+            double releaseNoteTime;
+
+            foreach(var noteTime in song.Keys)
+            {
+                noteCollections = songCopy[noteTime];
+
+                foreach (var note in noteCollections.KeyPresses)
+                {
+                    releaseNoteTime = noteTime + note.Duration;
+
+                    //Now add release event at this time
+                    if (!songCopy.TryGetValue(releaseNoteTime, out releaseNoteCollections))
+                    {
+                        releaseNoteCollections = new SongNoteEventCollections();
+                        songCopy.Add(releaseNoteTime, releaseNoteCollections);
+                    };
+
+                    releaseNoteCollections.KeyReleases.Add(note);
+                }
+            }
+
+            return songCopy;
         }
 
         public static void AddSongNoteToSong(double noteTime, Song song, Note xmlNote, double duration)
@@ -95,27 +126,26 @@ namespace ScoreControlLibrary.SongEventParser
             
             songNote.Duration = duration;
 
-            ICollection<SongNote> noteList;
+            SongNoteEventCollections noteEventCollections;
 
-            if (!song.TryGetValue(noteTime, out noteList))
+            if (!song.TryGetValue(noteTime, out noteEventCollections))
             {
-                noteList = new Collection<SongNote>();
-                song.Add(noteTime, noteList);
+                noteEventCollections = new SongNoteEventCollections();
+                song.Add(noteTime, noteEventCollections);
             };
 
-            noteList.Add(songNote);   
+            noteEventCollections.KeyPresses.Add(songNote);   
         }
 
         public static void ExtendSongNote(double noteTime, Song song, Note xmlNote, double duration)
         {
             int pitchId = GetPitchIdFromNote(xmlNote);
-
-
+            
             //searching the list backwards will be faster..
             //I'm sure there's nice linq for this, but hey..
             foreach (double itemNoteTime in song.Keys.Reverse())
             {
-                foreach(var note in song[itemNoteTime])
+                foreach(var note in song[itemNoteTime].KeyPresses)
                 {
                     if (note.PitchId == pitchId)
                     {
