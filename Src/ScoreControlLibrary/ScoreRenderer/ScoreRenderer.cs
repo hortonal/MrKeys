@@ -130,6 +130,11 @@ namespace ScoreControlLibrary
             }
         }
 
+        internal void MarkNote(double noteTime, int markForNote, int pitchId)
+        {
+            _renderHelper.MarkNote(noteTime, markForNote, pitchId);
+        }
+
         private Staff GetStaffFromNote(List<Staff> staffs, Note note)
         {
             int staffId = note.Staff;
@@ -137,7 +142,9 @@ namespace ScoreControlLibrary
             return null;
         }
 
-
-
+        internal void ResetMarking()
+        {
+            _renderHelper.ResetNoteColours();
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace ScoreControlLibrary.Views
     {
         IUnityContainer _container;
         IOutput _output;
+        IMidiInput _midiInput;
         ISongEventController _songEventController;
         IVirtualKeyBoard _virtualKeyboard;
         IMediaServiceHost _mediaServiceHost;
@@ -50,6 +51,8 @@ namespace ScoreControlLibrary.Views
         private double _scrollSpeed = 0;
         private double _scrollOffset = 200;
         private double _lastNoteTime = 0;
+        private double _nextNoteTime = 0;
+
         private object _lockObject = new object();
 
         public ScoreControl()
@@ -57,12 +60,13 @@ namespace ScoreControlLibrary.Views
             InitializeComponent();
         }
 
-        public ScoreControl(IUnityContainer container, IOutput output, IInputEvents inputEvents, IMediaServiceHost mediaServiceHost, 
+        public ScoreControl(IUnityContainer container, IOutput output, IMidiInput midiInput, IInputEvents inputEvents, IMediaServiceHost mediaServiceHost, 
             IVirtualKeyBoard virtualKeyboard, ILogger logger, XScore musicScore): this()
         {
             _container = container;
             _output = output;
             _intputEvents = inputEvents;
+            _midiInput = midiInput;
             _virtualKeyboard = virtualKeyboard;
             _musicScore = musicScore;
             _mediaServiceHost = mediaServiceHost;
@@ -76,64 +80,12 @@ namespace ScoreControlLibrary.Views
 
             _intputEvents.MessageReceived += HandleInputEvent;
 
+            _midiInput.StartRecording();
+
             ConfigureSongEventController();
         }
 
-        private void HandleInputEvent(object sender, PianoKeyStrokeEventArgs e)
-        {
-            if (e.KeyStrokeType != KeyStrokeType.KeyPress) return;
-
-            double markForNote = 0;
-
-            double noteTime = _songEventController.GetCurrentNoteTime();
-
-            double previousItemNoteTime = 0;
-            double secongPreviousItemNoteTime = 0;
-            foreach (var itemNoteTime in _song.Keys)
-            {
-                if (noteTime >= secongPreviousItemNoteTime && noteTime <= itemNoteTime)
-                {
-                    //Check if note played is in any of these 3 note times.
-                    bool inSecondPreviousNotes;
-                    bool inPreviousNotes;
-                    bool inNextNotes;
-                    inSecondPreviousNotes = _song[secongPreviousItemNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
-                    inPreviousNotes = _song[previousItemNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
-                    inNextNotes = _song[itemNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
-
-                    if (inPreviousNotes)
-                    {
-                        double accuracy = Math.Abs(noteTime - previousItemNoteTime);
-                        if (accuracy < 1.0 / 4)
-                        {
-                            markForNote = 10;
-                        } else if (accuracy < 1.0 / 2)
-                        {
-                            markForNote = 6;
-                        }
-                        else if (accuracy < 1.1)
-                        {
-                            markForNote = 4;
-                        }
-                        else
-                        {
-                            markForNote = 2;
-                        }
-                    }
-                    else
-                    {
-                        markForNote = 0;
-                    }
-
-                }
-
-                secongPreviousItemNoteTime = previousItemNoteTime;
-                previousItemNoteTime = itemNoteTime;
-            }
-            //Debug.WriteLine("Mark: " + markForNote);
-        }
-        
-
+       
         private void ConfigureSongEventController()
         {
             _song = new XScoreNoteEventParser(_musicScore).Parse();
@@ -159,8 +111,11 @@ namespace ScoreControlLibrary.Views
 
         private void Controller_Starting(object sender, EventArgs e)
         {
+            _scoreRenderer.ResetMarking();
             _updateScrollTimer.Change(0, _scrollTimingPerdiod);
             _scrollSpeed = 0;
+            _lastNoteTime = 0;
+            _nextNoteTime = 0;
         }
 
         private void Controller_Finished(object sender, EventArgs e)
@@ -180,18 +135,19 @@ namespace ScoreControlLibrary.Views
             
             //Only handle this once per chord   
             if (e.NoteTime <= _lastNoteTime) return;
-            
-            //Update scrool speed
-            var _lastHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NoteTime);
-            var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NextNoteTime);
 
-            SetScrollSpeed(_currentHorizontalScrollPosition, _nextHorizontalScrollEventPosition, e.NoteTime, e.NextNoteTime);
+            _lastNoteTime = e.NoteTime;
+            _nextNoteTime = e.NextNoteTime;
+
+            //Update scrool speed
+            var _lastHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(_lastNoteTime);
+            var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(_nextNoteTime);
+
+            SetScrollSpeed(_currentHorizontalScrollPosition, _nextHorizontalScrollEventPosition, _lastNoteTime, _nextNoteTime);
                 
             //_currentHorizontalScrollPosition = _lastHorizontalScrollEventPosition;
             //UpdateHorizontalScrollPosition();
            
-            _lastNoteTime = e.NoteTime;
-
             _logger.Log(this, LogLevel.Debug, "Score control finished handling song note event. " + e);
         }
 
@@ -237,5 +193,54 @@ namespace ScoreControlLibrary.Views
             UpdateHorizontalScrollPosition();
         }
 
+
+        private void HandleInputEvent(object sender, PianoKeyStrokeEventArgs e)
+        {
+            if (e == null) return;
+            if (e.KeyStrokeType != KeyStrokeType.KeyPress) return;
+
+            //Get the current note time from the playing song
+            double noteTime = _songEventController.GetCurrentNoteTime();
+
+            //Check if note played is in any of these 3 note times.
+            bool inPreviousNotes;
+            bool inNextNotes;
+            double compareNoteTime = -1;
+
+            inPreviousNotes = _song[_lastNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
+            inNextNotes = _song[_nextNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
+
+            if (inPreviousNotes) compareNoteTime = _lastNoteTime;
+            if (inNextNotes) compareNoteTime = _nextNoteTime;
+
+            int markForNote = 0;
+
+            if (compareNoteTime == -1)
+            {
+                markForNote = 0;
+            }
+            else
+            {
+                double accuracy = Math.Abs(noteTime - compareNoteTime);
+                if (accuracy < 1.0 / 4)
+                {
+                    markForNote = 10;
+                }
+                else if (accuracy < 1.0 / 2)
+                {
+                    markForNote = 6;
+                }
+                else if (accuracy < 1.1)
+                {
+                    markForNote = 4;
+                }
+                else
+                {
+                    markForNote = 1;
+                }
+            }
+
+            _scoreRenderer.MarkNote(compareNoteTime, markForNote, e.midiKeyId);
+        }
     }
 }

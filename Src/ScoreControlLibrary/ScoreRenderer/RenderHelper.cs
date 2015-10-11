@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Controls;
 using ScoreControlLibrary.Glyphs;
 
@@ -30,11 +31,11 @@ namespace ScoreControlLibrary
             return 0;
         }
 
-        public void AddItemToRender(double noteTime, FrameworkElement element, double yPosition, double xOffset, RenderItemType itemType)
+        public void AddItemToRender(double noteTime, FrameworkElement element, double yPosition, double xOffset, RenderItemType itemType, int pitchId = 0)
         {
             element.HorizontalAlignment = HorizontalAlignment.Left;
             element.VerticalAlignment = VerticalAlignment.Top;
-            _renderItemsDictionary.Add(noteTime, new RenderItem(element, yPosition, xOffset, itemType));
+            _renderItemsDictionary.Add(noteTime, new RenderItem(element, yPosition, xOffset, itemType, pitchId));
         }
 
         public void RenderItemXY(FrameworkElement element, double x, double y)
@@ -101,6 +102,45 @@ namespace ScoreControlLibrary
             return (from item in renderItems
                     where item.ItemType == type
                     select item);
+        }
+
+        internal void MarkNote(double noteTime, int markForNote, int pitchId)
+        {
+            List<RenderItem> renderItems;
+            if (_renderItemsDictionary.TryGetValue(noteTime, out renderItems))
+            {
+                foreach(var noteItem in renderItems.Where(r => r.ItemType == RenderItemType.Note && r.PitchId == pitchId))
+                {
+                    TextBlock tb = noteItem.UIElement as TextBlock;
+                    if (tb != null)
+                    {
+                        byte green = (byte) (255 * markForNote / 10);
+                        byte red = (byte)(255 * (10 - markForNote) / 10);
+
+                        SolidColorBrush brush = new SolidColorBrush();
+                        brush.Color = Color.FromArgb(255, red, green , 0);
+                        
+                        tb.Foreground = brush;
+                    }                    
+                }
+            } 
+        }
+
+        internal void ResetNoteColours()
+        {
+            List<RenderItem> renderItems;
+            foreach (var noteTime in _renderItemsDictionary.Keys)
+                if (_renderItemsDictionary.TryGetValue(noteTime, out renderItems))
+                {
+                    foreach (var noteItem in renderItems.Where(r => r.ItemType == RenderItemType.Note))
+                    {
+                        TextBlock tb = noteItem.UIElement as TextBlock;
+                        if (tb != null)
+                        {
+                            tb.Foreground = Brushes.Black;
+                        }
+                    }
+                }
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Common.IO
 
         public void Send(object sender, PianoKeyStrokeEventArgs args)
         {
+            if (args == null) return;
             if (IsInitialised)
             {
                 try

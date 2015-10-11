@@ -18,7 +18,10 @@ namespace ScoreControlLibrary
         public FrameworkElement UIElement { get; set; }
         public RenderItemType ItemType { get; set; }
         public double XOffset { get; set; }
-
+        /// <summary>
+        /// Used for interactive rendering per note
+        /// </summary>
+        public int PitchId { get; set; }
         
         /// <summary>
         /// Creates a render item object.  
@@ -26,12 +29,13 @@ namespace ScoreControlLibrary
         /// <param name="element"></param>
         /// <param name="yPosition"></param>
         /// <param name="itemType"></param>
-        public RenderItem(FrameworkElement element, double yPosition, double xOffsetToNextObject, RenderItemType itemType)
+        public RenderItem(FrameworkElement element, double yPosition, double xOffsetToNextObject, RenderItemType itemType, int pitchId)
         {
             YPosition = yPosition;
             UIElement = element;
             ItemType = itemType;
             XOffset = xOffsetToNextObject;
+            PitchId = pitchId;
         }
     }
 

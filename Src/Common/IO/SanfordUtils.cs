@@ -37,6 +37,8 @@ namespace Common.IO
 
         public static ChannelMessage ConvertKeyStrokeEventArgsToChannelMessage(PianoKeyStrokeEventArgs keyStrokeEventArgs)
         {
+            if (keyStrokeEventArgs == null) return null;
+
             var channelCommand = new ChannelCommand();
             int data1 = keyStrokeEventArgs.midiKeyId;
             int data2 = keyStrokeEventArgs.KeyVelocity; 

@@ -156,7 +156,7 @@ namespace ScoreControlLibrary.SongEventParser
             }
         }
 
-        private static int GetPitchIdFromNote(Note note)
+        public static int GetPitchIdFromNote(Note note)
         {
             return (note.Pitch.Octave + 1) * 12 + XmlMusicHelper.GetMidiIdOffsetFromC(note) + note.Pitch.Alter;
         }

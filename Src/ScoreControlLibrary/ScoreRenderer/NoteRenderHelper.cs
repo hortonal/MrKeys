@@ -29,20 +29,20 @@ namespace ScoreControlLibrary
             var pointStemStart = new System.Windows.Point();
             var pointStemEnd = new System.Windows.Point();
 
+            int pitchId = 0;
+
             if (note.IsRest)
             {
-
                 glyphType = GetRestGlyphFromNote(note, timing, divisions);
-               
                 finalYCoord = GetRestYCoord(glyphType);
             }
             else
             {
+                pitchId = SongEventParser.XScoreNoteEventParser.GetPitchIdFromNote(note);
                 //Default 
                 glyphType = typeof(BlackNoteHeadGlyph);
                 switch (note.Type)
                 {
-                     
                     case "half":
                         glyphType = typeof(HalfNoteGlyph);
                         break;
@@ -54,7 +54,6 @@ namespace ScoreControlLibrary
                     case "long":
                         break;
                     case "":
-
                         break;
                 }
             }
@@ -92,10 +91,12 @@ namespace ScoreControlLibrary
             }
             
             TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, defaultNoteSize * 3.3);
-
-            _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, xCoordDefaultNoteSeparation, RenderItemType.Note);
+            
+            _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, xCoordDefaultNoteSeparation,
+                RenderItemType.Note, pitchId);
 
             //Add placeholder line for beam (need to hook up in the renderer)
+            // need to implement
         }
 
         private Type GetRestGlyphFromNote(Note note, Timing timing, int divisions)
