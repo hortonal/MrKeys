@@ -155,10 +155,20 @@ namespace ScoreControlLibrary.ScoreEventController
             return (int) (1.0 * noteTime * _clock.Ppqn);
         }
 
+        private double ConvertTickToNoteTime(int tempo, int ticks)
+        {
+            return (1.0 * ticks / _clock.Ppqn);
+        }
+
         #region ISongEventController
         public void SetSong(Song song)
         {
             IntialiseWithSong(song);
+        }
+
+        public double GetCurrentNoteTime()
+        {
+            return ConvertTickToNoteTime(_songCopy.Tempo, _clock.Ticks);
         }
 
         private void FinishSong()
@@ -323,5 +333,7 @@ namespace ScoreControlLibrary.ScoreEventController
         {
             //Not implemented
         }
+
+
     }
 }

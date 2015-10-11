@@ -120,7 +120,7 @@ namespace ScoreControlLibrary
         #endregion 
 
         #region Note Addition Logic
-        public void AddNote(Note note, double devisions, double noteTime)
+        public void AddNote(Note note, int devisions, double noteTime)
         {
             double yCoord = CalculateYForNote(note);
             _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, ScoreLayoutDetails.DefaultQuarterNoteSeparation * note.Duration );

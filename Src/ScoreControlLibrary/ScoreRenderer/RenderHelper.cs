@@ -73,7 +73,7 @@ namespace ScoreControlLibrary
         private double RenderSpecificItems(RenderItemType type, double noteTime, double currentX)
         {
             
-            double xRightOffset = 1000; 
+            double xRightOffset = ScoreLayoutDetails.LineSpacing_Y * 4; 
             bool hadItemsToRender = false;
             var items = GetItemsByType(type, _renderItemsDictionary[noteTime]);
             foreach (RenderItem item in items)
@@ -89,6 +89,11 @@ namespace ScoreControlLibrary
 
             if (hadItemsToRender) return xRightOffset;
             return 0;
+        }
+
+        internal double GetMaxHorizontalPosition()
+        {
+            return GetHorizontalPositionForNoteTime(_renderItemsDictionary.Keys.Max());
         }
 
         private IEnumerable<RenderItem> GetItemsByType(RenderItemType type, IEnumerable<RenderItem> renderItems)

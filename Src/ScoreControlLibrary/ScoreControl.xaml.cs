@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Diagnostics;
 using Common.Logging;
+using Common.Events;
 
 namespace ScoreControlLibrary.Views
 {
@@ -26,7 +27,7 @@ namespace ScoreControlLibrary.Views
     /// </summary>
     public partial class ScoreControl : UserControl
     {
-
+        IUnityContainer _container;
         IOutput _output;
         ISongEventController _songEventController;
         IVirtualKeyBoard _virtualKeyboard;
@@ -35,6 +36,8 @@ namespace ScoreControlLibrary.Views
         ScoreRenderer _scoreRenderer;
         Timer _updateScrollTimer;
         ILogger _logger;
+        Song _song;
+        IInputEvents _intputEvents;
 
         //Frequency of horizontal update, ms
         private int _scrollTimingPerdiod = 6;
@@ -45,7 +48,7 @@ namespace ScoreControlLibrary.Views
         private double _currentTempo;
         //horizontal units per millisecond
         private double _scrollSpeed = 0;
-        private double _scrollOffset = 400;
+        private double _scrollOffset = 200;
         private double _lastNoteTime = 0;
         private object _lockObject = new object();
 
@@ -54,10 +57,12 @@ namespace ScoreControlLibrary.Views
             InitializeComponent();
         }
 
-        public ScoreControl(IUnityContainer container, IOutput output, IMediaServiceHost mediaServiceHost, 
+        public ScoreControl(IUnityContainer container, IOutput output, IInputEvents inputEvents, IMediaServiceHost mediaServiceHost, 
             IVirtualKeyBoard virtualKeyboard, ILogger logger, XScore musicScore): this()
         {
+            _container = container;
             _output = output;
+            _intputEvents = inputEvents;
             _virtualKeyboard = virtualKeyboard;
             _musicScore = musicScore;
             _mediaServiceHost = mediaServiceHost;
@@ -67,13 +72,73 @@ namespace ScoreControlLibrary.Views
 
             _scoreRenderer = new ScoreRenderer(_musicScore, ScoreGrid);
             _scoreRenderer.Render();
+            ScoreGrid.Width = _scoreRenderer.GetMaxHorizontalPosition();
 
-            Song _song;
+            _intputEvents.MessageReceived += HandleInputEvent;
+
+            ConfigureSongEventController();
+        }
+
+        private void HandleInputEvent(object sender, PianoKeyStrokeEventArgs e)
+        {
+            if (e.KeyStrokeType != KeyStrokeType.KeyPress) return;
+
+            double markForNote = 0;
+
+            double noteTime = _songEventController.GetCurrentNoteTime();
+
+            double previousItemNoteTime = 0;
+            double secongPreviousItemNoteTime = 0;
+            foreach (var itemNoteTime in _song.Keys)
+            {
+                if (noteTime >= secongPreviousItemNoteTime && noteTime <= itemNoteTime)
+                {
+                    //Check if note played is in any of these 3 note times.
+                    bool inSecondPreviousNotes;
+                    bool inPreviousNotes;
+                    bool inNextNotes;
+                    inSecondPreviousNotes = _song[secongPreviousItemNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
+                    inPreviousNotes = _song[previousItemNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
+                    inNextNotes = _song[itemNoteTime].KeyPresses.Any(n => n.PitchId == e.midiKeyId);
+
+                    if (inPreviousNotes)
+                    {
+                        double accuracy = Math.Abs(noteTime - previousItemNoteTime);
+                        if (accuracy < 1.0 / 4)
+                        {
+                            markForNote = 10;
+                        } else if (accuracy < 1.0 / 2)
+                        {
+                            markForNote = 6;
+                        }
+                        else if (accuracy < 1.1)
+                        {
+                            markForNote = 4;
+                        }
+                        else
+                        {
+                            markForNote = 2;
+                        }
+                    }
+                    else
+                    {
+                        markForNote = 0;
+                    }
+
+                }
+
+                secongPreviousItemNoteTime = previousItemNoteTime;
+                previousItemNoteTime = itemNoteTime;
+            }
+            //Debug.WriteLine("Mark: " + markForNote);
+        }
+        
+
+        private void ConfigureSongEventController()
+        {
             _song = new XScoreNoteEventParser(_musicScore).Parse();
 
-            ScoreGrid.Width = 12000;
-
-            _songEventController = container.Resolve<SongEventController>();
+            _songEventController = _container.Resolve<SongEventController>();
             _songEventController.SetSong(_song);
 
             _currentTempo = _songEventController.CurrentTempo;
@@ -83,7 +148,7 @@ namespace ScoreControlLibrary.Views
             _songEventController.Starting += Controller_Starting;
             _songEventController.Stopping += Controller_Stopping; ;
 
-            _mediaServiceHost.MediaService = (IMediaService) _songEventController;
+            _mediaServiceHost.MediaService = (IMediaService)_songEventController;
         }
 
         private void Controller_Stopping(object sender, EventArgs e)
@@ -95,6 +160,7 @@ namespace ScoreControlLibrary.Views
         private void Controller_Starting(object sender, EventArgs e)
         {
             _updateScrollTimer.Change(0, _scrollTimingPerdiod);
+            _scrollSpeed = 0;
         }
 
         private void Controller_Finished(object sender, EventArgs e)
@@ -120,7 +186,7 @@ namespace ScoreControlLibrary.Views
             var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(e.NextNoteTime);
 
             SetScrollSpeed(_currentHorizontalScrollPosition, _nextHorizontalScrollEventPosition, e.NoteTime, e.NextNoteTime);
-
+                
             //_currentHorizontalScrollPosition = _lastHorizontalScrollEventPosition;
             //UpdateHorizontalScrollPosition();
            
@@ -140,7 +206,10 @@ namespace ScoreControlLibrary.Views
 
         private void SetScrollSpeed(double startPosition, double endPosistion, double startNoteTime, double endNoteTime)
         {
-            _scrollSpeed = (endPosistion - startPosition) / ((endNoteTime - startNoteTime) * _currentTempo);
+            double scrollSpeed = (endPosistion - startPosition) / ((endNoteTime - startNoteTime) * _currentTempo);
+
+            if(scrollSpeed < 0) _scrollSpeed = 0;
+            else if (scrollSpeed < 200) _scrollSpeed = scrollSpeed;
         }
 
         private void UpdateHorizontalScrollPosition()

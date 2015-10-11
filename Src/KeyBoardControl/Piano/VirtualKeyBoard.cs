@@ -6,6 +6,7 @@ using System.Linq;
 using Common.Devices;
 using System.ComponentModel;
 using Common.Logging;
+using System.Windows.Input;
 
 namespace KeyBoardControlLibrary
 {
@@ -135,6 +136,70 @@ namespace KeyBoardControlLibrary
         public void Close()
         {
             throw new NotImplementedException();
+        }
+
+        public void HandleKeyboardPress(object sender, KeyEventArgs e)
+        {
+            int keyIdOffset = -1;
+            int baseKey = 60;
+
+            if (e.IsRepeat) return;
+
+            if(e.IsDown || e.IsUp)
+            {
+                switch (e.Key)
+                {
+                    case System.Windows.Input.Key.A:
+                        keyIdOffset = 0;
+                        break;
+                    case System.Windows.Input.Key.W:
+                        keyIdOffset = 1;
+                        break;
+                    case System.Windows.Input.Key.S:
+                        keyIdOffset = 2;
+                        break;
+                    case System.Windows.Input.Key.E:
+                        keyIdOffset = 3;
+                        break;
+                    case System.Windows.Input.Key.D:
+                        keyIdOffset = 4;
+                        break;
+                    case System.Windows.Input.Key.F:
+                        keyIdOffset = 5;
+                        break;
+                    case System.Windows.Input.Key.T:
+                        keyIdOffset = 6;
+                        break;
+                    case System.Windows.Input.Key.G:
+                        keyIdOffset = 7;
+                        break;
+                    case System.Windows.Input.Key.Y:
+                        keyIdOffset = 8;
+                        break;
+                    case System.Windows.Input.Key.H:
+                        keyIdOffset = 9;
+                        break;
+                    case System.Windows.Input.Key.U:
+                        keyIdOffset = 10;
+                        break;
+                    case System.Windows.Input.Key.J:
+                        keyIdOffset = 11;
+                        break;
+                    case System.Windows.Input.Key.K:
+                        keyIdOffset = 12;
+                        break;
+                }
+            }
+
+            if (keyIdOffset != -1)
+            {
+                KeyStrokeType keyPress = (e.IsDown ? KeyStrokeType.KeyPress: KeyStrokeType.KeyRelease);
+                var keyStrokeEvents = new PianoKeyStrokeEventArgs(baseKey + keyIdOffset, keyPress, 110);
+
+                KeyPressEvent(this, keyStrokeEvents);
+                HandleIncomingMessage(this, keyStrokeEvents);
+            }
+         
         }
         #endregion
     }

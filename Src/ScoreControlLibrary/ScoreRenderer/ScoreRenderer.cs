@@ -26,7 +26,7 @@ namespace ScoreControlLibrary
             _renderHelper = new RenderHelper(_scorePanel);
 
             double currentNoteTime = 0;
-            double currentDevisions = 0;
+            int currentDivisions = 0;
             
             var staffs = new Staffs(_renderHelper);
             
@@ -52,7 +52,7 @@ namespace ScoreControlLibrary
                 MeasureAttributes attributes = measure.Attributes;
                 if (attributes != null)
                 {
-                    if (attributes.Divisions != -1) currentDevisions = attributes.Divisions;
+                    if (attributes.Divisions != -1) currentDivisions = attributes.Divisions;
 
                     UpdateMeasureAttributes(attributes, staffs, currentNoteTime);
                 }
@@ -62,22 +62,22 @@ namespace ScoreControlLibrary
                 foreach (Note note in measure.Notes)
                 {
                     //If the current note is part of a chord, we need to revert to the previous NoteTime
-                    if (note.IsChord) currentNoteTime -= lastNoteDuration / currentDevisions;
+                    if (note.IsChord) currentNoteTime -= 1.0 * lastNoteDuration / currentDivisions;
 
                     Staff staff = GetStaffFromNote(staffs, note);
                     if (staff != null && note.IsDrawableEntity)
                     {
-                        staff.AddNote(note, currentDevisions, currentNoteTime);
+                        staff.AddNote(note, currentDivisions, currentNoteTime);
                     }
                         
                     //After current note drawn, handle keeping track of noteTime in the piece
                     switch (note.NoteType)
                     {
-                        case Note.NoteTypes.Backup: currentNoteTime -= note.Duration / currentDevisions;
+                        case Note.NoteTypes.Backup: currentNoteTime -= 1.0 * note.Duration / currentDivisions;
                             break;
-                        case Note.NoteTypes.Forward: currentNoteTime += note.Duration / currentDevisions;
+                        case Note.NoteTypes.Forward: currentNoteTime += 1.0 * note.Duration / currentDivisions;
                             break;
-                        default: currentNoteTime += note.Duration / currentDevisions;
+                        default: currentNoteTime += 1.0 * note.Duration / currentDivisions;
                             break;
                     }
 
@@ -94,6 +94,11 @@ namespace ScoreControlLibrary
         public double GetHorizontalPositionForNoteTime(double noteTime)
         {
             return _renderHelper.GetHorizontalPositionForNoteTime(noteTime);
+        }
+
+        public double GetMaxHorizontalPosition()
+        {
+            return _renderHelper.GetMaxHorizontalPosition();
         }
 
         private void UpdateMeasureAttributes(MeasureAttributes attributes, List<Staff> staffs, double noteTime)

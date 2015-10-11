@@ -21,55 +21,28 @@ namespace ScoreControlLibrary
             _restYCoords = restYCoords;
         }
 
-        public void AddNote(Note note, Timing timing, double devisions, double noteTime, double yCoord, double defaultNoteSize, double xCoordDefaultNoteSeparation)
+        public void AddNote(Note note, Timing timing, int divisions, double noteTime, double yCoord, double defaultNoteSize, double xCoordDefaultNoteSeparation)
         {
-            Type glyphType = typeof(BlackNoteHeadGlyph);
+            Type glyphType;
             double finalYCoord = yCoord;
-            double defaultNoteWidth = 20.0;
 
             var pointStemStart = new System.Windows.Point();
             var pointStemEnd = new System.Windows.Point();
 
             if (note.IsRest)
             {
-                switch (note.Type)
-                {
-                    case "128th":
-                        glyphType = typeof(Rest128thGlyph);
-                        break;
-                    case "64th":
-                        glyphType = typeof(Rest64thGlyph);
-                        break;
-                    case "32nd":
-                        glyphType = typeof(Rest32ndGlyph);
-                        break;
-                    case "16th":
-                        glyphType = typeof(Rest16thGlyph);
-                        break;
-                    case "eighth":
-                        glyphType = typeof(RestEighthGlyph);
-                        break;
-                    case "quarter":
-                        glyphType = typeof(RestQuarterGlyph);
-                        break;
-                    case "half":
-                        glyphType = typeof(RestHalfGlyph);
-                        defaultNoteWidth = defaultNoteWidth * 2;
-                        break;
-                    case "whole":
-                        glyphType = typeof(RestWholeGlyph);
-                        defaultNoteWidth = defaultNoteWidth * 4;
-                        break;
-                    case "":
-                        glyphType = CalculateRestType(note.Duration, timing, devisions);
-                        break;
-                }
+
+                glyphType = GetRestGlyphFromNote(note, timing, divisions);
+               
                 finalYCoord = GetRestYCoord(glyphType);
             }
             else
             {
+                //Default 
+                glyphType = typeof(BlackNoteHeadGlyph);
                 switch (note.Type)
                 {
+                     
                     case "half":
                         glyphType = typeof(HalfNoteGlyph);
                         break;
@@ -81,11 +54,12 @@ namespace ScoreControlLibrary
                     case "long":
                         break;
                     case "":
+
                         break;
                 }
             }
 
-            if (note.Stem != "")
+            if (note.Stem != "" || glyphType == typeof(BlackNoteHeadGlyph))
             {
                 Line line = new Line();
 
@@ -101,7 +75,7 @@ namespace ScoreControlLibrary
                         pointStemEnd.X = 0.1;
                         pointStemEnd.Y = stemHeight;
                         break;
-                    case "up":
+                    default:
                         pointStemStart.X = defaultNoteSize - 0.1;
                         pointStemStart.Y = -0.1;
                         pointStemEnd.X = defaultNoteSize - 0.1;
@@ -124,6 +98,44 @@ namespace ScoreControlLibrary
             //Add placeholder line for beam (need to hook up in the renderer)
         }
 
+        private Type GetRestGlyphFromNote(Note note, Timing timing, int divisions)
+        {
+            Type glyphType = null;
+            switch (note.Type)
+            {
+                case "128th":
+                    glyphType = typeof(Rest128thGlyph);
+                    break;
+                case "64th":
+                    glyphType = typeof(Rest64thGlyph);
+                    break;
+                case "32nd":
+                    glyphType = typeof(Rest32ndGlyph);
+                    break;
+                case "16th":
+                    glyphType = typeof(Rest16thGlyph);
+                    break;
+                case "eighth":
+                    glyphType = typeof(RestEighthGlyph);
+                    break;
+                case "quarter":
+                    glyphType = typeof(RestQuarterGlyph);
+                    break;
+                case "half":
+                    glyphType = typeof(RestHalfGlyph);
+                    break;
+                case "whole":
+                    glyphType = typeof(RestWholeGlyph);
+                    break;
+                case "":
+                    //Figure it out from Division
+                    glyphType = CalculateRestType(note.Duration, timing, divisions);
+                    break;
+            }
+
+            return glyphType;
+        }
+
         public void AddLedgerLine(double noteTime, double yCoord)
         {
             var lineWidth = ScoreLayoutDetails.DefaultNoteHeight * 1.9;
@@ -141,12 +153,15 @@ namespace ScoreControlLibrary
             _renderHelper.AddItemToRender(noteTime, line, yCoord, (- 1.2 * lineWidth / 4), RenderItemType.LedgerLine);
         }
 
-        private Type CalculateRestType(int noteDuration, Timing timing, double devisions)
+        private Type CalculateRestType(int noteDuration, Timing timing, int divisions)
         {
             //Converts the rest duration into a fraction of a bar.  Times by 256 to handle switching and
             //handle the shortest possible rest
-            switch ( Convert.ToInt16((noteDuration * timing.Denominator) / (devisions * 4 * timing.Numerator) * 256))
+            int inverseDuration = Convert.ToInt16(1.0 * (noteDuration * timing.Denominator) / (divisions * 4 * timing.Numerator) * 256);
+            switch (inverseDuration)
             {
+                case 512:
+                    return typeof(RestWholeGlyph);
                 case 256:
                     return typeof(RestWholeGlyph); 
                 case 128:
@@ -164,7 +179,9 @@ namespace ScoreControlLibrary
                 case 2:
                     return typeof(Rest128thGlyph); 
                 default:
-                    throw new ArgumentException("Can't currently handle rests of length 256th. Or other bad shit's happened");
+                    return typeof(RestWholeGlyph);
+                    //Log warning...
+                    //throw new ArgumentException("Can't currently handle rests of length 256th. Or other bad shit's happened");
             }
         }
 

@@ -16,7 +16,7 @@ namespace MrKeys.NoteGuess
         private int _testKeyId;
         private IOutput _outputDevice;
         private IVirtualKeyBoard _keyboard;
-        private RelayCommand _relateCommand;
+        private RelayCommand _goRelayCommand;
 
         public NoteGuessViewModel(IOutput outputDevice, IInputEvents inputDevice,
             IVirtualKeyBoard keyBoard)
@@ -24,7 +24,7 @@ namespace MrKeys.NoteGuess
             _testActive = false;
             _outputDevice = outputDevice;
             _keyboard = keyBoard;
-            _relateCommand = new RelayCommand(StartTest, () => true);
+            _goRelayCommand = new RelayCommand(StartTest, () => true);
             //Subscribe to input messages.
             inputDevice.MessageReceived += (o, e) => HandleInputDeviceInput(o, e);
         }
@@ -98,7 +98,7 @@ namespace MrKeys.NoteGuess
         
         public ICommand GoButton
         {
-            get { return _relateCommand; }
+            get { return _goRelayCommand; }
         }
 
         private void StartTest()

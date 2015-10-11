@@ -22,8 +22,7 @@ namespace ScoreControlLibrary.ScoreEventController
         int CurrentTempo { get; }
 
         void SetSong(Song songNoteList);
-       
-        
+        double GetCurrentNoteTime();
     }
 
     public delegate void SongEventHandler(object sender, SongEventArgs e);

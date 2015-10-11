@@ -21,9 +21,18 @@ namespace KeyBoardControlLibrary
     /// </summary>
     public partial class KeyBoardControl : UserControl
     {
+        private IVirtualKeyBoard _keyboard;
         public KeyBoardControl(IVirtualKeyBoard keyBoard): this()
         {
             keyBoard.DrawKeys(KeyBoardCanvas);
+
+            _keyboard = keyBoard;
+
+
+            var window = Application.Current.MainWindow;
+            //Hookup keyboard presses
+            window.KeyDown += (o, e) => _keyboard.HandleKeyboardPress(o, e);
+            window.KeyUp += (o, e) => _keyboard.HandleKeyboardPress(o, e);
         }
         
         public KeyBoardControl()
