@@ -51,6 +51,7 @@ namespace ScoreControlLibrary
 
         private RenderHelper _renderHelper;
         private NoteRenderHelper _noteRenderHelper;
+        private KeyRenderHelper _keyRenderHelper;
         //private double _defaultNoteSeparation;
 
         public Staff(RenderHelper renderHelper, double lineSpacing, double lowestLine_Y)
@@ -61,7 +62,7 @@ namespace ScoreControlLibrary
             RestYCoords = new RestYCoords(LowestLine_Y, LineSpacing);
 
             _noteRenderHelper = new NoteRenderHelper(_renderHelper, RestYCoords);
-            
+            _keyRenderHelper = new KeyRenderHelper(_renderHelper);
 
             //Set some values that will never occur in practice, so when we first check to see if the attributes
             //in the xml are different to our staff, we'll always update the first time around
@@ -155,29 +156,46 @@ namespace ScoreControlLibrary
 
             return;
         }
-        
-            
+
+        internal void AddKey(double noteTime, Key key)
+        {
+            _keyRenderHelper.AddKey(noteTime, key, LowEReference_Y());
+        }
+
+        private double LowEReference_Y()
+        {
+            switch (ClefType)
+            {
+                case ClefTypes.StandardTrebble:
+                    return LowestLine_Y;
+                case ClefTypes.StandardBass:
+                    return LowestLine_Y + LineSpacing;
+                default:
+                    return LowestLine_Y;
+            }
+        }
+
+        private double MiddleC_Y()
+        {
+            switch (ClefType)
+            {
+                case ClefTypes.StandardTrebble:
+                    return LowestLine_Y + LineSpacing;
+                case ClefTypes.StandardBass:
+                    return HighestLine_Y - LineSpacing;
+                default:
+                    return LowestLine_Y + LineSpacing;
+            }
+        }
+
+
         private double CalculateYForNote(Note note)
         {
             if (note.IsRest) return CalculateYForRest(note);
 
-            double middleC_Y;
-
-            switch (ClefType)
-            {
-                case ClefTypes.StandardTrebble :  
-                    middleC_Y =  LowestLine_Y + LineSpacing;
-                    break;
-                case ClefTypes.StandardBass :  
-                    middleC_Y =  HighestLine_Y - LineSpacing;
-                    break;
-                default: 
-                    middleC_Y =  LowestLine_Y + LineSpacing;
-                    break;
-            }
-            
+           
             int octaveOffsetFromMiddleC = note.Pitch.Octave - 4; //Octave 4 starts at middle C
-            return middleC_Y - (octaveOffsetFromMiddleC * 7.0 + XmlMusicHelper.GetLineOffsetFromC(note)) * ScoreLayoutDetails.OffsetPerNote_Y;
+            return MiddleC_Y() - (octaveOffsetFromMiddleC * 7.0 + XmlMusicHelper.GetLineOffsetFromC(note)) * ScoreLayoutDetails.OffsetPerNote_Y;
         }
 
         private double CalculateYForRest(Note note)
@@ -192,8 +210,8 @@ namespace ScoreControlLibrary
         public void AddCleffChange(double noteTime)
         {
             double yPosition;
-            double clefSize = LineSpacing * 4;
-            double clefWidth = LineSpacing * 3.2;
+            double clefSize = LineSpacing * 3.8;
+            
             Type glyphType;
 
             switch (ClefType)
@@ -209,6 +227,8 @@ namespace ScoreControlLibrary
             }
             
             TextBlock cleffVisual = _renderHelper.Glyphs.GetGlyph(glyphType, clefSize);
+
+            double clefWidth = ScoreLayoutDetails.LineSpacing_Y * 5;
 
             _renderHelper.AddItemToRender(noteTime, cleffVisual, yPosition - cleffVisual.BaselineOffset, clefWidth, 0, RenderItemType.Clef);
         }

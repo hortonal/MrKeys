@@ -132,7 +132,7 @@ namespace ScoreControlLibrary
                     return;
             }
 
-            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, ScoreLayoutDetails.DefaultNoteHeight * 2.3);
+            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, ScoreLayoutDetails.DefaultAlterationScaling);
 
             _renderHelper.AddItemToRender(noteTime, tb, yCoord - tb.BaselineOffset, ScoreLayoutDetails.DefaultNoteHeight, 0,
                 RenderItemType.Alteration, 0);

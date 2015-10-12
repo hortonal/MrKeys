@@ -15,6 +15,7 @@ namespace ScoreControlLibrary
         public static double NumberLinesBetweenCenterAndStaffs { get { return 3.0; } }
         public static double DefaultMargin_X { get { return 10; } }
         public static double DefaultNoteHeight { get { return BasicUnit * (1 - 0.13); ; } }
+        public static double DefaultAlterationScaling { get { return BasicUnit * 2.3; ; } }
         //public static double DefaultNoteWidth { get { return LineSpacing_Y; } }
         public static double DefaultQuarterNoteSeparation { get { return LineSpacing_Y * 2.5; } }
 

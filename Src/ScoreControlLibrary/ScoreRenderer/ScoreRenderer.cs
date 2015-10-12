@@ -126,7 +126,10 @@ namespace ScoreControlLibrary
                         staff.Timing.Numerator = xmlTime.Beats;
                         staff.Timing.Denominator = xmlTime.Mode; 
                         staff.AddTimingChange(noteTime);   
-                    }   
+                    }
+
+                Key key = attributes.Key;
+                if (key != null) staff.AddKey(noteTime, key);
             }
         }
 

@@ -41,6 +41,7 @@ namespace ScoreControlLibrary
             XDistanceToNextObject = xDistanceToNextItem;
             XOffset = xOffset;
             PitchId = pitchId;
+
         }
     }
 }
