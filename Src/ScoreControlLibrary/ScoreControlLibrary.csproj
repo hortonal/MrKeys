@@ -75,6 +75,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScoreRenderer\RenderItem.cs" />
     <Compile Include="ScoreRenderer\RenderItemsDictionary.cs" />
     <Compile Include="ScoreRenderer\RenderHelper.cs" />
     <Compile Include="ScoreRenderer\ScoreLayoutDetails.cs" />

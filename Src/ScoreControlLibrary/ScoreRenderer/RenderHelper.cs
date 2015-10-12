@@ -31,18 +31,18 @@ namespace ScoreControlLibrary
             return 0;
         }
 
-        public void AddItemToRender(double noteTime, FrameworkElement element, double yPosition, double xOffset, RenderItemType itemType, int pitchId = 0)
+        public void AddItemToRender(double noteTime, FrameworkElement element, double yPosition, double xDistanceToNextObject, double xOffset, RenderItemType itemType, int pitchId = 0)
         {
-            element.HorizontalAlignment = HorizontalAlignment.Left;
-            element.VerticalAlignment = VerticalAlignment.Top;
-            _renderItemsDictionary.Add(noteTime, new RenderItem(element, yPosition, xOffset, itemType, pitchId));
+            _renderItemsDictionary.Add(noteTime, new RenderItem(element, yPosition, xDistanceToNextObject, xOffset, itemType, pitchId));
         }
 
-        public void RenderItemXY(FrameworkElement element, double x, double y)
+        public void RenderItemXY(double x, RenderItem item)
         {
+            FrameworkElement element = item.UIElement;
+
             element.HorizontalAlignment = HorizontalAlignment.Left;
             element.VerticalAlignment = VerticalAlignment.Top;
-            element.Margin = new Thickness(x, y, 0, 0);
+            element.Margin = new Thickness(x - item.XOffset, item.YPosition, 0, 0);
             _scorePanel.Children.Add(element);
         }
 
@@ -64,32 +64,29 @@ namespace ScoreControlLibrary
                 currentX += RenderSpecificItems(RenderItemType.Clef, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.Key, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.TimeSignature, noteTime, currentX);
+                currentX += RenderSpecificItems(RenderItemType.Alteration, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.LedgerLine, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.NoteStem, noteTime, currentX);
                 currentX += RenderSpecificItems(RenderItemType.Note, noteTime, currentX);
+                
             }
             return currentX;
         }
 
         private double RenderSpecificItems(RenderItemType type, double noteTime, double currentX)
         {
-            
-            double xRightOffset = ScoreLayoutDetails.LineSpacing_Y * 4; 
-            bool hadItemsToRender = false;
+            double maxOffsetInGroup = 0;
             var items = GetItemsByType(type, _renderItemsDictionary[noteTime]);
+            
             foreach (RenderItem item in items)
             {
-                hadItemsToRender = true;
-                
-                if (item.XOffset < xRightOffset) xRightOffset = item.XOffset;
+                if (item.XDistanceToNextObject > maxOffsetInGroup) maxOffsetInGroup = item.XDistanceToNextObject;
                 //Store the final object horizontal position for later
                 item.XPosition = currentX;
 
-                RenderItemXY(item.UIElement, currentX, item.YPosition);                   
+                RenderItemXY(currentX, item);                   
             }
-
-            if (hadItemsToRender) return xRightOffset;
-            return 0;
+            return maxOffsetInGroup;
         }
 
         internal double GetMaxHorizontalPosition()

@@ -22,10 +22,10 @@ namespace ScoreControlLibrary
             
             //XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Dichterliebe01.xml");
             //XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\LedgerTest.xml");
-            XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Scales-C-2-Hands.xml");
+            //XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Scales-C-2-Hands.xml");
             //XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Promenade_Example.xml");
             //XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Simple2NoteTest.xml");
-            //XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Nocturne Op. 9, No. 2.xml");
+            XScore testMusicScore = new XScore(@".\ScoreRenderer\Examples\Nocturne Op. 9, No. 2.xml");
 
             //Don't like the param overrides approach... Maybe allow only 1 active score and register the instance??
             _control = container.Resolve<ScoreControl>(new ParameterOverrides { { "musicScore", testMusicScore } });

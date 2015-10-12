@@ -101,7 +101,10 @@ namespace ScoreControlLibrary
                 line.X2 = endX - startX;
                 line.StrokeThickness = 1;
                 line.Stroke = Brushes.Black;
-                _renderHelper.RenderItemXY(line, startX, y);
+
+                RenderItem item = new RenderItem(line, y, 0, 0, RenderItemType.NoteLine, 0);
+
+                _renderHelper.RenderItemXY(startX, item);
             }
         }
 
@@ -123,7 +126,7 @@ namespace ScoreControlLibrary
         public void AddNote(Note note, int devisions, double noteTime)
         {
             double yCoord = CalculateYForNote(note);
-            _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord, ScoreLayoutDetails.DefaultNoteHeight, ScoreLayoutDetails.DefaultQuarterNoteSeparation * note.Duration );
+            _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord );
 
             if(note.NoteType == Note.NoteTypes.Note) AddLedgerLinesIfNeeded(note, noteTime, yCoord);
         }
@@ -182,7 +185,6 @@ namespace ScoreControlLibrary
             return LowestLine_Y + LineSpacing * 2.0;
         }
 
-
         #endregion
 
 
@@ -208,8 +210,7 @@ namespace ScoreControlLibrary
             
             TextBlock cleffVisual = _renderHelper.Glyphs.GetGlyph(glyphType, clefSize);
 
-            _renderHelper.AddItemToRender(noteTime, cleffVisual, yPosition - cleffVisual.BaselineOffset, clefWidth, RenderItemType.Clef);
-
+            _renderHelper.AddItemToRender(noteTime, cleffVisual, yPosition - cleffVisual.BaselineOffset, clefWidth, 0, RenderItemType.Clef);
         }
 
         public bool ClefEquivalentToCurrent(Clef testClef)
@@ -233,10 +234,10 @@ namespace ScoreControlLibrary
             
             _renderHelper.AddItemToRender(noteTime, numeratorGlyph,
                 LowestLine_Y - numeratorGlyph.BaselineOffset - LineSpacing * 2.0, 
-                fontSize, RenderItemType.TimeSignature);
+                fontSize, 0, RenderItemType.TimeSignature);
             
             _renderHelper.AddItemToRender(noteTime, denominatorGlyph,
-                LowestLine_Y - denominatorGlyph.BaselineOffset, fontSize, 
+                LowestLine_Y - denominatorGlyph.BaselineOffset, fontSize, 0,
                 RenderItemType.TimeSignature);
         }
         #endregion

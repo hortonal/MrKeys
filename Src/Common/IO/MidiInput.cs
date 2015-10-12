@@ -28,12 +28,12 @@ namespace Common.IO
 
         public void StartRecording()
         {
-            _inputDevice.StartRecording();
+            if (IsInitialised) _inputDevice.StartRecording();
         }
 
         public void StopRecording()
         {
-            _inputDevice.StopRecording();
+            if (IsInitialised) _inputDevice.StopRecording();
         }
 
         #region Init

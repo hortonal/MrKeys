@@ -21,11 +21,13 @@ namespace ScoreControlLibrary
             _restYCoords = restYCoords;
         }
 
-        public void AddNote(Note note, Timing timing, int divisions, double noteTime, double yCoord, double defaultNoteSize, double xCoordDefaultNoteSeparation)
+        public void AddNote(Note note, Timing timing, int divisions, double noteTime, double yCoord)
         {
+            
+            AddAlteration(note, noteTime, yCoord);
             Type glyphType;
             double finalYCoord = yCoord;
-
+            double xDistanceToNextObject = 0;
             var pointStemStart = new System.Windows.Point();
             var pointStemEnd = new System.Windows.Point();
 
@@ -37,7 +39,12 @@ namespace ScoreControlLibrary
                 finalYCoord = GetRestYCoord(glyphType);
             }
             else
-            {
+            {                
+                xDistanceToNextObject = ScoreLayoutDetails.DefaultQuarterNoteSeparation * 2 * note.Duration / divisions;
+
+                if (xDistanceToNextObject < ScoreLayoutDetails.DefaultNoteHeight) xDistanceToNextObject = ScoreLayoutDetails.LineSpacing_Y * 1.2;
+                if (xDistanceToNextObject > ScoreLayoutDetails.LineSpacing_Y * 3) xDistanceToNextObject = ScoreLayoutDetails.LineSpacing_Y * 3;
+
                 pitchId = SongEventParser.XScoreNoteEventParser.GetPitchIdFromNote(note);
                 //Default 
                 glyphType = typeof(BlackNoteHeadGlyph);
@@ -65,7 +72,7 @@ namespace ScoreControlLibrary
                 line.StrokeThickness = 1.2;
                 line.Stroke = Brushes.Black;
 
-                double stemHeight = defaultNoteSize * 3.0;
+                double stemHeight = ScoreLayoutDetails.DefaultNoteHeight * 3.0;
                 switch(note.Stem)
                 {
                     case "down":
@@ -75,9 +82,9 @@ namespace ScoreControlLibrary
                         pointStemEnd.Y = stemHeight;
                         break;
                     default:
-                        pointStemStart.X = defaultNoteSize - 0.1;
+                        pointStemStart.X = ScoreLayoutDetails.DefaultNoteHeight - 0.1;
                         pointStemStart.Y = -0.1;
-                        pointStemEnd.X = defaultNoteSize - 0.1;
+                        pointStemEnd.X = ScoreLayoutDetails.DefaultNoteHeight - 0.1;
                         pointStemEnd.Y = -stemHeight;
                         break;
                 }
@@ -87,16 +94,48 @@ namespace ScoreControlLibrary
                 line.Y1 = pointStemStart.Y;
                 line.Y2 = pointStemEnd.Y;
                 
-                _renderHelper.AddItemToRender(noteTime, line, finalYCoord, 0, RenderItemType.NoteStem);
+                _renderHelper.AddItemToRender(noteTime, line, finalYCoord, 0, 0, RenderItemType.NoteStem);
             }
             
-            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, defaultNoteSize * 3.3);
+            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, ScoreLayoutDetails.DefaultNoteHeight * 3.3);
             
-            _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, xCoordDefaultNoteSeparation,
-                RenderItemType.Note, pitchId);
+            _renderHelper.AddItemToRender(noteTime, tb, finalYCoord - tb.BaselineOffset, 
+                xDistanceToNextObject, 0, RenderItemType.Note, pitchId);
 
             //Add placeholder line for beam (need to hook up in the renderer)
             // need to implement
+        }
+
+        private void AddAlteration(Note note, double noteTime, double yCoord)
+        {
+            Pitch pitch = note.Pitch;
+            if (pitch == null) return;
+
+            int alter = pitch.Alter;
+            
+            Type glyphType;
+            switch (alter)
+            {
+                case -2:
+                    glyphType = typeof(DoubleFlatGlyph);
+                    break;
+                case -1:
+                    glyphType = typeof(FlatGlyph);
+                    break;
+                case 1:
+                    glyphType = typeof(SharpGlyph);
+                    break;
+                case 2:
+                    glyphType = typeof(DoubleSharpGlyph);
+                    break;
+                default:
+                    return;
+            }
+
+            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, ScoreLayoutDetails.DefaultNoteHeight * 2.3);
+
+            _renderHelper.AddItemToRender(noteTime, tb, yCoord - tb.BaselineOffset, ScoreLayoutDetails.DefaultNoteHeight, 0,
+                RenderItemType.Alteration, 0);
         }
 
         private Type GetRestGlyphFromNote(Note note, Timing timing, int divisions)
@@ -151,8 +190,10 @@ namespace ScoreControlLibrary
             line.X1 = -lineWidth / 2;
             line.X2 = lineWidth / 2;
             
-            _renderHelper.AddItemToRender(noteTime, line, yCoord, (- 1.2 * lineWidth / 4), RenderItemType.LedgerLine);
+            _renderHelper.AddItemToRender(noteTime, line, yCoord, 0, (-1.2 * lineWidth / 4), RenderItemType.LedgerLine);
         }
+        
+
 
         private Type CalculateRestType(int noteDuration, Timing timing, int divisions)
         {

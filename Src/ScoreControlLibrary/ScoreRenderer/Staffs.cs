@@ -22,8 +22,8 @@ namespace ScoreControlLibrary
         {
 
             double xLineOffset = 0;
-            double xPostBarLineOffset = ScoreLayoutDetails.LineSpacing_Y * 1.5;
-            
+            double xPostBarLineOffset = ScoreLayoutDetails.LineSpacing_Y;
+
             if (barLineStyle == BarLineStyle.LightHeavy)
             {
                 xLineOffset = -ScoreLayoutDetails.LineSpacing_Y / 2;
@@ -40,7 +40,7 @@ namespace ScoreControlLibrary
                 X2 = xLineOffset
             };
 
-            _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, xPostBarLineOffset, RenderItemType.BarDivision);
+            _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, xPostBarLineOffset, 0, RenderItemType.BarDivision);
 
             if(barLineStyle == BarLineStyle.LightHeavy)
             {
@@ -52,7 +52,7 @@ namespace ScoreControlLibrary
                     StrokeThickness = 2
                 };
 
-                _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, 0, RenderItemType.BarDivision);
+                _renderHelper.AddItemToRender(noteTime, singleBarLine, HighestBarYCoord, 0, 0, RenderItemType.BarDivision);
 
             }
         }
