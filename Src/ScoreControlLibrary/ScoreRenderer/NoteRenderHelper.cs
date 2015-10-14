@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using ScoreControlLibrary.Glyphs;
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.ScoreRenderer
 {
     internal class NoteRenderHelper
     {
@@ -24,7 +24,7 @@ namespace ScoreControlLibrary
         public void AddNote(Note note, Timing timing, int divisions, double noteTime, double yCoord)
         {
             
-            AddAlteration(note, noteTime, yCoord);
+            
             Type glyphType;
             double finalYCoord = yCoord;
             double xDistanceToNextObject = 0;
@@ -106,37 +106,7 @@ namespace ScoreControlLibrary
             // need to implement
         }
 
-        private void AddAlteration(Note note, double noteTime, double yCoord)
-        {
-            Pitch pitch = note.Pitch;
-            if (pitch == null) return;
-
-            int alter = pitch.Alter;
-            
-            Type glyphType;
-            switch (alter)
-            {
-                case -2:
-                    glyphType = typeof(DoubleFlatGlyph);
-                    break;
-                case -1:
-                    glyphType = typeof(FlatGlyph);
-                    break;
-                case 1:
-                    glyphType = typeof(SharpGlyph);
-                    break;
-                case 2:
-                    glyphType = typeof(DoubleSharpGlyph);
-                    break;
-                default:
-                    return;
-            }
-
-            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, ScoreLayoutDetails.DefaultAlterationScaling);
-
-            _renderHelper.AddItemToRender(noteTime, tb, yCoord - tb.BaselineOffset, ScoreLayoutDetails.DefaultNoteHeight, 0,
-                RenderItemType.Alteration, 0);
-        }
+      
 
         private Type GetRestGlyphFromNote(Note note, Timing timing, int divisions)
         {

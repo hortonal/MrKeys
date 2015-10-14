@@ -1,21 +1,27 @@
 ﻿using MusicXml;
 using ScoreControlLibrary.Glyphs;
 using System.Windows.Controls;
+using System;
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.ScoreRenderer
 {
     internal class KeyRenderHelper
     {
+        private Key _currentKey;
+
         RenderHelper _renderHelper;
         public KeyRenderHelper(RenderHelper renderHelper)
         {
             _renderHelper = renderHelper;
+            _currentKey = null;
         }
 
-        public void AddKey(double noteTime, Key key, double lowEReference_Y)
+        public void SetKey(double noteTime, Key key, double lowEReference_Y)
         {
             if (key == null) return;
-            
+
+            _currentKey = key;
+
             if (key.Fifths < 0) AddKeyItem(noteTime, FlatGlyph(), lowEReference_Y - ScoreLayoutDetails.LineSpacing_Y * 2, ScoreLayoutDetails.DefaultNoteHeight * 0);
             if (key.Fifths < -1) AddKeyItem(noteTime, FlatGlyph(), lowEReference_Y - ScoreLayoutDetails.LineSpacing_Y * 3.5, ScoreLayoutDetails.DefaultNoteHeight * 1);
             if (key.Fifths < -2) AddKeyItem(noteTime, FlatGlyph(), lowEReference_Y - ScoreLayoutDetails.LineSpacing_Y * 1.5, ScoreLayoutDetails.DefaultNoteHeight * 2);
@@ -55,6 +61,32 @@ namespace ScoreControlLibrary
         private TextBlock DoubleSharpGlyph()
         {
             return _renderHelper.Glyphs.GetGlyph(typeof(DoubleSharpGlyph), ScoreLayoutDetails.DefaultAlterationScaling);
+        }
+
+        public NoteAlterationType GetAlteration(Note note)
+        {
+            if (note.Pitch == null) return NoteAlterationType.Natural;
+
+            //Has note been adjusted in this measure?
+
+            //Check if note is natural in key. If so, do nothing
+            int naturalAlteration = KeyHelper.NaturalAlteration(note.Pitch.Step, _currentKey.Fifths);
+
+            //Do nothing if natural
+            if (note.Pitch.Alter - naturalAlteration == 0) return NoteAlterationType.Natural;
+
+            if (note.Pitch.Alter == 0) return NoteAlterationType.Neutral;
+            
+            switch (note.Pitch.Alter - naturalAlteration)
+            {
+                case -2: return NoteAlterationType.DoubleFlat;
+                case -1: return NoteAlterationType.Flat;
+                case 0: return NoteAlterationType.Natural;
+                case 1: return NoteAlterationType.Sharp;
+                case 2: return NoteAlterationType.DoubleSharp;
+            }
+
+            return NoteAlterationType.Natural;
         }
     }
 }

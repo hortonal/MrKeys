@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using ScoreControlLibrary.Glyphs;
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.ScoreRenderer
 {
     internal class RenderHelper
     {

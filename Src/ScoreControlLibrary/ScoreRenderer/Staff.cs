@@ -10,7 +10,7 @@ using MusicXml;
 using Common.Music;
 using ScoreControlLibrary.Glyphs;
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.ScoreRenderer
 {
     internal class StaffCleff
     {
@@ -127,9 +127,44 @@ namespace ScoreControlLibrary
         public void AddNote(Note note, int devisions, double noteTime)
         {
             double yCoord = CalculateYForNote(note);
+
+            AddAlteration(note, noteTime, yCoord);
+
             _noteRenderHelper.AddNote(note, Timing, devisions, noteTime, yCoord );
 
             if(note.NoteType == Note.NoteTypes.Note) AddLedgerLinesIfNeeded(note, noteTime, yCoord);
+        }
+
+        private void AddAlteration(Note note, double noteTime, double yCoord)
+        {
+            NoteAlterationType type = _keyRenderHelper.GetAlteration(note);
+            
+            Type glyphType;
+            switch (type)
+            {
+                case NoteAlterationType.Neutral:
+                    glyphType = typeof(NaturalGlyph);
+                    break;
+                case NoteAlterationType.DoubleFlat:
+                    glyphType = typeof(DoubleFlatGlyph);
+                    break;
+                case NoteAlterationType.Flat:
+                    glyphType = typeof(FlatGlyph);
+                    break;
+                case NoteAlterationType.Sharp:
+                    glyphType = typeof(SharpGlyph);
+                    break;
+                case NoteAlterationType.DoubleSharp:
+                    glyphType = typeof(DoubleSharpGlyph);
+                    break;
+                default:
+                    return;
+            }
+
+            TextBlock tb = _renderHelper.Glyphs.GetGlyph(glyphType, ScoreLayoutDetails.DefaultAlterationScaling);
+
+            _renderHelper.AddItemToRender(noteTime, tb, yCoord - tb.BaselineOffset, ScoreLayoutDetails.DefaultNoteHeight, 0,
+                RenderItemType.Alteration, 0);
         }
 
         private void AddLedgerLinesIfNeeded(Note note, double noteTime, double yCoord)
@@ -159,7 +194,7 @@ namespace ScoreControlLibrary
 
         internal void AddKey(double noteTime, Key key)
         {
-            _keyRenderHelper.AddKey(noteTime, key, LowEReference_Y());
+            _keyRenderHelper.SetKey(noteTime, key, LowEReference_Y());
         }
 
         private double LowEReference_Y()

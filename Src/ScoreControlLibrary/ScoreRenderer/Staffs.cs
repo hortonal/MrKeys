@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Shapes;
 using System.Windows.Media;
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.ScoreRenderer
 {
     internal enum BarLineStyle { Light, LightHeavy }
 

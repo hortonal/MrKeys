@@ -6,16 +6,16 @@ using MusicXml;
 using System.Windows.Controls;
 
 
-namespace ScoreControlLibrary
+namespace ScoreControlLibrary.ScoreRenderer
 {
     
-    public class ScoreRenderer
+    public class ScoreParser
     {
         private Canvas _scorePanel;
         private XScore _score;
         private RenderHelper _renderHelper;
 
-        public ScoreRenderer(XScore score, Canvas scorePanel)
+        public ScoreParser(XScore score, Canvas scorePanel)
         {
             this._score = score;
             this._scorePanel = scorePanel;

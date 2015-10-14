@@ -19,6 +19,7 @@ using System.Threading;
 using System.Diagnostics;
 using Common.Logging;
 using Common.Events;
+using ScoreControlLibrary.ScoreRenderer;
 
 namespace ScoreControlLibrary.Views
 {
@@ -34,7 +35,7 @@ namespace ScoreControlLibrary.Views
         IVirtualKeyBoard _virtualKeyboard;
         IMediaServiceHost _mediaServiceHost;
         XScore _musicScore;
-        ScoreRenderer _scoreRenderer;
+        ScoreParser _scoreParser;
         Timer _updateScrollTimer;
         ILogger _logger;
         Song _song;
@@ -74,9 +75,9 @@ namespace ScoreControlLibrary.Views
 
             _updateScrollTimer = new Timer(ScrollTimerHandler, null, Timeout.Infinite, _scrollTimingPerdiod);
 
-            _scoreRenderer = new ScoreRenderer(_musicScore, ScoreGrid);
-            _scoreRenderer.Render();
-            ScoreGrid.Width = _scoreRenderer.GetMaxHorizontalPosition();
+            _scoreParser = new ScoreParser(_musicScore, ScoreGrid);
+            _scoreParser.Render();
+            ScoreGrid.Width = _scoreParser.GetMaxHorizontalPosition();
 
             _intputEvents.MessageReceived += HandleInputEvent;
 
@@ -111,7 +112,7 @@ namespace ScoreControlLibrary.Views
 
         private void Controller_Starting(object sender, EventArgs e)
         {
-            _scoreRenderer.ResetMarking();
+            _scoreParser.ResetMarking();
             _updateScrollTimer.Change(0, _scrollTimingPerdiod);
             _scrollSpeed = 0;
             _lastNoteTime = 0;
@@ -140,8 +141,8 @@ namespace ScoreControlLibrary.Views
             _nextNoteTime = e.NextNoteTime;
 
             //Update scrool speed
-            var _lastHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(_lastNoteTime);
-            var _nextHorizontalScrollEventPosition = _scoreRenderer.GetHorizontalPositionForNoteTime(_nextNoteTime);
+            var _lastHorizontalScrollEventPosition = _scoreParser.GetHorizontalPositionForNoteTime(_lastNoteTime);
+            var _nextHorizontalScrollEventPosition = _scoreParser.GetHorizontalPositionForNoteTime(_nextNoteTime);
 
             SetScrollSpeed(_currentHorizontalScrollPosition, _nextHorizontalScrollEventPosition, _lastNoteTime, _nextNoteTime);
                 
@@ -240,7 +241,7 @@ namespace ScoreControlLibrary.Views
                 }
             }
 
-            _scoreRenderer.MarkNote(compareNoteTime, markForNote, e.midiKeyId);
+            _scoreParser.MarkNote(compareNoteTime, markForNote, e.midiKeyId);
         }
     }
 }
