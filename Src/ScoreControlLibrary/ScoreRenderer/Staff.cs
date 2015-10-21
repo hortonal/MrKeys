@@ -107,6 +107,7 @@ namespace ScoreControlLibrary.ScoreRenderer
 
                 _renderHelper.RenderItemXY(startX, item);
             }
+            _keyRenderHelper.ResetAlterations();
         }
 
         private IEnumerable<double> StaffLine_YCoords()
@@ -194,7 +195,7 @@ namespace ScoreControlLibrary.ScoreRenderer
 
         internal void AddKey(double noteTime, Key key)
         {
-            _keyRenderHelper.SetKey(noteTime, key, LowEReference_Y());
+            _keyRenderHelper.AddKeyChange(noteTime, key, LowEReference_Y());
         }
 
         private double LowEReference_Y()

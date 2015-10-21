@@ -63,12 +63,12 @@
   <ItemGroup>
     <Compile Include="MusicXmlHelpers.cs" />
     <Compile Include="ScoreEventController\SongEventController.cs" />
+    <Compile Include="ScoreRenderer\Alterations.cs" />
     <Compile Include="ScoreRenderer\Glyphs\FontHelpers.cs" />
     <Compile Include="ScoreRenderer\Glyphs\Glyphs.cs" />
     <Compile Include="ScoreRenderer\Glyphs\MuseScoreFontCharacters.cs" />
     <Compile Include="ScoreRenderer\Glyphs\MusicFontCharacters.cs" />
     <Compile Include="ScoreRenderer\Glyphs\PolihymniaFontCharacters.cs" />
-    <Compile Include="ScoreRenderer\KeyHelper.cs" />
     <Compile Include="ScoreRenderer\KeyRenderHelper.cs" />
     <Compile Include="ScoreRenderer\NoteRenderHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
