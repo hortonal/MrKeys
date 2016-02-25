@@ -17,6 +17,7 @@ using KeyBoardControlLibrary;
 using System.ComponentModel;
 using System.Threading;
 using System.Diagnostics;
+
 using Common.Logging;
 using Common.Events;
 using ScoreControlLibrary.ScoreRenderer;
@@ -46,13 +47,15 @@ namespace ScoreControlLibrary.Views
         
         //State variables
         private double _currentHorizontalScrollPosition = 0;
+        private BarDetails nextBarDetails;
         //song tempo. How long is 1 noteTime in milliseconds
         private double _currentTempo;
         //horizontal units per millisecond
         private double _scrollSpeed = 0;
-        private double _scrollOffset = 200;
+        private double _scrollOffset = 100;
         private double _lastNoteTime = 0;
         private double _nextNoteTime = 0;
+        
 
         private object _lockObject = new object();
 
@@ -78,6 +81,10 @@ namespace ScoreControlLibrary.Views
             _scoreParser = new ScoreParser(_musicScore, ScoreGrid);
             _scoreParser.Render();
             ScoreGrid.Width = _scoreParser.GetMaxHorizontalPosition();
+
+            nextBarDetails = new BarDetails();
+            nextBarDetails.NoteTime = 0;
+            nextBarDetails.XCoord = 0;
 
             _intputEvents.MessageReceived += HandleInputEvent;
 
@@ -108,6 +115,8 @@ namespace ScoreControlLibrary.Views
         {
             _updateScrollTimer.Change(Timeout.Infinite, _scrollTimingPerdiod);
             _lastNoteTime = 0;
+            ResetHorizontalScrollPosition();
+            nextBarDetails = new BarDetails();
         }
 
         private void Controller_Starting(object sender, EventArgs e)
@@ -134,26 +143,24 @@ namespace ScoreControlLibrary.Views
 
             if (e.NoteKeyStrokeEvenArguments.KeyStrokeType != Common.Events.KeyStrokeType.KeyPress) return;
             
-            //Only handle this once per chord   
+            //Only handle this once per chord
             if (e.NoteTime <= _lastNoteTime) return;
-
-            _lastNoteTime = e.NoteTime;
-            _nextNoteTime = e.NextNoteTime;
-
-            //Update scrool speed
-            var _lastHorizontalScrollEventPosition = _scoreParser.GetHorizontalPositionForNoteTime(_lastNoteTime);
-            var _nextHorizontalScrollEventPosition = _scoreParser.GetHorizontalPositionForNoteTime(_nextNoteTime);
-
-            SetScrollSpeed(_currentHorizontalScrollPosition, _nextHorizontalScrollEventPosition, _lastNoteTime, _nextNoteTime);
+            
+            //update speed once per bar
+            if (e.NoteTime > nextBarDetails.NoteTime)
+            {
+                _lastNoteTime = nextBarDetails.NoteTime;
+                nextBarDetails = _scoreParser.GetNextBarDetails(e.NoteTime);
+                SetScrollSpeed(nextBarDetails.XCoord, _lastNoteTime, nextBarDetails.NoteTime);
                 
-            //_currentHorizontalScrollPosition = _lastHorizontalScrollEventPosition;
-            //UpdateHorizontalScrollPosition();
-           
+            }
+            
             _logger.Log(this, LogLevel.Debug, "Score control finished handling song note event. " + e);
         }
 
         private void ResetHorizontalScrollPosition()
         {
+
             _currentHorizontalScrollPosition = 0;
             Dispatcher.Invoke(new Action(() =>
             {
@@ -161,8 +168,9 @@ namespace ScoreControlLibrary.Views
             }));
         }
 
-        private void SetScrollSpeed(double startPosition, double endPosistion, double startNoteTime, double endNoteTime)
+        private void SetScrollSpeed(double endPosistion, double startNoteTime, double endNoteTime)
         {
+            double startPosition = ScoreScrollViewer.HorizontalOffset;
             double scrollSpeed = (endPosistion - startPosition) / ((endNoteTime - startNoteTime) * _currentTempo);
 
             if(scrollSpeed < 0) _scrollSpeed = 0;
@@ -171,6 +179,7 @@ namespace ScoreControlLibrary.Views
 
         private void UpdateHorizontalScrollPosition()
         {
+            
             Dispatcher.Invoke(new Action(() =>
             {
                 double actualScrollPosition;

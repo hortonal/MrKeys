@@ -89,6 +89,29 @@ namespace ScoreControlLibrary.ScoreRenderer
             return maxOffsetInGroup;
         }
 
+        internal BarDetails GetNextBarDetails(double noteTime)
+        {
+            var barDetails = new BarDetails();
+
+            //Get first bar note time and x coord where the noteTime is greater than current note time
+            //I have a dictionary of 
+            //                      List<renderItems>
+            // I need a predicate on renderItemType, while knowing the key that it pertains to.
+            var barItems = _renderItemsDictionary.Where(ris => ris.Value.Any(ri => ri.ItemType == RenderItemType.BarDivision) && ris.Key > noteTime);
+
+            if (barItems != null)
+            {
+                var firstItem = barItems.First();
+
+                barDetails.NoteTime = firstItem.Key;
+                barDetails.XCoord = GetHorizontalPositionForNoteTime(firstItem.Key);
+            }
+            
+            
+
+            return barDetails;
+        }
+
         internal double GetMaxHorizontalPosition()
         {
             return GetHorizontalPositionForNoteTime(_renderItemsDictionary.Keys.Max());

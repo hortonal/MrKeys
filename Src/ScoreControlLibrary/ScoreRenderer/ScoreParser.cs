@@ -91,6 +91,11 @@ namespace ScoreControlLibrary.ScoreRenderer
             foreach (var staff in staffs) staff.DrawStaffLines(ScoreLayoutDetails.DefaultMargin_X, finalX);
         }
 
+        public BarDetails GetNextBarDetails(double noteTime)
+        {
+            return _renderHelper.GetNextBarDetails(noteTime);
+        }
+
         public double GetHorizontalPositionForNoteTime(double noteTime)
         {
             return _renderHelper.GetHorizontalPositionForNoteTime(noteTime);

@@ -64,6 +64,7 @@
     <Compile Include="MusicXmlHelpers.cs" />
     <Compile Include="ScoreEventController\SongEventController.cs" />
     <Compile Include="ScoreRenderer\Alterations.cs" />
+    <Compile Include="ScoreRenderer\BarDetails.cs" />
     <Compile Include="ScoreRenderer\Glyphs\FontHelpers.cs" />
     <Compile Include="ScoreRenderer\Glyphs\Glyphs.cs" />
     <Compile Include="ScoreRenderer\Glyphs\MuseScoreFontCharacters.cs" />
